@@ -1,6 +1,7 @@
 name: Integration
 on:
-  paths: ["Colorblind/**","client/**"]
+  push:
+    paths: ["Colorblind/**", "client/**"]
 
 jobs:
   ci:
