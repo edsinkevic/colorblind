@@ -19,14 +19,8 @@ public class ParcelController : ControllerBase
     [HttpGet("{code}")]
     public ParcelContract Get(string code)
     {
-        return new ParcelContract
-        {
-            Parcel = _parcelCrud.GetParcel(code)
-        };
+        return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
     }
 }
 
-public class ParcelContract
-{
-    public Parcel Parcel { get; set; }
-}
+public record ParcelContract(Parcel Parcel);
