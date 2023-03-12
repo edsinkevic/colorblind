@@ -5,9 +5,11 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    paths: Colorblind/**
+    
   pull_request:
     branches: [ "main" ]
+  
 
 jobs:
   build:
