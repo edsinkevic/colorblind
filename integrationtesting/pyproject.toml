@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "integrationtesting"
+version = "0.1.0"
+description = ""
+authors = ["edsinkevic <sinkevicedwin@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+selenium = "^4.8.2"
+pytest = "^7.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
