@@ -21,8 +21,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      working-directory: ./Colorblind/WebApp/
+      run: dotnet restore WebApp.csproj
     - name: Build
-      run: dotnet build --no-restore
+      working-directory: ./Colorblind/WebApp/
+      run: dotnet build --no-restore WebApp.csproj
     - name: Test
+      working-directory: ./Colorblind/
       run: dotnet test --no-build --verbosity normal
