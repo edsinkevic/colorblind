@@ -20,16 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore server dependencies
+    - name: Restore
       working-directory: ./Colorblind/WebApp/
       run: dotnet restore WebApp.csproj
-    - name: Build the server
+    - name: Build
       working-directory: ./Colorblind/WebApp/
       run: dotnet build --no-restore WebApp.csproj
-    - name: Test the server
+    - name: Test
       working-directory: ./Colorblind/
       run: dotnet test --no-build --verbosity normal
-    - name: Build the client
-      working-directory: ./client
-      run: sudo apt install npm && npm install && npm run build
 
