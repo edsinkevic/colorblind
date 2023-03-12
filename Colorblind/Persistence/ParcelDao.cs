@@ -7,20 +7,10 @@ public class ParcelDao : IParcelDao
 {
     public Parcel FetchParcel(string code)
     {
-        var location = new Location
-        {
-            StreetAddress = new StreetAddress
-            {
-                Street = "Didlaukio g. 5",
-                ApartmentNumber = "24"
-            }
-        };
+        var streetAddress = new StreetAddress(Street: "Didlaukio g. 5", ApartmentNumber: "24");
+        var location = new Location(StreetAddress: streetAddress);
 
-        var parcel = new Parcel()
-        {
-            Code = code,
-            Location = location
-        };
+        var parcel = new Parcel(Code: code, Location: location);
         return parcel;
     }
 }

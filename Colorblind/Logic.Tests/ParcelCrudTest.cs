@@ -11,20 +11,10 @@ public class ParcelCrudTest
     [SetUp]
     public void Setup()
     {
-        var location = new Location
-        {
-            StreetAddress = new StreetAddress
-            {
-                Street = "Didlaukio g. 5",
-                ApartmentNumber = "24"
-            }
-        };
+        var streetAddress = new StreetAddress(Street: "Didlaukio g. 5", ApartmentNumber: "24");
+        var location = new Location(StreetAddress: streetAddress);
 
-        var parcel = new Parcel()
-        {
-            Code = "123",
-            Location = location
-        };
+        var parcel = new Parcel(Code: "123", Location: location);
 
         var mock = new Mock<IParcelDao>();
         mock.Setup(p => p.FetchParcel(It.IsAny<string>())).Returns(parcel);

@@ -1,18 +1,7 @@
 namespace Logic.Models;
 
-public class Parcel
-{
-    public string Code { get; set; }
-    public Location Location { get; set; }
-}
+public record Parcel(string Code, Location Location);
 
-public class Location
-{
-    public StreetAddress StreetAddress { get; set; }
-}
+public record Location(StreetAddress StreetAddress);
 
-public class StreetAddress
-{
-    public string Street { get; set; }
-    public string ApartmentNumber { get; set; }
-}
+public record StreetAddress(string Street, string ApartmentNumber);
