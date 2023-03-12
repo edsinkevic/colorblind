@@ -32,3 +32,4 @@ jobs:
     - name: Build the client
       working-directory: ./client
       run: sudo apt install npm && npm install && npm run build
+
