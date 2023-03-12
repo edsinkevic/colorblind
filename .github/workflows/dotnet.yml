@@ -23,12 +23,12 @@ jobs:
     - name: Restore server dependencies
       working-directory: ./Colorblind/WebApp/
       run: dotnet restore WebApp.csproj
-    - name: Build the erver
+    - name: Build the server
       working-directory: ./Colorblind/WebApp/
       run: dotnet build --no-restore WebApp.csproj
-    - name: Test the erver
+    - name: Test the server
       working-directory: ./Colorblind/
       run: dotnet test --no-build --verbosity normal
     - name: Build the client
       working-directory: ./client
-      run: sudo apt install npm && npm build
+      run: sudo apt install npm && npm run build
