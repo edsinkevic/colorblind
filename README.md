@@ -2,9 +2,11 @@
 
 An educational project where we design and implement a parcel E-self service system.
 
-# How to run
-TODO
+<h1 align="center"><project-name></h1>
 
-# Use cases
+<p align="center"><project-description></p>
 
-# 
+## Links
+
+- [Server](./Colorblind)
+- [Client](./client)
