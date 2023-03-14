@@ -25,7 +25,7 @@ jobs:
 
     - name: Install deps
       working-directory: ./integrationtesting
-      run: poetry init
+      run: poetry install
     - name: Test
       working-directory: ./integrationtesting
       run: poetry run pytest
