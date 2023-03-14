@@ -19,7 +19,6 @@ jobs:
         compose-file: docker-compose.yml
     
     - name: Build image
-      working-directory: ./integrationtesting
       uses: abatilo/actions-poetry@v2
       with:
         poetry-version: "1.1.15"
