@@ -7,3 +7,9 @@
 - [Server](./Colorblind)
 - [Client](./client)
 - [Document](./docs)
+
+## How to run all services
+
+```
+  docker-compose up
+```
