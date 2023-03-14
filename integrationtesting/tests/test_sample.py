@@ -20,7 +20,9 @@ config: Config = Config(
 
 
 def test_scenario():
-    driver: WebDriver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.headless = True
+    driver: WebDriver = webdriver.Chrome(options=options)
     driver.get(config.client_url)
     driver.find_element(By.XPATH, "//p[contains(text(), 'Find in-depth')]")
 
