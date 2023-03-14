@@ -15,5 +15,5 @@
 ```
   docker build -t colorblind-server:0.0.1 .
   
-  docker run <hostPort>:80 colorblind-server:0.0.1
+  docker run -p <hostPort>:80 colorblind-server:0.0.1
 ```
