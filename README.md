@@ -6,3 +6,4 @@
 
 - [Server](./Colorblind)
 - [Client](./client)
+- [Document](./docs)
