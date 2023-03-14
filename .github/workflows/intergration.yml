@@ -21,7 +21,7 @@ jobs:
     - name: Build poetry image
       uses: abatilo/actions-poetry@v2
       with:
-        poetry-version: "1.1.15"
+        poetry-version: "1.4.0"
 
     - name: Install deps
       working-directory: ./integrationtesting
