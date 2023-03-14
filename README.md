@@ -1,10 +1,6 @@
-# colorblind
+<h1 align="center">colorblind</h1>
 
-An educational project where we design and implement a parcel E-self service system.
-
-<h1 align="center"><project-name></h1>
-
-<p align="center"><project-description></p>
+<p align="center">An educational project where we design and implement a parcel E-self service system</p>
 
 ## Links
 
