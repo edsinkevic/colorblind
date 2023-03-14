@@ -18,10 +18,14 @@ jobs:
       with:
         compose-file: docker-compose.yml
     
-    - name: Build image
+    - name: Build poetry image
       uses: abatilo/actions-poetry@v2
       with:
         poetry-version: "1.1.15"
+
+    - name: Install deps
+      working-directory: ./integrationtesting
+      run: poetry init
     - name: Test
       working-directory: ./integrationtesting
       run: poetry run pytest
