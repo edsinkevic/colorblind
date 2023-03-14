@@ -1,0 +1,29 @@
+name: Integration
+
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: nanasess/setup-chromedriver@v1
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - uses: isbang/compose-action@v1.4.1
+      with:
+        compose-file: docker-compose.yml
+    
+    - name: Build poetry image
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: "1.4.0"
+
+    - name: Install deps
+      working-directory: ./integrationtesting
+      run: poetry install
+    - name: Test
+      working-directory: ./integrationtesting
+      run: poetry run pytest
