@@ -6,10 +6,6 @@ name: .NET
 on:
   push:
     paths: Colorblind/**
-    
-  pull_request:
-    branches: [ "main" ]
-  
 
 jobs:
   build:
