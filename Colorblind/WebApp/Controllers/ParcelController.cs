@@ -8,19 +8,20 @@ namespace WebApp.Controllers;
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
-    private readonly ParcelCrud _parcelCrud;
-
-    public ParcelController(ParcelCrud parcelCrud)
-    {
-        _parcelCrud = parcelCrud;
-    }
+        private readonly ParcelCrud _parcelCrud;
 
 
-    [HttpGet("{code}")]
-    public ParcelContract Get(string code)
-    {
-        return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
-    }
+        public ParcelController(ParcelCrud parcelCrud)
+        {
+                _parcelCrud = parcelCrud;
+        }
+
+
+        [HttpGet("{code}")]
+        public ParcelContract Get(string code)
+        {
+                return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
+        }
 }
 
 public record ParcelContract(Parcel Parcel);
