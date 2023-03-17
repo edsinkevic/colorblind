@@ -17,3 +17,9 @@
   
   docker run -p <hostPort>:80 colorblind-server:0.0.1
 ```
+
+# Formatting
+## Using .editorconfig
+```
+  dotnet format
+```
