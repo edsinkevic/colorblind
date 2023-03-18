@@ -1,27 +1,28 @@
-using Logic;
-using Logic.Models;
+using Logic.Queries.GetParcel;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers;
 
 [ApiController]
 [Route("parcels")]
-public class ParcelController : ControllerBase
+public class ParcelController : ApiController
 {
-        private readonly ParcelCrud _parcelCrud;
+        private readonly IMediator _mediator;
 
 
-        public ParcelController(ParcelCrud parcelCrud)
+        public ParcelController(IMediator mediator)
         {
-                _parcelCrud = parcelCrud;
+                _mediator = mediator;
         }
 
 
         [HttpGet("{code}")]
-        public ParcelContract Get(string code)
+        public async Task<IActionResult> Get(string code)
         {
-                return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
+                var query = new GetParcelQuery(code);
+                var result = await _mediator.Send(query);
+
+                return result.Match(value => Ok(new ParcelContract(value)), Problem);
         }
 }
-
-public record ParcelContract(Parcel Parcel);

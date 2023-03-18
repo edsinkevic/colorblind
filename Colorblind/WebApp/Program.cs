@@ -1,4 +1,6 @@
 using Logic;
+using Logic.Queries.GetParcel;
+using Logic.Repositories;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<ParcelCrud>();
-builder.Services.AddTransient<IParcelDao, ParcelDao>();
+builder.Services.AddLogic();
+builder.Services.AddPersistence();
+
 
 var app = builder.Build();
 
