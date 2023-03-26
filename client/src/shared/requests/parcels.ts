@@ -4,9 +4,11 @@ import {
   Problem,
 } from "../lib/models/models";
 
+import * as E from "fp-ts/Either";
+
 export const registerParcel = async (
   parcelRegistration: ParcelRegistration
-) => {
+): Promise<E.Either<Error, ParcelRegistrationResponse>> => {
   const resp = await fetch(
     `${process.env.NEXT_PUBLIC_COLORBLIND_SERVER_URL}/parcels/register`,
     {
@@ -19,7 +21,9 @@ export const registerParcel = async (
   );
 
   if (resp.status === 200)
-    return (await resp.json()) as ParcelRegistrationResponse;
+    return E.right((await resp.json()) as ParcelRegistrationResponse);
   if (resp.status === 400)
-    throw new Error(((await resp.json()) as Problem).title);
+    return E.left(new Error(((await resp.json()) as Problem).title));
+
+  return E.left(new Error("Something went super wrong!"));
 };

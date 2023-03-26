@@ -7,6 +7,8 @@ import {
   ParcelRegistrationResponse,
 } from "../shared/lib/models/models";
 import { registerParcel } from "../shared/requests/parcels";
+import * as E from "fp-ts/Either";
+import { pipe } from "fp-ts/lib/function";
 
 const defaultRegistration = {
   size: "S",
@@ -32,10 +34,14 @@ export default function Home() {
   const [result, setResult] = useState<ParcelRegistrationResponse>();
   const [error, setError] = useState<Error>();
 
-  const onClick = () => {
-    registerParcel(parcelRegistration)
-      .then(setResult)
-      .catch((error) => setError(error));
+  const onClick = async () => {
+    pipe(
+      await registerParcel(parcelRegistration),
+      E.match(
+        (left) => setError(left),
+        (right) => setResult(right)
+      )
+    );
   };
 
   useEffect(() => {
