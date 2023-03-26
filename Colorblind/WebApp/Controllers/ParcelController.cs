@@ -1,6 +1,6 @@
 using Logic;
-using Logic.Models;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Contracts;
 
 namespace WebApp.Controllers;
 
@@ -22,6 +22,10 @@ public class ParcelController : ControllerBase
         {
                 return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
         }
-}
 
-public record ParcelContract(Parcel Parcel);
+        [HttpPost("register")]
+        public RegisterParcelResponse Register(RegisterParcelContract contract)
+        {
+                return new RegisterParcelResponse(RegistrationCode: "");
+        }
+}

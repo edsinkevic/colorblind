@@ -1,10 +1,16 @@
 services:
   server:
     build: ./Colorblind
+    image: colorblind/server
+    container_name: colorblind-server
     ports:
       - "8080:80"
   client:
     build: ./client
+    image: colorblind/client
+    container_name: colorblind-client
+    depends_on:
+      - server
     ports: 
       - "3000:3000"
 
