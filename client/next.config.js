@@ -1,9 +1,29 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone',
-  experimental: {
-    appDir: true,
-  },
-}
+const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 
-module.exports = nextConfig
+module.exports = (phase, { defaultConfig }) => {
+  const base = {
+    output: "standalone",
+    experimental: {
+      appDir: true,
+    },
+  };
+
+  if (phase === PHASE_DEVELOPMENT_SERVER) {
+    return {
+      ...base,
+      env: {
+        colorblindServerUrl: process.env.COLORBLIND_SERVER_URL
+          ? process.env.COLORBLIND_SERVER_URL
+          : "localhost:8080",
+      },
+    };
+  }
+
+  return {
+    ...base,
+    env: {
+      colorblindServerUrl: process.env.COLORBLIND_SERVER_URL,
+    },
+  };
+};
