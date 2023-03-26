@@ -15,7 +15,7 @@ module.exports = (phase, { defaultConfig }) => {
       env: {
         colorblindServerUrl: process.env.COLORBLIND_SERVER_URL
           ? process.env.COLORBLIND_SERVER_URL
-          : "localhost:8080",
+          : "http://localhost:8080",
       },
     };
   }

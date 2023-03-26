@@ -1,5 +1,9 @@
-"use client"
+"use client";
 
-export default function Error() {
-  return <p>error...</p>;
+export default function Error({ reset }) {
+  return (
+    <p>
+      error...<button onClick={reset}>Try again.</button>
+    </p>
+  );
 }
