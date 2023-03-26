@@ -13,7 +13,12 @@ export interface ParcelRegistration {
   transactionId: string;
 }
 
-
 export interface ParcelRegistrationResponse {
-  registrationCode: string
+  registrationCode: string;
+}
+
+export interface Problem {
+  type: string;
+  detail: string;
+  title: string;
 }

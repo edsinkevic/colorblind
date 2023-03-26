@@ -1,9 +1,16 @@
 "use client";
 
-export default function Error({ reset }) {
+export default function Error({
+  reset,
+  error,
+}: {
+  reset: () => void;
+  error: Error;
+}) {
   return (
     <p>
-      error...<button onClick={reset}>Try again.</button>
+      {error.message}
+      <button onClick={reset}>Try again.</button>
     </p>
   );
 }
