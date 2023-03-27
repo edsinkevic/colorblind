@@ -26,6 +26,7 @@ const defaultRegistration = {
     fullname: "",
     parcelLockerId: "",
   },
+  invoiceEmail: ""
 };
 
 export default function Home() {
