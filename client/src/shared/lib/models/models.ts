@@ -11,6 +11,7 @@ export interface ParcelRegistration {
   senderInfo?: PersonInfo;
   receiverInfo?: PersonInfo;
   transactionId: string;
+  invoiceEmail: string;
 }
 
 export interface ParcelRegistrationResponse {
