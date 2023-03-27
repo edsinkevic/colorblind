@@ -26,7 +26,7 @@ const defaultRegistration = {
     fullname: "",
     parcelLockerId: "",
   },
-  invoiceEmail: ""
+  invoiceEmail: "",
 };
 
 export default function Home() {
@@ -38,10 +38,7 @@ export default function Home() {
   const onClick = async () => {
     pipe(
       await registerParcel(parcelRegistration),
-      E.match(
-        (left) => setError(left),
-        (right) => setResult(right)
-      )
+      E.match(setError, setResult)
     );
   };
 
