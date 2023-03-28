@@ -13,4 +13,7 @@ services:
       - server
     ports: 
       - "3000:3000"
+    environment:
+      - "COLORBLIND_SERVER_URL=http://localhost:8080"
+
 
