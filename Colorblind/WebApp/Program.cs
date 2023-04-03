@@ -1,31 +1,36 @@
-using Logic;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var schemaName = Environment.GetEnvironmentVariable("SCHEMA_NAME") ??
+                 throw new ArgumentException("SCHEMA_NAME not provided!");
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var connectionString = builder.Configuration.GetConnectionString("Colorblind") ??
+                       throw new ArgumentException("Colorblind database connection string not provided");
 
-builder.Services.AddTransient<ParcelCrud>();
-builder.Services.AddTransient<IParcelDao, ParcelDao>();
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .Configure<JsonOptions>(o =>
+        o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+    .Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(o =>
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+    .AddControllers();
+
+builder.Services.SetupMarten(schemaName, connectionString);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+    app.UseSwagger().UseSwaggerUI();
 }
 
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader())
+    .UseHttpsRedirection()
+    .UseAuthorization();
 
 app.MapControllers();
 
