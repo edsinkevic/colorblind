@@ -5,8 +5,8 @@ export const colorblindServerUrl = (path: string) =>
 
 export const defaultFetchConfig = {
   headers: {
-    "Content-Type": "application/json",
-  },
+    "Content-Type": "application/json"
+  }
 };
 
 export const defaultResponseHandler = async <T>(resp: Response): Promise<T> => {
@@ -14,13 +14,13 @@ export const defaultResponseHandler = async <T>(resp: Response): Promise<T> => {
     const data = await resp.json();
     throw new Error((data as Problem).title);
 
-    const data = await resp.json();
-    return data as T;
   }
 
-  if (resp.status === 400) {
+  if (!resp.status.toString().startsWith("2")) {
     const data = await resp.json();
     throw new Error((data as Problem).title);
   }
-  throw new Error("Something went super wrong!");
+
+  const data = await resp.json();
+  return data as T;
 };
