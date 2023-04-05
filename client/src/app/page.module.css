@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: calc(100vh - 80px);
     background-size: cover;
     background: linear-gradient(
             rgba(255, 255, 255, 0.7),
@@ -10,21 +10,29 @@
     ), url("https://images.pexels.com/photos/114979/pexels-photo-114979.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500") center;
 }
 
-.main form {
-    background-color: white;
-    padding: 0 60px;
-    border-radius: 10px;
+.intro {
+    padding-left: 40px;
+    width: 200px;
 }
 
-.main h1 {
-    color: rgb(77, 1, 77);
-    text-align: center;
+.intro h1 {
+    font-size: 50px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.intro p {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .main button {
-    width: 100%;
+    width: 200px;
     height: 50px;
-    padding: 10px;
     border: none;
     background-color: rebeccapurple;
     color: white;
@@ -33,5 +41,5 @@
     font-size: 18px;
     cursor: pointer;
     margin-top: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
