@@ -8,6 +8,8 @@ namespace Domain.Rules;
 
 public static class ParcelRules
 {
+    
+    
     public static ParcelRegistered Handle(RegisterParcel command)
     {
         return command.Adapt<ParcelRegistered>();

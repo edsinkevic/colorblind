@@ -7,7 +7,7 @@ using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using WebApp.Requests;
-using static Domain.Rules.ParcelService;
+using static Domain.Rules.ParcelRules;
 
 
 namespace WebApp.Controllers;

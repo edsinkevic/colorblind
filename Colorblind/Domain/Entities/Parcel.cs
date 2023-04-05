@@ -14,14 +14,15 @@ public record Parcel(Guid Id,
     ParcelDeliveryType DeliveryType,
     DeliveryInfo SenderDeliveryInfo,
     DeliveryInfo ReceiverDeliveryInfo,
-    ParcelStatus Status = ParcelStatus.Registered
+    ParcelStatus Status = ParcelStatus.Registered,
+    string? TerminalId = null
 )
 {
     public static Parcel Create(ParcelRegistered registered) =>
         registered.Adapt<Parcel>();
 
-    public Parcel Apply(ParcelSubmitted submitted) =>
-        this with { Status = ParcelStatus.Submitted };
+    public Parcel Apply(ParcelSubmittedToTerminal submittedToTerminal) =>
+        this with { Status = ParcelStatus.Submitted, TerminalId = submittedToTerminal.TerminalId };
 
     public Parcel Apply(ParcelShipped shipped) =>
         this with { Status = ParcelStatus.Shipped };

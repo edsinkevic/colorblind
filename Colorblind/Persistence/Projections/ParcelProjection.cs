@@ -12,5 +12,8 @@ public class ParcelProjection : SingleStreamAggregation<Parcel>
         registered.Adapt<Parcel>() with { Status = ParcelStatus.Registered };
 
     public static Parcel Handle(Parcel parcel, ParcelUnregistered unregistered) =>
-        parcel with { Status = ParcelStatus.Unregistered };
+        parcel.Apply(unregistered);
+
+    public static Parcel Handle(Parcel parcel, ParcelSubmittedToTerminal submittedToTerminal) =>
+        parcel.Apply(submittedToTerminal);
 }
