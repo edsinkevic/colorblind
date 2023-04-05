@@ -8,15 +8,15 @@ indent_style = space
 
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
-indent_size = 8
+indent_size = 4
 
 # XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
-indent_size = 8
+indent_size = 4
 
 # Code files
 [*.{cs,csx,vb,vbx}]
-indent_size = 8
+indent_size = 4
 insert_final_newline = true
 ###############################
 # .NET Coding Conventions     #
@@ -79,3 +79,4 @@ csharp_space_between_method_call_empty_parameter_list_parentheses = false
 # Wrapping preferences
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
+resharper_csharp_wrap_parameters_style = chop_if_long

@@ -2,16 +2,24 @@ export interface PersonInfo {
   fullname: string;
   phoneNumber: string;
   email: string;
-  parcelLockerId?: string;
+  parcelLockerAddress: string;
+  takeawayAddress: string;
+}
+
+export interface DeliveryType {
+  from: string;
+  to: string;
 }
 
 export interface ParcelRegistration {
   size: string;
   couponCode: string;
-  senderInfo?: PersonInfo;
-  receiverInfo?: PersonInfo;
-  transactionId: string;
+  senderDeliveryInfo?: PersonInfo;
+  receiverDeliveryInfo?: PersonInfo;
+  transactionCode: string;
   invoiceEmail: string;
+
+  deliveryType: DeliveryType;
 }
 
 export interface ParcelRegistrationResponse {
@@ -22,4 +30,9 @@ export interface Problem {
   type: string;
   detail: string;
   title: string;
+}
+export interface ParcelDetails {
+  id: string;
+  code: string;
+  parcelStatus: string;
 }

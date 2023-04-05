@@ -1,6 +1,14 @@
-using Logic;
+using Domain.Commands.Parcel;
+using Domain.Entities;
+using Mapster;
+using Marten;
+using Marten.Pagination;
+using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Contracts;
+using Persistence;
+using WebApp.Requests;
+using static Domain.Rules.ParcelRules;
+
 
 namespace WebApp.Controllers;
 
@@ -8,24 +16,60 @@ namespace WebApp.Controllers;
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
-        private readonly ParcelCrud _parcelCrud;
+    [HttpGet("{code}")]
+    public Task<IPagedList<Parcel>> GetDetails(IQuerySession querySession,
+        string code,
+        [FromQuery] int? pageNumber,
+        [FromQuery] int? pageSize,
+        CancellationToken ct) =>
+        querySession.Query<Parcel>().Where(i => i.Code == code)
+            .ToPagedListAsync(pageNumber ?? 1, pageSize ?? 10, ct);
 
-
-        public ParcelController(ParcelCrud parcelCrud)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(IDocumentSession documentSession,
+        RegisterParcelRequest request,
+        CancellationToken ct)
+    {
+        var parcelId = CombGuidIdGeneration.NewGuid();
+        var parcelCode = Guid.NewGuid().ToString();
+        var createdDate = DateTime.Now;
+        var command = request.Adapt<RegisterParcel>() with
         {
-                _parcelCrud = parcelCrud;
-        }
+            Id = parcelId,
+            Code = parcelCode,
+            CreatedDate = createdDate
+        };
 
+        await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
 
-        [HttpGet("{code}")]
-        public ParcelContract Get(string code)
-        {
-                return new ParcelContract(Parcel: _parcelCrud.GetParcel(code));
-        }
+        return Created($"parcels/{parcelCode}", parcelCode);
+    }
 
-        [HttpPost("register")]
-        public RegisterParcelResponse Register(RegisterParcelContract contract)
-        {
-                return new RegisterParcelResponse(RegistrationCode: "");
-        }
+    [HttpPost("{code}/unregister")]
+    public async Task<IActionResult> Submit(IDocumentSession documentSession,
+        string code,
+        [FromHeader(Name = "If-Match")] string eTag,
+        CancellationToken ct)
+    {
+        var parcel = await documentSession
+            .Query<Parcel>()
+            .Where(i => i.Code == code)
+            .FirstOrDefaultAsync(ct);
+
+        if (parcel is null)
+            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
+
+        var command = new UnregisterParcel(parcel.Id);
+
+        await documentSession.GetAndUpdate<Parcel>(
+            parcel.Id,
+            eTag.ToExpectedVersion(),
+            x => Handle(x, command),
+            ct
+        );
+
+        return Ok();
+    }
 }
+
+public record SubmitParcelRequest(string Code, Guid TerminalId);

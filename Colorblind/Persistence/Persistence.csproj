@@ -7,7 +7,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Logic\Logic.csproj" />
+      <Reference Include="Marten">
+        <HintPath>..\..\..\..\..\.nuget\packages\marten\5.11.0\lib\net6.0\Marten.dll</HintPath>
+      </Reference>
+      <Reference Include="Weasel.Core">
+        <HintPath>..\..\..\..\..\.nuget\packages\weasel.core\5.7.2\lib\net6.0\Weasel.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.3.0" />
+      <PackageReference Include="Marten" Version="5.11.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>
