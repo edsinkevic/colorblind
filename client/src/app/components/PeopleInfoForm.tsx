@@ -1,11 +1,16 @@
 import { FormInput } from "colorblind/app/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/app/components/PhoneInput";
-import { PeopleInfo } from "colorblind/app/page";
+import { PersonInfo } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
 
 interface Props {
   onSubmit: (data: PeopleInfo) => void;
   defaultValue: PeopleInfo;
+}
+
+export interface PeopleInfo {
+  senderDeliveryInfo?: PersonInfo;
+  receiverDeliveryInfo?: PersonInfo;
 }
 
 export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {

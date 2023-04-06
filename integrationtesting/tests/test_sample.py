@@ -24,7 +24,7 @@ def test_scenario():
     options.headless = True
     driver: WebDriver = webdriver.Chrome(options=options)
     driver.get(config.client_url)
-    driver.find_element(By.XPATH, "//*[contains(text(), 'Terminal')]")
+    driver.find_element(By.XPATH, "//*[contains(text(), 'FastMail')]")
 
     response = requests.get(f"{config.server_url}/parcels/1")
     response.raise_for_status()
