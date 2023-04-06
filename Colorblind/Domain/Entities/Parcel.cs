@@ -20,7 +20,7 @@ public record Parcel(Guid Id,
 )
 {
     public static Parcel Create(ParcelRegistered registered) =>
-        registered.Adapt<Parcel>();
+        registered.Adapt<Parcel>() with { Status = ParcelStatus.Registered };
 
     public Parcel Apply(ParcelSubmittedToTerminal submittedToTerminal) =>
         this with { Status = ParcelStatus.Submitted, TerminalId = submittedToTerminal.TerminalId };

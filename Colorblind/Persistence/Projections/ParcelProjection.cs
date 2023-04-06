@@ -9,7 +9,7 @@ namespace Persistence.Projections;
 public class ParcelProjection : SingleStreamAggregation<Parcel>
 {
     public static Parcel Create(ParcelRegistered registered) =>
-        registered.Adapt<Parcel>() with { Status = ParcelStatus.Registered };
+        Parcel.Create(registered);
 
     public static Parcel Handle(Parcel parcel, ParcelUnregistered unregistered) =>
         parcel.Apply(unregistered);
@@ -20,6 +20,6 @@ public class ParcelProjection : SingleStreamAggregation<Parcel>
     public static Parcel Handle(Parcel parcel, ParcelShipped shipped) =>
         parcel.Apply(shipped);
 
-    public static Parcel Handle(Parcel parcel, ParcelDelivered shipped) =>
-        parcel.Apply(shipped);
+    public static Parcel Handle(Parcel parcel, ParcelDelivered delivered) =>
+        parcel.Apply(delivered);
 }
