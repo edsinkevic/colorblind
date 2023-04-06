@@ -25,18 +25,22 @@ config: Config = Config(
 def test_scenario():
     response = requests.post(f"{config.server_url}/parcels/register", json=json.loads(defaultRegistration()),
                              headers={"Content-type": "application/json"})
-    parcel_id = response.text
+    parcel_code = response.text
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_id}/submit/terminal/123", headers=defaultHeaders(1))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/123", headers=defaultHeaders(1))
     pprint(response.text)
     response.raise_for_status()
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_id}/ship/123", headers=defaultHeaders(2))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/ship/123", headers=defaultHeaders(2))
     response.raise_for_status()
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_id}/deliver", headers=defaultHeaders(3))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/deliver", headers=defaultHeaders(3))
     response.raise_for_status()
 
+    response = requests.get(f"{config.server_url}/parcels/{parcel_code}")
+    resp = response.json()
+
+    assert resp[0]['status'] == "Delivered"
 
 def defaultHeaders(version: int):
     return {"Content-type": "application/json", "If-Match": f'''"{version}"'''}
