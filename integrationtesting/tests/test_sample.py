@@ -1,22 +1,9 @@
 import requests as requests
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
-import os
-from dataclasses import dataclass
-
 from selenium.webdriver.common.by import By
 
-
-@dataclass
-class Config:
-    client_url: str
-    server_url: str
-
-
-config: Config = Config(
-    client_url="http://localhost:3000",
-    server_url="http://localhost:8080"
-)
+from tests.config import config
 
 
 def test_scenario():
