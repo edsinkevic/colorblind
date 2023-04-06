@@ -35,7 +35,9 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
+            Id = parcelId,
+            Code = parcelCode,
+            CreatedDate = createdDate
         };
 
         await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
@@ -65,7 +67,7 @@ public class ParcelController : ControllerBase
 
         return Ok();
     }
-    
+
     [HttpPost("{code}/submit/terminal/{terminalId}")]
     public async Task<IActionResult> SubmitToTerminal(IDocumentSession documentSession,
         string code,
