@@ -1,4 +1,6 @@
-import styles from "./Form.module.css";
+"use client";
+
+import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { ParcelRegistration } from "../../shared/lib/models/models";
 import { register } from "../../shared/requests/parcels";
@@ -22,6 +24,7 @@ export default function Form() {
 
   const [registration, setRegistration] =
     useState<ParcelRegistration>(defaultRegistration);
+
   return (
     <div className={styles.form}>
       {sectionIdx == 0 ? (
