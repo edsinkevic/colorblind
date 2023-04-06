@@ -16,10 +16,10 @@ public class ParcelProjection : SingleStreamAggregation<Parcel>
 
     public static Parcel Handle(Parcel parcel, ParcelSubmittedToTerminal submittedToTerminal) =>
         parcel.Apply(submittedToTerminal);
-    
+
     public static Parcel Handle(Parcel parcel, ParcelShipped shipped) =>
         parcel.Apply(shipped);
-    
+
     public static Parcel Handle(Parcel parcel, ParcelDelivered shipped) =>
         parcel.Apply(shipped);
 }

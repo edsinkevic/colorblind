@@ -44,7 +44,7 @@ public static class ParcelRules
         if (parcel.Status != ParcelStatus.Shipped)
             throw new InvalidOperationException(
                 "Cannot finish delivery for a parcel that was not shipped");
-        
+
         if (parcel.CourierId is null)
             throw new InvalidOperationException(
                 "The parcel doesn't have a courier!");
