@@ -35,9 +35,7 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate
+            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
         };
 
         await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
@@ -60,6 +58,59 @@ public class ParcelController : ControllerBase
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
         var command = new UnregisterParcel(parcel.Id);
+
+        await documentSession.GetAndUpdate<Parcel>(
+            parcel.Id,
+            eTag.ToExpectedVersion(),
+            x => Handle(x, command),
+            ct
+        );
+
+        return Ok();
+    }
+
+    [HttpPost("{code}/ship/{courierId}")]
+    public async Task<IActionResult> Ship(IDocumentSession documentSession,
+        string code,
+        string courierId,
+        [FromHeader(Name = "If-Match")] string eTag,
+        CancellationToken ct)
+    {
+        var parcel = await documentSession
+            .Query<Parcel>()
+            .Where(i => i.Code == code)
+            .FirstOrDefaultAsync(ct);
+
+        if (parcel is null)
+            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
+
+        var command = new ShipParcel(parcel.Id, courierId);
+
+        await documentSession.GetAndUpdate<Parcel>(
+            parcel.Id,
+            eTag.ToExpectedVersion(),
+            x => Handle(x, command),
+            ct
+        );
+
+        return Ok();
+    }
+
+    [HttpPost("{code}/ship")]
+    public async Task<IActionResult> Deliver(IDocumentSession documentSession,
+        string code,
+        [FromHeader(Name = "If-Match")] string eTag,
+        CancellationToken ct)
+    {
+        var parcel = await documentSession
+            .Query<Parcel>()
+            .Where(i => i.Code == code)
+            .FirstOrDefaultAsync(ct);
+
+        if (parcel is null)
+            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
+
+        var command = new DeliverParcel(parcel.Id);
 
         await documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
