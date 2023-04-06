@@ -2,8 +2,24 @@ import json
 from pprint import pprint
 
 import requests as requests
+from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
+import os
+from dataclasses import dataclass
 
-from tests.test_sample import config
+from selenium.webdriver.common.by import By
+
+
+@dataclass
+class Config:
+    client_url: str
+    server_url: str
+
+
+config: Config = Config(
+    client_url="http://localhost:3000",
+    server_url="http://localhost:8080"
+)
 
 
 def test_scenario():
@@ -11,8 +27,7 @@ def test_scenario():
                              headers={"Content-type": "application/json"})
     parcel_code = response.text
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/123",
-                             headers=defaultHeaders(1))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/123", headers=defaultHeaders(1))
     pprint(response.text)
     response.raise_for_status()
 
@@ -26,7 +41,6 @@ def test_scenario():
     resp = response.json()
 
     assert resp[0]['status'] == "Delivered"
-
 
 def defaultHeaders(version: int):
     return {"Content-type": "application/json", "If-Match": f'''"{version}"'''}
