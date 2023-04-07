@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ParcelInfoForm } from "colorblind/app/registerparcel/stepone/components/ParcelInfoForm";
 import { useRouter } from "next/navigation";
 import { ParcelRegistration } from "colorblind/shared/lib/models/models";
+import { store } from "colorblind/shared/lib/state";
 
 export default function StepOne() {
   const [error, setError] = useState<Error>();
@@ -23,7 +24,7 @@ export default function StepOne() {
         defaultValue={{ ...registration }}
         onSubmit={(info) => {
           setRegistration({ ...registration, ...info });
-          localStorage.setItem("registration", JSON.stringify(registration));
+          store("registration", registration);
           router.push("/registerparcel/steptwo");
         }}
       />

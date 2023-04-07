@@ -6,35 +6,34 @@ import { useRouter } from "next/navigation";
 import { ParcelRegistration } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/parcels";
 import { PeopleInfoForm } from "colorblind/app/registerparcel/steptwo/components/PeopleInfoForm";
+import { getFromStore } from "colorblind/shared/lib/state";
 
 export default function StepTwo() {
-  const [registration, setRegistration] =
-    useState<ParcelRegistration>(defaultRegistration);
+  const [registration, setRegistration] = useState<ParcelRegistration>();
   const [error, setError] = useState<Error>();
   const router = useRouter();
-  const onSubmit = async (value: ParcelRegistration): Promise<void> => {
-    await register(value)
-      .then((x) => router.replace(`/${x.registrationCode}`))
-      .catch((x) => setError(x));
-  };
 
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    const reg = localStorage.getItem("registration");
+    const reg = getFromStore<ParcelRegistration>("registration");
     if (!reg) {
       router.replace("/registerparcel/stepone");
       return;
     }
 
-    try {
-      setRegistration(JSON.parse(reg));
-    } catch (e) {
-      router.replace("/registerparcel/stepone");
-    }
+    setRegistration(reg);
   }, [router]);
+
+  const onSubmit = async (value: ParcelRegistration): Promise<void> => {
+    await register(value)
+      .then((x) => router.replace(`/${x.registrationCode}`))
+      .catch((x) => setError(x));
+  };
+
+  if (!registration) return null;
 
   return (
     <div className={styles.form}>
@@ -48,28 +47,3 @@ export default function StepTwo() {
     </div>
   );
 }
-
-const defaultRegistration: ParcelRegistration = {
-  size: "S",
-  couponCode: "123",
-  transactionCode: "123",
-  senderDeliveryInfo: {
-    email: "vardas@pavardaitis.com",
-    phoneNumber: "+37061095511",
-    fullname: "Vardas Pavardaitis",
-    parcelLockerAddress: "Druskio g.5",
-    takeawayAddress: "",
-  },
-  receiverDeliveryInfo: {
-    email: "vardas@pavardaitis.com",
-    phoneNumber: "+37061095511",
-    fullname: "Vardas Pavardaitis",
-    parcelLockerAddress: "Druskio g.5",
-    takeawayAddress: "",
-  },
-  invoiceEmail: "vardas@pavardaitis",
-  deliveryType: {
-    from: "terminal",
-    to: "terminal",
-  },
-};
