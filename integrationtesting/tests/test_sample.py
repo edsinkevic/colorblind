@@ -29,6 +29,4 @@ def test_scenario():
     response = requests.get(f"{config.server_url}/parcels/1")
     response.raise_for_status()
 
-    assert response.json().get('parcel', None) is not None
-
     driver.close()

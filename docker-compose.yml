@@ -1,10 +1,23 @@
 services:
+  database:
+    image: postgres
+    container_name: colorblind-database
+    ports: 
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
   server:
     build: ./Colorblind
     image: colorblind/server
     container_name: colorblind-server
+    depends_on: 
+      - database
     ports:
-      - "8080:80"
+      - 8080:80
+    environment:
+      - SCHEMA_NAME=colorblind
+      - "DB_STRING=host=database;database=postgres;password=postgres;username=postgres"
   client:
     build: ./client
     image: colorblind/client
@@ -12,8 +25,6 @@ services:
     depends_on:
       - server
     ports: 
-      - "3000:3000"
+      - 3000:3000
     environment:
-      - "COLORBLIND_SERVER_URL=http://localhost:8080"
-
-
+      - COLORBLIND_SERVER_URL=http://localhost:8080

@@ -25,6 +25,6 @@ public static class SetupMartenExtensions
 
                     options.Projections.Add<ParcelProjection>(ProjectionLifecycle.Inline);
                 }
-            ).AddAsyncDaemon(DaemonMode.Solo);
+            ).AddAsyncDaemon(DaemonMode.HotCold);
     }
 }

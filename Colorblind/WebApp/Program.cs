@@ -4,11 +4,14 @@ using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var schemaName = Environment.GetEnvironmentVariable("SCHEMA_NAME") ??
-                 throw new ArgumentException("SCHEMA_NAME not provided!");
+var schemaName =
+    Environment.GetEnvironmentVariable("SCHEMA_NAME") ??
+    throw new ArgumentException("SCHEMA_NAME not provided!");
 
-var connectionString = builder.Configuration.GetConnectionString("Colorblind") ??
-                       throw new ArgumentException("Colorblind database connection string not provided");
+var connectionString =
+    Environment.GetEnvironmentVariable("DB_STRING") ??
+    builder.Configuration.GetConnectionString("Colorblind") ??
+    throw new ArgumentException("Colorblind database connection string not provided");
 
 builder.Services
     .AddEndpointsApiExplorer()
