@@ -1,5 +1,3 @@
-import styles from "colorblind/app/components/ParcelInfo.module.css";
-
 export const PickerFromArray = ({
   array,
   onSubmit,
@@ -8,10 +6,7 @@ export const PickerFromArray = ({
   onSubmit: (str: string) => void;
 }) => {
   return (
-    <select
-      className={styles.slide}
-      onChange={(event) => onSubmit(event.target.value)}
-    >
+    <select onChange={(event) => onSubmit(event.target.value)}>
       {array.map((item, idx) => (
         <option key={idx} value={item}>
           {item}

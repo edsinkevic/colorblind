@@ -1,4 +1,3 @@
-import styles from "./FormInput.module.css";
 import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 
 interface Props
@@ -9,7 +8,7 @@ interface Props
 
 export const FormInput = (props: Props) => {
   return (
-    <div className={styles.inputContainer}>
+    <div>
       <label>{props.placeholder}</label>
       <input {...props} />
     </div>
