@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DeliveryType } from "../../shared/lib/models/models";
-import { PickerFromArray } from "colorblind/app/components/PickerFromArray";
+import { DeliveryType } from "../../../../shared/lib/models/models";
+import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
 
 interface ParcelInfo {
   deliveryType: DeliveryType;

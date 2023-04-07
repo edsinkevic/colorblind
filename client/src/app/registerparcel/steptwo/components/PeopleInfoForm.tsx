@@ -1,5 +1,5 @@
-import { FormInput } from "colorblind/app/components/FormInput";
-import { ColorblindPhoneInput } from "colorblind/app/components/PhoneInput";
+import { FormInput } from "colorblind/shared/components/FormInput";
+import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
 import { PersonInfo } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
 

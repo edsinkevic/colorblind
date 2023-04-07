@@ -10,7 +10,12 @@ export default function Home() {
     <>
       <div>
         <div>
-          <button className={styles.bigButton} onClick={() => router.push("/registerparcel")}>Send package</button>
+          <button
+            className={styles.bigButton}
+            onClick={() => router.push("/registerparcel/stepone")}
+          >
+            Send package
+          </button>
         </div>
         <div>
           <button className={styles.bigButton}>Track package</button>
@@ -22,7 +27,8 @@ export default function Home() {
       <div className={styles.intro}>
         <h1>FastMail</h1>
         <p>
-          say goodbye to parcel delivery hassles - experience seamless shipping with us.
+          say goodbye to parcel delivery hassles - experience seamless shipping
+          with us.
         </p>
       </div>
     </>

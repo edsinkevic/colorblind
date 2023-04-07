@@ -2,14 +2,14 @@
 
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { ParcelRegistration } from "../../shared/lib/models/models";
-import { register } from "../../shared/requests/parcels";
-import { PeopleInfoForm } from "colorblind/app/components/PeopleInfoForm";
-import { ParcelInfoForm } from "colorblind/app/components/ParcelInfoForm";
 import { useRouter } from "next/navigation";
+import { ParcelRegistration } from "colorblind/shared/lib/models/models";
+import { register } from "colorblind/shared/requests/parcels";
+import { PeopleInfoForm } from "colorblind/app/registerparcel/steptwo/components/PeopleInfoForm";
 
-export default function Form() {
-  const [sectionIdx, setSectionIdx] = useState<number>(0);
+export default function StepTwo() {
+  const [registration, setRegistration] =
+    useState<ParcelRegistration>(defaultRegistration);
   const [error, setError] = useState<Error>();
   const router = useRouter();
   const onSubmit = async (value: ParcelRegistration): Promise<void> => {
@@ -22,30 +22,29 @@ export default function Form() {
     if (error) throw error;
   }, [error]);
 
-  const [registration, setRegistration] =
-    useState<ParcelRegistration>(defaultRegistration);
+  useEffect(() => {
+    const reg = localStorage.getItem("registration");
+    if (!reg) {
+      router.replace("/registerparcel/stepone");
+      return;
+    }
+
+    try {
+      setRegistration(JSON.parse(reg));
+    } catch (e) {
+      router.replace("/registerparcel/stepone");
+    }
+  }, [router]);
 
   return (
     <div className={styles.form}>
-      {sectionIdx == 0 ? (
-        <ParcelInfoForm
-          defaultValue={{ ...registration }}
-          onSubmit={(info) => {
-            setRegistration({ ...registration, ...info });
-            setSectionIdx(sectionIdx + 1);
-          }}
-        />
-      ) : null}
-
-      {sectionIdx == 1 ? (
-        <PeopleInfoForm
-          defaultValue={{ ...registration }}
-          onSubmit={(data) => {
-            setRegistration({ ...registration, ...data });
-            onSubmit(registration);
-          }}
-        />
-      ) : null}
+      <PeopleInfoForm
+        defaultValue={{ ...registration }}
+        onSubmit={(data) => {
+          setRegistration({ ...registration, ...data });
+          onSubmit(registration);
+        }}
+      />
     </div>
   );
 }
