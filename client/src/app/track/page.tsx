@@ -20,8 +20,9 @@ export default function ParcelDetailsPage({}: Props) {
       store("recentlyTracked", [code]);
       return;
     }
+    const alreadyThere = recentlyTracked.find((v, _n, _s) => v === code);
 
-    store("recentlyTracked", [...recentlyTracked, code]);
+    if (!alreadyThere) store("recentlyTracked", [...recentlyTracked, code]);
   };
 
   useEffect(() => {
