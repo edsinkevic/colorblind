@@ -5,7 +5,7 @@ export const PickerFromArray = ({
 }: {
   array: string[];
   onSubmit: (str: string) => void;
-  hidden: boolean;
+  hidden?: boolean;
 }) => {
   return (
     <select hidden={hidden} onChange={(event) => onSubmit(event.target.value)}>
