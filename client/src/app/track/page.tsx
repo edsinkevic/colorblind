@@ -22,7 +22,7 @@ export default function ParcelDetailsPage({}: Props) {
       store(TRACKED_STORAGE_KEY, [code]);
       return;
     }
-    const alreadyThere = recentlyTracked.find((v, _n, _s) => v === code);
+    const alreadyThere = recentlyTracked.find((v) => v === code);
     if (!alreadyThere)
       store(TRACKED_STORAGE_KEY, [code, ...recentlyTracked].slice(0, 10));
   };
