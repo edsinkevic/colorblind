@@ -9,6 +9,8 @@ import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
 
 interface Props {}
 
+const TRACKED_STORAGE_KEY = "recentlyTracked";
+
 export default function ParcelDetailsPage({}: Props) {
   const [code, setCode] = useState<string>("");
   const router = useRouter();
@@ -17,16 +19,16 @@ export default function ParcelDetailsPage({}: Props) {
   const storeRecentlyTracked = (code: string) => {
     const recentlyTracked = getFromStore<string[]>("recentlyTracked");
     if (!recentlyTracked) {
-      store("recentlyTracked", [code]);
+      store(TRACKED_STORAGE_KEY, [code]);
       return;
     }
     const alreadyThere = recentlyTracked.find((v, _n, _s) => v === code);
-
-    if (!alreadyThere) store("recentlyTracked", [...recentlyTracked, code]);
+    if (!alreadyThere)
+      store(TRACKED_STORAGE_KEY, [code, ...recentlyTracked].slice(0, 10));
   };
 
   useEffect(() => {
-    const recentlyTracked = getFromStore<string[]>("recentlyTracked");
+    const recentlyTracked = getFromStore<string[]>(TRACKED_STORAGE_KEY);
 
     if (!recentlyTracked) {
       setRecentlyTracked([]);
