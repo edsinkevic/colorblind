@@ -23,7 +23,7 @@ config: Config = Config(
 
 def test_register_parcel():
     options = webdriver.ChromeOptions()
-    options.headless = True
+    # options.headless = True
     driver: WebDriver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
     driver.get(config.client_url)
@@ -37,7 +37,7 @@ def test_register_parcel():
     time.sleep(0.5)
     element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
     element.click()
-    time.sleep(1)
+    time.sleep(2)
 
     parcel_code = driver.current_url.rsplit('/', 1)[-1]
 
