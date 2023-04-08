@@ -5,15 +5,14 @@ export const colorblindServerUrl = (path: string) =>
 
 export const defaultFetchConfig = {
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 };
 
 export const defaultResponseHandler = async <T>(resp: Response): Promise<T> => {
   if (resp.status === 400) {
     const data = await resp.json();
     throw new Error((data as Problem).title);
-
   }
 
   if (!resp.status.toString().startsWith("2")) {

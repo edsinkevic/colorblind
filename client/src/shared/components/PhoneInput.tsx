@@ -11,8 +11,8 @@ interface Props extends PhoneInputProps {
 
 export const ColorblindPhoneInput = (props: Props) => {
   return (
-    <div >
-      {/*<label>{props.inputProps.placeholder}</label>*/}
+    <div>
+      <label>{props.inputProps.placeholder}</label>
       <PhoneInput {...props} />
     </div>
   );
