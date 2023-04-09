@@ -1,28 +1,19 @@
-"use client";
-import { useRouter } from "next/navigation";
 import styles from "./Header.module.css";
+import Link from "next/link";
 
 export const Header = () => {
-  const router = useRouter();
-
   return (
     <div className={styles.headerContainer}>
-      <div onClick={() => router.push("")} className={styles.titleContainer}>
+      <Link href="/" className={styles.titleContainer}>
         <h1>FastMail</h1>
-      </div>
+      </Link>
       <div className={styles.buttonContainer}>
-        <button
-          className={styles.headerButton}
-          onClick={() => router.push("/registerparcel/stepone")}
-        >
-          Send Package
-        </button>
-        <button
-          className={styles.headerButton}
-          onClick={() => router.push("/track")}
-        >
-          Track parcel
-        </button>
+        <Link href={"/registerparcel/stepone"}>
+          <button className={styles.headerButton}>Send Package</button>
+        </Link>
+        <a href={"/track"}>
+          <button className={styles.headerButton}>Track parcel</button>
+        </a>
         <button className={styles.headerButton}>F.A.Q.</button>
       </div>
     </div>
