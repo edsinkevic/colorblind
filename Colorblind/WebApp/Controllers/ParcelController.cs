@@ -17,13 +17,19 @@ namespace WebApp.Controllers;
 public class ParcelController : ControllerBase
 {
     [HttpGet("{code}")]
-    public Task<IPagedList<Parcel>> GetDetails(IQuerySession querySession,
+    public async Task<IActionResult> GetDetails(IQuerySession querySession,
         string code,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize,
-        CancellationToken ct) =>
-        querySession.Query<Parcel>().Where(i => i.Code == code)
-            .ToPagedListAsync(pageNumber ?? 1, pageSize ?? 10, ct);
+        CancellationToken ct)
+    {
+        try
+        {
+            return Ok(await querySession.Query<Parcel>().FirstAsync(i => i.Code == code, token: ct));
+        }
+        catch (InvalidOperationException e)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound);
+        }
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(IDocumentSession documentSession,
@@ -35,14 +41,12 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate
+            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
         };
 
         await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
 
-        return Created($"parcels/{parcelCode}", parcelCode);
+        return Created($"parcels/{parcelCode}", new {code = parcelCode});
     }
 
     [HttpPost("{code}/unregister")]
@@ -145,5 +149,3 @@ public class ParcelController : ControllerBase
             .Where(i => i.Code == code)
             .FirstOrDefaultAsync(ct);
 }
-
-public record SubmitParcelRequest(string Code, Guid TerminalId);

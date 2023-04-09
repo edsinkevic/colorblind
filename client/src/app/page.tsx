@@ -18,7 +18,12 @@ export default function Home() {
           </button>
         </div>
         <div>
-          <button className={styles.bigButton}>Track package</button>
+          <button
+            className={styles.bigButton}
+            onClick={() => router.push("/track")}
+          >
+            Track package
+          </button>
         </div>
         <div>
           <button className={styles.bigButton}>Help</button>

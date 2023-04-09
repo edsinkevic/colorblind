@@ -1,3 +1,5 @@
+import time
+
 import requests as requests
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -19,14 +21,25 @@ config: Config = Config(
 )
 
 
-def test_scenario():
+def test_register_parcel():
     options = webdriver.ChromeOptions()
     options.headless = True
     driver: WebDriver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)
     driver.get(config.client_url)
-    driver.find_element(By.XPATH, "//*[contains(text(), 'FastMail')]")
+    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Send package')]")
+    element.click()
 
-    response = requests.get(f"{config.server_url}/parcels/1")
+    time.sleep(0.5)
+    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
+    element.click()
+
+    time.sleep(0.5)
+    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
+    element.click()
+    time.sleep(2)
+
+    parcel_code = driver.current_url.rsplit('/', 1)[-1]
+
+    response = requests.get(f"{config.server_url}/parcels/{parcel_code}")
     response.raise_for_status()
-
-    driver.close()

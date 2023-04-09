@@ -29,7 +29,7 @@ export default function StepTwo() {
 
   const onSubmit = async (value: ParcelRegistration): Promise<void> => {
     await register(value)
-      .then((x) => router.replace(`/${x.registrationCode}`))
+      .then((x) => router.replace(`/track/${x.code}`))
       .catch((x) => setError(x));
   };
 

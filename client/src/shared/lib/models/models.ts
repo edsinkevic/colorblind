@@ -23,7 +23,7 @@ export interface ParcelRegistration {
 }
 
 export interface ParcelRegistrationResponse {
-  registrationCode: string;
+  code: string;
 }
 
 export interface Problem {
