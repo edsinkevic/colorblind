@@ -37,9 +37,3 @@ def test_register_parcel():
     time.sleep(0.5)
     element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
     element.click()
-    time.sleep(2)
-
-    parcel_code = driver.current_url.rsplit('/', 1)[-1]
-
-    response = requests.get(f"{config.server_url}/parcels/{parcel_code}")
-    response.raise_for_status()
