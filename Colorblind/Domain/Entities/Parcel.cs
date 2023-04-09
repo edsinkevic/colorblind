@@ -15,7 +15,7 @@ public record Parcel(Guid Id,
     DeliveryInfo SenderDeliveryInfo,
     DeliveryInfo ReceiverDeliveryInfo,
     ParcelStatus Status = ParcelStatus.Registered,
-    string? TerminalId = null,
+    Guid? TerminalId = null,
     string? CourierId = null
 )
 {

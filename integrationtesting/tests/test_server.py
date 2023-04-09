@@ -26,10 +26,23 @@ def test_scenario():
     response = requests.post(f"{config.server_url}/parcels/register", json=json.loads(defaultRegistration()),
                             headers={"Content-type": "application/json"})
     resp = response.json()
-    parcel_code = resp['code']
+    parcel_id = resp['id']
+    parcel_code = response.headers['Location'].rsplit('/', 1)[-1]
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/123", headers=defaultHeaders(1))
+    response = requests.post(f"{config.server_url}/terminals", json=json.loads(defaultTerminal()))
     response.raise_for_status()
+
+    terminal_id = response.json()['id']
+
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/{terminal_id}", headers=defaultHeaders(1))
+    response.raise_for_status()
+
+    response = requests.get(f"{config.server_url}/terminals/{terminal_id}")
+    response.raise_for_status()
+
+    terminal = response.json()
+
+    assert len(terminal['parcelIds']) == 1 and terminal['parcelIds'][0] == parcel_id
 
     response = requests.post(f"{config.server_url}/parcels/{parcel_code}/ship/123", headers=defaultHeaders(2))
     response.raise_for_status()
@@ -55,3 +68,6 @@ def defaultRegistration():
                                     "fullname": "Vardas Pavardaitis", "parcelLockerAddress": "Druskio g.5",
                                     "takeawayAddress": ""}, "invoiceEmail": "vardas@pavardaitis",
            "deliveryType": {"from": "terminal", "to": "terminal"}}'''
+
+def defaultTerminal():
+    return '''{"address": "string"}'''
