@@ -11,9 +11,9 @@ export const Header = () => {
         <Link href={"/registerparcel/stepone"}>
           <button className={styles.headerButton}>Send Package</button>
         </Link>
-        <a href={"/track"}>
+        <Link href={"/track"}>
           <button className={styles.headerButton}>Track parcel</button>
-        </a>
+        </Link>
         <button className={styles.headerButton}>F.A.Q.</button>
       </div>
     </div>
