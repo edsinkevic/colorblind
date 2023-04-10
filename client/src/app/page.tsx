@@ -1,30 +1,18 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function Home() {
-  const router = useRouter();
-
   return (
     <>
       <div>
         <div>
-          <button
-            className={styles.bigButton}
-            onClick={() => router.push("/registerparcel/stepone")}
-          >
-            Send package
-          </button>
+          <Link href={"/registerparcel/stepone"}>
+            <button className={styles.bigButton}>Send package</button>
+          </Link>
         </div>
-        <div>
-          <button
-            className={styles.bigButton}
-            onClick={() => router.push("/track")}
-          >
-            Track package
-          </button>
-        </div>
+        <Link href={"/track"}>
+          <button className={styles.bigButton}>Track package</button>
+        </Link>
         <div>
           <button className={styles.bigButton}>Help</button>
         </div>

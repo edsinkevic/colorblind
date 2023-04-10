@@ -2,7 +2,6 @@ using Domain.Commands.Parcel;
 using Domain.Entities;
 using Mapster;
 using Marten;
-using Marten.Pagination;
 using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -21,14 +20,11 @@ public class ParcelController : ControllerBase
         string code,
         CancellationToken ct)
     {
-        try
-        {
-            return Ok(await querySession.Query<Parcel>().FirstAsync(i => i.Code == code, token: ct));
-        }
-        catch (InvalidOperationException e)
-        {
-            return Problem(statusCode: StatusCodes.Status404NotFound);
-        }
+        var res = await querySession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
+
+        return res is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!")
+            : Ok(res);
     }
 
     [HttpPost("register")]
@@ -41,12 +37,14 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
+            Id = parcelId,
+            Code = parcelCode,
+            CreatedDate = createdDate
         };
 
         await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
 
-        return Created($"parcels/{parcelCode}", new {code = parcelCode});
+        return Created($"parcels/{parcelCode}", new { id = parcelId });
     }
 
     [HttpPost("{code}/unregister")]
@@ -84,7 +82,17 @@ public class ParcelController : ControllerBase
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
-        var command = new SubmitParcelToTerminal(parcel.Id, terminalId);
+        if (!Guid.TryParse(terminalId, out Guid terminalGuid))
+            return Problem(statusCode: 400, title: "Terminal id is not well-formed!");
+
+        var exists = await documentSession
+            .Query<Terminal>()
+            .AnyAsync(x => x.Id == terminalGuid, token: ct);
+
+        if (!exists)
+            return Problem(statusCode: 404, title: "Terminal not found");
+
+        var command = new SubmitParcelToTerminal(parcel.Id, terminalGuid);
 
         await documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
@@ -143,7 +151,7 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    private Task<Parcel?> GetParcel(IDocumentSession documentSession, string code, CancellationToken ct) =>
+    private Task<Parcel?> GetParcel(IQuerySession documentSession, string code, CancellationToken ct) =>
         documentSession
             .Query<Parcel>()
             .Where(i => i.Code == code)

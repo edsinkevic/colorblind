@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Marten;
 using Marten.Events.Daemon.Resiliency;
 using Marten.Events.Projections;
@@ -24,6 +25,7 @@ public static class SetupMartenExtensions
                         nonPublicMembersStorage: NonPublicMembersStorage.All);
 
                     options.Projections.Add<ParcelProjection>(ProjectionLifecycle.Inline);
+                    options.Projections.Add<TerminalProjection>(ProjectionLifecycle.Inline);
                 }
             ).AddAsyncDaemon(DaemonMode.HotCold);
     }
