@@ -31,8 +31,17 @@ export interface Problem {
   detail: string;
   title: string;
 }
+
 export interface ParcelDetails {
   id: string;
   code: string;
   parcelStatus: string;
+}
+
+export interface RegisterTerminalResponse {
+  id: string;
+}
+
+export interface RegisterTerminal {
+  address: string;
 }

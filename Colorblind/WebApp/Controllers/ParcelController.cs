@@ -37,14 +37,12 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate
+            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
         };
 
         await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
 
-        return Created($"parcels/{parcelCode}", new { id = parcelId });
+        return Created($"parcels/{parcelCode}", new { id = parcelId, code = parcelCode });
     }
 
     [HttpPost("{code}/unregister")]
@@ -70,10 +68,10 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("{code}/submit/terminal/{terminalId}")]
+    [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
     public async Task<IActionResult> SubmitToTerminal(IDocumentSession documentSession,
         string code,
-        string terminalId,
+        Guid terminalId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
@@ -82,17 +80,14 @@ public class ParcelController : ControllerBase
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
-        if (!Guid.TryParse(terminalId, out Guid terminalGuid))
-            return Problem(statusCode: 400, title: "Terminal id is not well-formed!");
-
         var exists = await documentSession
             .Query<Terminal>()
-            .AnyAsync(x => x.Id == terminalGuid, token: ct);
+            .AnyAsync(x => x.Id == terminalId, token: ct);
 
         if (!exists)
             return Problem(statusCode: 404, title: "Terminal not found");
 
-        var command = new SubmitParcelToTerminal(parcel.Id, terminalGuid);
+        var command = new SubmitParcelToTerminal(parcel.Id, terminalId);
 
         await documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
@@ -107,7 +102,7 @@ public class ParcelController : ControllerBase
     [HttpPost("{code}/ship/{courierId}")]
     public async Task<IActionResult> Ship(IDocumentSession documentSession,
         string code,
-        string courierId,
+        Guid courierId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
@@ -151,7 +146,7 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    private Task<Parcel?> GetParcel(IQuerySession documentSession, string code, CancellationToken ct) =>
+    private static Task<Parcel?> GetParcel(IQuerySession documentSession, string code, CancellationToken ct) =>
         documentSession
             .Query<Parcel>()
             .Where(i => i.Code == code)

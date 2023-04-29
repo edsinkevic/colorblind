@@ -9,7 +9,7 @@ public record ParcelRegistered(Guid Id,
     string TransactionCode,
     string InvoiceEmail,
     string CouponCode,
-    DeliveryInfo SenderDeliveryInfo,
+    SenderDeliveryInfo SenderDeliveryInfo,
     DeliveryInfo ReceiverDeliveryInfo,
     ParcelDeliveryType DeliveryType
 );

@@ -24,7 +24,8 @@ config: Config = Config(
 
 def test_scenario():
     response = requests.post(f"{config.server_url}/parcels/register", json=json.loads(defaultRegistration()),
-                            headers={"Content-type": "application/json"})
+                             headers={"Content-type": "application/json"})
+    response.raise_for_status()
     resp = response.json()
     parcel_id = resp['id']
     parcel_code = response.headers['Location'].rsplit('/', 1)[-1]
@@ -34,7 +35,8 @@ def test_scenario():
 
     terminal_id = response.json()['id']
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/{terminal_id}", headers=defaultHeaders(1))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/{terminal_id}",
+                             headers=defaultHeaders(1))
     response.raise_for_status()
 
     response = requests.get(f"{config.server_url}/terminals/{terminal_id}")
@@ -44,7 +46,7 @@ def test_scenario():
 
     assert len(terminal['parcelIds']) == 1 and terminal['parcelIds'][0] == parcel_id
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/ship/123", headers=defaultHeaders(2))
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/ship/{terminal_id}", headers=defaultHeaders(2))
     response.raise_for_status()
 
     response = requests.post(f"{config.server_url}/parcels/{parcel_code}/deliver", headers=defaultHeaders(3))
@@ -55,6 +57,7 @@ def test_scenario():
 
     assert resp['status'] == "Delivered"
 
+
 def defaultHeaders(version: int):
     return {"Content-type": "application/json", "If-Match": f'''"{version}"'''}
 
@@ -62,12 +65,13 @@ def defaultHeaders(version: int):
 def defaultRegistration():
     return '''{"size": "S", "couponCode": "123", "transactionCode": "123",
            "senderDeliveryInfo": {"email": "vardas@pavardaitis.com", "phoneNumber": "+37061095511",
-                                  "fullname": "Vardas Pavardaitis", "parcelLockerAddress": "Druskio g.5",
+                                  "fullname": "Vardas Pavardaitis", "terminalId": "e3426dd1-2e26-4fbf-918f-e412a4ec3ab8",
                                   "takeawayAddress": ""},
            "receiverDeliveryInfo": {"email": "vardas@pavardaitis.com", "phoneNumber": "+37061095511",
-                                    "fullname": "Vardas Pavardaitis", "parcelLockerAddress": "Druskio g.5",
+                                    "fullname": "Vardas Pavardaitis", "terminalId": "e3426dd1-2e26-4fbf-918f-e412a4ec3ab8",
                                     "takeawayAddress": ""}, "invoiceEmail": "vardas@pavardaitis",
            "deliveryType": {"from": "terminal", "to": "terminal"}}'''
+
 
 def defaultTerminal():
     return '''{"address": "string"}'''
