@@ -7,6 +7,9 @@ export const Header = () => {
       <Link href="/" className={styles.titleContainer}>
         <h1>FastMail</h1>
       </Link>
+      <Link href={"/admin"} className={styles.headerButton}>
+        <h1>Admin environment</h1>
+      </Link>
       <div className={styles.buttonContainer}>
         <Link href={"/registerparcel/stepone"}>
           <button className={styles.headerButton}>Send Package</button>
