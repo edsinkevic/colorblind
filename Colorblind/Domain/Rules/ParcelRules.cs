@@ -49,7 +49,6 @@ public static class ParcelRules
             throw new InvalidOperationException(
                 "The parcel doesn't have a courier!");
 
-
-        return new ParcelDelivered(command.ParcelId, parcel.CourierId);
+        return new ParcelDelivered(command.ParcelId);
     }
 }

@@ -16,7 +16,7 @@ public record Parcel(Guid Id,
     DeliveryInfo ReceiverDeliveryInfo,
     ParcelStatus Status = ParcelStatus.Registered,
     Guid? TerminalId = null,
-    string? CourierId = null
+    Guid? CourierId = null
 )
 {
     public static Parcel Create(ParcelRegistered registered) =>

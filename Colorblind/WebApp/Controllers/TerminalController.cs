@@ -1,9 +1,11 @@
 using Domain.Entities;
 using Domain.Rules;
 using Marten;
+using Marten.Pagination;
 using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using WebApp.Requests;
 using static Domain.Rules.TerminalRules;
 
 namespace WebApp.Controllers;
@@ -12,14 +14,20 @@ namespace WebApp.Controllers;
 [Route("terminals")]
 public class TerminalController : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(IDocumentSession documentSession, string id)
+    [HttpGet]
+    public async Task<IActionResult> Get(IDocumentSession documentSession,
+        [FromQuery] int? pageSize,
+        [FromQuery] int? pageNum,
+        CancellationToken ct)
     {
-        if (!Guid.TryParse(id, out Guid terminalGuid))
-            return Problem(statusCode: 400, title: "Terminal id is not well-formed!");
+        return Ok(await documentSession.Query<Terminal>().ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct));
+    }
 
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(IDocumentSession documentSession, Guid id)
+    {
         var terminal = await documentSession.Query<Terminal>().FirstOrDefaultAsync(x =>
-            x.Id == terminalGuid);
+            x.Id == id);
 
         return terminal is null
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
@@ -40,5 +48,3 @@ public class TerminalController : ControllerBase
         return Ok(new { id = id });
     }
 }
-
-public record RegisterTerminalRequest(string Address);

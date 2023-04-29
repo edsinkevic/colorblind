@@ -10,5 +10,5 @@ public record RegisterParcel(Guid Id,
     string CouponCode,
     string TransactionCode,
     ParcelDeliveryType DeliveryType,
-    DeliveryInfo SenderDeliveryInfo,
+    SenderDeliveryInfo SenderDeliveryInfo,
     DeliveryInfo ReceiverDeliveryInfo);
