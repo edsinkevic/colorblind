@@ -16,7 +16,7 @@ export default function StepOne() {
     e.preventDefault();
     const resp = await register({ address });
 
-    if (resp.status === StatusCodes.CREATED) {
+    if (resp.status === StatusCodes.OK) {
       // Decide what to do next
       router.replace("/");
       return;
