@@ -1,25 +1,17 @@
-import {
-  ParcelDetails,
-  ParcelRegistration,
-  ParcelRegistrationResponse,
-} from "../lib/models/models";
-import {
-  colorblindServerUrl,
-  defaultFetchConfig,
-  defaultResponseHandler,
-} from "./shared";
+import { ParcelRegistration } from "../lib/models/models";
+import { colorblindServerUrl, defaultFetchConfig } from "./shared";
 
 export const register = (
   parcelRegistration: ParcelRegistration
-): Promise<ParcelRegistrationResponse> =>
+): Promise<Response> =>
   fetch(colorblindServerUrl("/parcels/register"), {
     ...defaultFetchConfig,
     method: "POST",
     body: JSON.stringify(parcelRegistration),
-  }).then(defaultResponseHandler<ParcelRegistrationResponse>);
+  });
 
-export const detailsGetOne = (code: string): Promise<ParcelDetails> =>
+export const detailsGetOne = (code: string): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/${code}`), {
     ...defaultFetchConfig,
     method: "GET",
-  }).then(defaultResponseHandler<ParcelDetails>);
+  })
