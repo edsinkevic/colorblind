@@ -4,31 +4,21 @@ import { FormInput } from "colorblind/shared/components/FormInput";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
-import { getFromStore, store } from "colorblind/shared/lib/state";
 import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
+import {
+  getRecentlyTracked,
+  storeRecentlyTracked,
+} from "colorblind/app/track/components/actions";
 
 interface Props {}
-
-const TRACKED_STORAGE_KEY = "recentlyTracked";
 
 export default function ParcelDetailsPage({}: Props) {
   const [code, setCode] = useState<string>("");
   const router = useRouter();
   const [recentlyTracked, setRecentlyTracked] = useState<string[]>([]);
 
-  const storeRecentlyTracked = (code: string) => {
-    const recentlyTracked = getFromStore<string[]>("recentlyTracked");
-    if (!recentlyTracked) {
-      store(TRACKED_STORAGE_KEY, [code]);
-      return;
-    }
-    const alreadyThere = recentlyTracked.find((v) => v === code);
-    if (!alreadyThere)
-      store(TRACKED_STORAGE_KEY, [code, ...recentlyTracked].slice(0, 10));
-  };
-
   useEffect(() => {
-    const recentlyTracked = getFromStore<string[]>(TRACKED_STORAGE_KEY);
+    const recentlyTracked = getRecentlyTracked();
 
     if (!recentlyTracked) {
       setRecentlyTracked([]);
