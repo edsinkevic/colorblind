@@ -6,6 +6,7 @@ import { ParcelInfoForm } from "colorblind/app/registerparcel/stepone/components
 import { useRouter } from "next/navigation";
 import { ParcelRegistration } from "colorblind/shared/lib/models/models";
 import { store } from "colorblind/shared/lib/state";
+import { StatusIndicator } from "../components/StatusIndicator";
 
 export default function StepOne() {
   const [error, setError] = useState<Error>();
@@ -20,6 +21,7 @@ export default function StepOne() {
 
   return (
     <div className={styles.form}>
+      <StatusIndicator current={1}  />
       <ParcelInfoForm
         defaultValue={{ ...registration }}
         onSubmit={(info) => {

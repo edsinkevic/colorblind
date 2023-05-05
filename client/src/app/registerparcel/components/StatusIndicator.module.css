@@ -1,0 +1,18 @@
+.statusIndicator {
+    background-color: lightgray;
+    grid-column: 1 ;
+    grid-row: 1;
+}
+
+.statusIndicator li {
+    font-size: medium;
+}
+
+.statusIndicator li.active {
+    color: rebeccapurple;
+    font-weight: bold;
+}
+
+.statusIndicator label {
+    padding-left: 30px;
+}

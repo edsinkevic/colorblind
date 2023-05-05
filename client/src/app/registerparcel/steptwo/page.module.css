@@ -1,16 +1,42 @@
-.form form {
-  background-color: white;
-  padding: 1px 60px;
+.form {
+  display: grid;
+  grid-template-columns: 200px auto;
+  grid-template-rows: 1fr;
+  width: 800px;
+  height: 450px;
 }
 
-.form h1 {
+.form form {
+  background-color: white;
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  padding: 1px 20px;
+}
+
+.sender {
+  grid-row: 1;
+  grid-column: 1;
+  padding-right: 20px;
+} 
+
+.receiver {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.form h2 {
   color: rgb(77, 1, 77);
   text-align: center;
-  margin: 20px 0 20px;
+  margin: 10px 0 10px;
 }
 
 .form button {
-  width: 100%;
+  justify-self: right;
+  align-self: end;
+  width: 30%;
+  grid-column: 2;
+  grid-row: 2;
   height: 50px;
   padding: 10px;
   border: none;
@@ -18,7 +44,7 @@
   color: white;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: medium;
   cursor: pointer;
   margin-top: 15px;
   margin-bottom: 30px;

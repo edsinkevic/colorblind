@@ -55,7 +55,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           }
         />
       </div>
-      <button type={"submit"}>Submit</button>
+      <button type={"submit"}>Next</button>
     </form>
   );
 }

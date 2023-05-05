@@ -1,7 +1,18 @@
+.form {
+  display: grid;
+  grid-template-columns: 200px auto;
+  grid-template-rows: 1fr;
+  width: 800px;
+  height: 450px;
+}
+
 .form form {
   background-color: white;
   padding: 0 60px;
   border-radius: 10px;
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
 }
 
 .form h1 {
@@ -10,7 +21,9 @@
 }
 
 .form button {
-  width: 100%;
+  justify-self: right;
+  align-self: end;
+  width: 30%;
   height: 50px;
   padding: 10px;
   border: none;

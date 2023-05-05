@@ -12,6 +12,7 @@ import {
 import { register } from "colorblind/shared/requests/parcels";
 import { PeopleInfoForm } from "colorblind/app/registerparcel/steptwo/components/PeopleInfoForm";
 import { getFromStore } from "colorblind/shared/lib/state";
+import { StatusIndicator } from "../components/StatusIndicator";
 
 export default function StepTwo() {
   const [registration, setRegistration] = useState<ParcelRegistration>();
@@ -54,6 +55,7 @@ export default function StepTwo() {
     <div className={styles.form}>
       {error ? JSON.stringify(error) : null}
       {problem ? JSON.stringify(problem) : null}
+      <StatusIndicator current={2} />
       <PeopleInfoForm
         defaultValue={{ ...registration }}
         onSubmit={(data) => {
