@@ -1,7 +1,5 @@
 .statusIndicator {
     background-color: lightgray;
-    grid-column: 1 ;
-    grid-row: 1;
 }
 
 .statusIndicator li {

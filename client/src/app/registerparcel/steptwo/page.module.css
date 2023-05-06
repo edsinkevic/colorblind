@@ -1,9 +1,6 @@
 .form {
   display: grid;
-  grid-template-columns: 200px auto;
-  grid-template-rows: 1fr;
-  width: 800px;
-  height: 450px;
+  height: 100%;
 }
 
 .form form {

@@ -1,13 +1,14 @@
 import styles from "./StatusIndicator.module.css";
 
 interface Props {
-    current: number
+    current: number,
+    className?: string
 }
 
 const states = ["Package", "Sender and receiver information", "Overview", "Payment"];
-export const StatusIndicator = ({ current }: Props) => {
+export const StatusIndicator = ({ current, className }: Props) => {
     return (
-        <div className={styles.statusIndicator}>
+        <div className={`${className} ${styles.statusIndicator}`}>
             <label>Status</label>
             <ol>
                 {states.map((state, index) =>

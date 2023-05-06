@@ -1,18 +1,13 @@
 .form {
-  display: grid;
-  grid-template-columns: 200px auto;
-  grid-template-rows: 1fr;
-  width: 800px;
-  height: 450px;
+  height: 100%;
 }
 
 .form form {
   background-color: white;
   padding: 0 60px;
   border-radius: 10px;
-  grid-column: 2;
-  grid-row: 1;
   display: grid;
+  height: 100%;
 }
 
 .form h1 {
