@@ -57,8 +57,7 @@ export default function StepTwo() {
       <PeopleInfoForm
         defaultValue={{ ...registration }}
         onSubmit={(data) => {
-          setRegistration({ ...registration, ...data });
-          onSubmit(registration);
+          onSubmit({ ...registration, ...data});
         }}
       />
     </div>

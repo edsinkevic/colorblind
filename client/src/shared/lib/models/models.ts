@@ -1,3 +1,5 @@
+import { StringLiteral } from "typescript";
+
 export interface PersonInfo {
   fullname: string;
   phoneNumber: string;
@@ -35,6 +37,13 @@ export interface Problem {
 export interface ParcelDetails {
   id: string;
   code: string;
+  size: string;
+  createdDate: string;
+  invoiceEmail: string;
+  transactionCode: string;
+  deliveryType: DeliveryType;
+  senderDeliveryInfo: PersonInfo;
+  receiverDeliveryInfo: PersonInfo;
   parcelStatus: string;
 }
 
