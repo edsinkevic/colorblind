@@ -5,12 +5,12 @@ export const Header = () => {
   return (
     <div className={styles.headerContainer}>
       <Link href="/" className={styles.titleContainer}>
-        <h1>FastMail</h1>
-      </Link>
-      <Link href={"/admin"} className={styles.headerButton}>
-        <h1>Admin environment</h1>
+        <button className={styles.headerButton}>FastMail</button>
       </Link>
       <div className={styles.buttonContainer}>
+        <Link href={"/admin"}>
+          <button className={styles.headerButton}>Admin environment</button>
+        </Link>
         <Link href={"/registerparcel/stepone"}>
           <button className={styles.headerButton}>Send Package</button>
         </Link>
