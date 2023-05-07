@@ -31,9 +31,9 @@ def test_register_parcel():
     element.click()
 
     time.sleep(0.5)
-    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
+    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Next')]")
     element.click()
 
     time.sleep(0.5)
-    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Submit')]")
+    element = driver.find_element(By.XPATH, "//button[contains(text(), 'Next')]")
     element.click()
