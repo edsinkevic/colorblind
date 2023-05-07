@@ -38,7 +38,9 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId, Code = parcelCode, CreatedDate = createdDate,
+            Id = parcelId,
+            Code = parcelCode,
+            CreatedDate = createdDate,
         };
 
         documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
