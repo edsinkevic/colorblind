@@ -39,7 +39,17 @@ public class ParcelController : ControllerBase
         {
             Id = parcelId,
             Code = parcelCode,
-            CreatedDate = createdDate
+            CreatedDate = createdDate,
+            SenderDeliveryInfo = new Domain.Values.SenderDeliveryInfo(
+                request.SenderDeliveryInfo.Fullname,
+                request.SenderDeliveryInfo.PhoneNumber,
+                request.SenderDeliveryInfo.Email,
+                request.SenderDeliveryInfo.TerminalId),
+            ReceiverDeliveryInfo = new Domain.Values.DeliveryInfo(
+                request.ReceiverDeliveryInfo.Fullname,
+                request.ReceiverDeliveryInfo.PhoneNumber,
+                request.ReceiverDeliveryInfo.Email,
+                request.ReceiverDeliveryInfo.TerminalId),
         };
 
         documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));

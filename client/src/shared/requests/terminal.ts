@@ -10,3 +10,9 @@ export const register = (data: RegisterTerminal): Promise<Response> =>
     body: JSON.stringify(data),
     method: "POST",
   });
+
+export const getAll = (): Promise<Response> =>
+  fetch(colorblindServerUrl(`/terminals`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
