@@ -11,7 +11,7 @@ export const PickerFromArray = ({
 }) => {
   return (
     <select hidden={hidden} onChange={(event) => onSubmit(event.target.value)}>
-      {nonOption && <option value={nonOption}>{nonOption}</option>}
+      {nonOption && <option disabled>{nonOption}</option>}
       {array.map((item, idx) => (
         <option key={idx} value={item}>
           {item}

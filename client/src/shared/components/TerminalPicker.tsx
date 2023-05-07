@@ -13,7 +13,7 @@ export const TerminalPicker = ({
 }) => {
     return (
         <select hidden={hidden} onChange={(event) => onSubmit(event.target.value)}>
-            {nonOption && <option key={-1} value={undefined}>{nonOption}</option>}
+            {nonOption && <option disabled>{nonOption}</option>}
             {terminals.map((terminal, idx) => (
                 <option key={idx} value={terminal.id}>
                     {terminal.address}
