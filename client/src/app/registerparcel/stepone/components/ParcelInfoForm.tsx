@@ -1,3 +1,4 @@
+import styles from "./ParcelInfoForm.module.css";
 import { useState } from "react";
 import { DeliveryType } from "../../../../shared/lib/models/models";
 import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
@@ -18,12 +19,13 @@ const deliveryTypes = ["Terminal", "Address"];
 export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
   const [state, setState] = useState<ParcelInfo>(defaultValue);
   return (
-    <form
+    <form className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(state);
       }}
     >
+      <label>Package information</label>
       <div>
         <span>Size</span>
         <PickerFromArray
@@ -31,6 +33,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           onSubmit={(size) => setState({ ...state, size })}
         />
       </div>
+      <label>Delivery type</label>
       <div>
         <span>From</span>
         <PickerFromArray

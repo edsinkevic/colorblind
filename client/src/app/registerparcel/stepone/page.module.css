@@ -4,7 +4,6 @@
 
 .form form {
   background-color: white;
-  padding: 0 60px;
   border-radius: 10px;
   display: grid;
   height: 100%;
@@ -19,6 +18,8 @@
   justify-self: right;
   align-self: end;
   width: 30%;
+  /* grid-column: 2;
+  grid-row: 2; */
   height: 50px;
   padding: 10px;
   border: none;
@@ -26,7 +27,7 @@
   color: white;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: medium;
   cursor: pointer;
   margin-top: 15px;
   margin-bottom: 30px;

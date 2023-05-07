@@ -7,13 +7,14 @@ interface Props extends PhoneInputProps {
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >;
+  className?: string;
 }
 
 export const ColorblindPhoneInput = (props: Props) => {
   return (
     <div>
       <label>{props.inputProps.placeholder}</label>
-      <PhoneInput {...props} />
+      <PhoneInput inputClass={props.className} {...props} />
     </div>
   );
 };

@@ -10,11 +10,16 @@ export const StatusIndicator = ({ current, className }: Props) => {
     return (
         <div className={`${className} ${styles.statusIndicator}`}>
             <label>Status</label>
-            <ol>
+            <div className={styles.list}>
                 {states.map((state, index) =>
-                    <li key={index} className={index === current - 1 ? styles.active : ""}>{state}</li>
+                    <div key={index} className={`${styles.item} ${index === current - 1 ? styles.active : ""}`}>
+                        <span className={styles.itemIndex}>{index + 1}</span>
+                        <span className={styles.itemName}>
+                            {state}
+                        </span>
+                    </div>
                 )}
-            </ol>
+            </div>
         </div>
     );
 };

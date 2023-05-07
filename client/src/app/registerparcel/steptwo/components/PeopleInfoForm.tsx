@@ -44,6 +44,7 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {
           onChange={handleChange}
         />
         <ColorblindPhoneInput
+          className={styles.telContainer}
           key={2}
           inputProps={{
             name: "senderDeliveryInfo.phoneNumber",
@@ -72,6 +73,7 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {
           onChange={handleChange}
         />
         <ColorblindPhoneInput
+          className={styles.telContainer}
           key={5}
           inputProps={{
             name: "receiverDeliveryInfo.phoneNumber",
