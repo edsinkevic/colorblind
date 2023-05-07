@@ -2,7 +2,7 @@ import styles from "../page.module.css"
 
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
-import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
+import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
 import { PersonInfo, TerminalDetails } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
 
@@ -72,12 +72,11 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => 
           onChange={handleChange}
         />
         <label>Terminal</label>
-        <PickerFromArray
+        <TerminalPicker
           nonOption="Select terminal"
-          array={terminals.map(t => t.address)}
-          onSubmit={(address) => {
-            const terminal = terminals.find(t => t.address === address);
-            setFieldValue("senderDeliveryInfo.terminalId", terminal?.id);
+          terminals={terminals}
+          onSubmit={(id) => {
+            setFieldValue("senderDeliveryInfo.terminalId", id);
           }} />
       </div>
       <div className={styles.receiver}>
@@ -108,12 +107,11 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => 
           country={"lt"}
         />
         <label>Terminal</label>
-        <PickerFromArray
+        <TerminalPicker
           nonOption="Select terminal"
-          array={terminals.map(t => t.address)}
-          onSubmit={(address) => {
-            const terminal = terminals.find(t => t.address === address);
-            setFieldValue("receiverDeliveryInfo.terminalId", terminal?.id);
+          terminals={terminals}
+          onSubmit={(id) => {
+            setFieldValue("receiverDeliveryInfo.terminalId", id);
           }} />
       </div>
       <button type="submit">Next</button>
