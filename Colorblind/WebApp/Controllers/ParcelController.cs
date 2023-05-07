@@ -37,12 +37,11 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate
+            Id = parcelId, Code = parcelCode, CreatedDate = createdDate
         };
 
-        await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
+        documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
+        await documentSession.SaveChangesAsync(ct);
 
         return Created($"parcels/{parcelCode}", new { id = parcelId, code = parcelCode });
     }

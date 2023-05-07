@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Marten;
 using Marten.Events.Daemon.Resiliency;
 using Marten.Events.Projections;
