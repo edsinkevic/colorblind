@@ -1,5 +1,6 @@
 using Domain.Commands.Parcel;
 using Domain.Entities;
+using Domain.Values;
 using Mapster;
 using Marten;
 using Marten.Schema.Identity;
@@ -37,19 +38,7 @@ public class ParcelController : ControllerBase
         var createdDate = DateTime.Now;
         var command = request.Adapt<RegisterParcel>() with
         {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate,
-            SenderDeliveryInfo = new Domain.Values.SenderDeliveryInfo(
-                request.SenderDeliveryInfo.Fullname,
-                request.SenderDeliveryInfo.PhoneNumber,
-                request.SenderDeliveryInfo.Email,
-                request.SenderDeliveryInfo.TerminalId),
-            ReceiverDeliveryInfo = new Domain.Values.DeliveryInfo(
-                request.ReceiverDeliveryInfo.Fullname,
-                request.ReceiverDeliveryInfo.PhoneNumber,
-                request.ReceiverDeliveryInfo.Email,
-                request.ReceiverDeliveryInfo.TerminalId),
+            Id = parcelId, Code = parcelCode, CreatedDate = createdDate,
         };
 
         documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
