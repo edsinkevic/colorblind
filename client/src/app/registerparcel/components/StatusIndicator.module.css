@@ -1,0 +1,48 @@
+.statusIndicator {
+    background-color: lightgray;
+}
+
+.statusIndicator .item {
+    font-size: medium;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: grid;
+    grid-template-columns: 30px auto;
+}
+
+.itemIndex {
+    grid-column: 1;
+    border-radius: 50%;
+    border: 1px solid;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    line-height: 30px;
+    text-align: center;
+    font-size: large;
+    margin-right: 10px;
+}
+
+.itemName {
+    grid-column: 2;
+    margin-left: 10px;
+    margin-right: 5px;
+    text-align: left;
+    align-items: center;
+    font-size: 14px;
+    display: flex;
+    line-height: 20px;
+}
+
+.statusIndicator .active {
+    color: rebeccapurple;
+    font-weight: bold;
+}
+
+.statusIndicator label {
+    display: inline-block;
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}

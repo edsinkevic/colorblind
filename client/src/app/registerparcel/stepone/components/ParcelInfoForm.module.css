@@ -1,0 +1,21 @@
+.form label {
+    display: inline-block;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.form {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.form span {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+
+
+
+
+
