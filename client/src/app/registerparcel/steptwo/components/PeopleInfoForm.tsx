@@ -2,12 +2,14 @@ import styles from "../page.module.css"
 
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
-import { PersonInfo } from "colorblind/shared/lib/models/models";
+import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
+import { PersonInfo, TerminalDetails } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
 
 interface Props {
   onSubmit: (data: PeopleInfo) => void;
   defaultValue: PeopleInfo;
+  terminals: TerminalDetails[];
 }
 
 export interface PeopleInfo {
@@ -15,18 +17,32 @@ export interface PeopleInfo {
   receiverDeliveryInfo?: PersonInfo;
 }
 
-export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {
+export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => {
   const {
     values: form,
     handleChange,
     handleSubmit,
+    setFieldValue,
   } = useFormik<PeopleInfo>({
     initialValues: defaultValue,
     onSubmit: onSubmit,
   });
 
+  const handleSubmitWithValidation = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!form.senderDeliveryInfo?.terminalId) {
+      alert("Please select terminal")
+      return;
+    }
+    if (!form.receiverDeliveryInfo?.terminalId) {
+      alert("Please select terminal");
+      return;
+    }
+    handleSubmit(e);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmitWithValidation}>
       <div className={styles.sender}>
         <h2>Sender</h2>
         <FormInput
@@ -55,6 +71,13 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {
           country={"lt"}
           onChange={handleChange}
         />
+        <label>Terminal</label>
+        <TerminalPicker
+          nonOption="Select terminal"
+          terminals={terminals}
+          onSubmit={(id) => {
+            setFieldValue("senderDeliveryInfo.terminalId", id);
+          }} />
       </div>
       <div className={styles.receiver}>
         <h2>Receiver</h2>
@@ -83,8 +106,14 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit }: Props) => {
           }}
           country={"lt"}
         />
+        <label>Terminal</label>
+        <TerminalPicker
+          nonOption="Select terminal"
+          terminals={terminals}
+          onSubmit={(id) => {
+            setFieldValue("receiverDeliveryInfo.terminalId", id);
+          }} />
       </div>
-      
       <button type="submit">Next</button>
     </form>
   );
