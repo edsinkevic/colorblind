@@ -1,5 +1,4 @@
 using Domain.Values;
-using Newtonsoft.Json;
 
 namespace WebApp.Requests;
 
@@ -13,8 +12,8 @@ public record RegisterParcelRequest(ParcelSize Size,
 
 public record SenderDeliveryInfoRequest(string Fullname,
     string PhoneNumber,
-    string Email);
-
+    string Email,
+    Guid TerminalId = default!);
 public record DeliveryInfoRequest(string Fullname,
     string PhoneNumber,
     string Email,

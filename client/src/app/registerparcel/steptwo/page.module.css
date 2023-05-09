@@ -1,16 +1,39 @@
-.form form {
-  background-color: white;
-  padding: 1px 60px;
+.form {
+  display: grid;
+  height: 100%;
 }
 
-.form h1 {
+.form form {
+  background-color: white;
+  display: grid;
+  padding: 1px 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sender {
+  grid-row: 1;
+  grid-column: 1;
+  padding-right: 20px;
+}
+
+.receiver {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.form h2 {
   color: rgb(77, 1, 77);
   text-align: center;
-  margin: 20px 0 20px;
+  margin: 10px 0 10px;
 }
 
 .form button {
-  width: 100%;
+  justify-self: right;
+  align-self: end;
+  width: 30%;
+  grid-column: 2;
+  grid-row: 2;
   height: 50px;
   padding: 10px;
   border: none;
@@ -18,7 +41,7 @@
   color: white;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: medium;
   cursor: pointer;
   margin-top: 15px;
   margin-bottom: 30px;
@@ -34,11 +57,8 @@
   width: 100%;
 }
 
-.form .tel-container {
+.form .telContainer {
   box-sizing: border-box;
-  padding-bottom: 10px;
-  padding-top: 12px;
-  padding-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
   width: 100%;

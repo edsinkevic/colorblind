@@ -35,7 +35,7 @@ public class TerminalController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(IDocumentSession documentSession,
+    public async Task<ActionResult> Post(IDocumentSession documentSession,
         RegisterTerminalRequest request,
         CancellationToken ct)
     {
@@ -43,8 +43,9 @@ public class TerminalController : ControllerBase
 
         var command = new RegisterTerminal(TerminalId: id, Address: request.Address);
 
-        await documentSession.Add<Terminal>(id, Handle(command), ct: ct);
+        documentSession.Events.StartStream<Terminal>(id, Handle(command));
 
-        return Ok(new { id = id });
+        await documentSession.SaveChangesAsync(ct);
+        return Ok(new { id });
     }
 }

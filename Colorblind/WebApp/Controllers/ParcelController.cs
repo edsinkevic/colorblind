@@ -1,5 +1,6 @@
 using Domain.Commands.Parcel;
 using Domain.Entities;
+using Domain.Values;
 using Mapster;
 using Marten;
 using Marten.Schema.Identity;
@@ -39,10 +40,11 @@ public class ParcelController : ControllerBase
         {
             Id = parcelId,
             Code = parcelCode,
-            CreatedDate = createdDate
+            CreatedDate = createdDate,
         };
 
-        await documentSession.Add<Parcel>(parcelId, Handle(command), ct);
+        documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
+        await documentSession.SaveChangesAsync(ct);
 
         return Created($"parcels/{parcelCode}", new { id = parcelId, code = parcelCode });
     }

@@ -4,7 +4,7 @@ export interface PersonInfo {
   fullname: string;
   phoneNumber: string;
   email: string;
-  parcelLockerAddress: string;
+  terminalId?: string;
   takeawayAddress: string;
 }
 
@@ -47,6 +47,10 @@ export interface ParcelDetails {
   parcelStatus: string;
 }
 
+export interface TerminalDetails {
+  id: string;
+  address: string;
+}
 export interface RegisterTerminalResponse {
   id: string;
 }
