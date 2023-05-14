@@ -41,7 +41,15 @@ export interface Problem {
 export interface ParcelDetails {
   id: string;
   code: string;
-  parcelStatus: string;
+  status: ParcelStatus;
+}
+
+export enum ParcelStatus {
+  REGISTERED = "Registered",
+  UNREGISTERED = "Unregistered",
+  SUBMITTED = "Submitted",
+  SHIPPED = "Shipped",
+  DELIVERED = "Delivered",
 }
 
 export interface TerminalDetails {
