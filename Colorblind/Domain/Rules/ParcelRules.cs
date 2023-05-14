@@ -25,7 +25,7 @@ public static class ParcelRules
     {
         if (parcel.Status != ParcelStatus.Registered)
             throw new InvalidOperationException(
-                "Cannot submit a parcel that passed the registration point");
+                "Parcel must have Registered status");
 
         return new ParcelSubmittedToTerminal(command.ParcelId, command.TerminalId);
     }

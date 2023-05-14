@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,9 @@ var connectionString =
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .Configure<JsonOptions>(o =>
+    .Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(o =>
         o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
-    .Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(o =>
+    .Configure<JsonOptions>(o =>
         o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .AddControllers();
 
@@ -31,7 +32,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
 }
 
-app.UseCors(options => options.AllowAnyOrigin().WithExposedHeaders().AllowAnyMethod().AllowAnyHeader())
+app.UseMiddleware<InvalidOperationExceptionMiddleware>();
+
+app.UseCors(options => options.AllowAnyOrigin().WithExposedHeaders("*").AllowAnyMethod().AllowAnyHeader())
     .UseHttpsRedirection()
     .UseAuthorization();
 
