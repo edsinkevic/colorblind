@@ -16,26 +16,26 @@ namespace WebApp.Controllers;
 public class CourierController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> Get(IDocumentSession documentSession,
+    public async Task<IActionResult> Get(IQuerySession session,
         [FromQuery] string? name,
         [FromQuery] int? pageSize,
         [FromQuery] int? pageNum,
         CancellationToken ct)
     {
-        return Ok(await documentSession.Query<Courier>()
+        return Ok(await session.Query<Courier>()
             .Where(x => name == null || x.Name.Contains(name))
             .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct));
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(IDocumentSession documentSession, Guid id)
+    public async Task<IActionResult> Get(IQuerySession session, Guid id)
     {
-        var terminal = await documentSession.Query<Courier>().FirstOrDefaultAsync(x =>
+        var courier = await session.Query<Courier>().FirstOrDefaultAsync(x =>
             x.Id == id);
 
-        return terminal is null
+        return courier is null
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
-            : Ok(terminal);
+            : Ok(courier);
     }
 
     [HttpPost]
