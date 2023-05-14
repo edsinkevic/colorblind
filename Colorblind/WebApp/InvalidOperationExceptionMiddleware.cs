@@ -24,7 +24,9 @@ public class InvalidOperationExceptionMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
-                title = "Bad request", status = context.Response.StatusCode, detail = ex.Message,
+                title = "Bad request",
+                status = context.Response.StatusCode,
+                detail = ex.Message,
             }));
         }
     }
