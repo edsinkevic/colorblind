@@ -1,7 +1,4 @@
-"use client";
-
-import styles from "./page.module.css";
-import React from "react";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -9,10 +6,19 @@ interface Props {
   };
 }
 
-export default function StepOne({ params: { id } }: Props) {
+export default function TerminalHome({ params: { id } }: Props) {
   return (
-    <div className={styles.form}>
-      <h1>{id}</h1>
-    </div>
+    <>
+      <div>
+        <Link href={`/terminal/${id}/courier`}>
+          <button className={"bigButton"}>Courier environment</button>
+        </Link>
+      </div>
+      <div>
+        <Link href={`/terminal/${id}/submit`}>
+          <button className={"bigButton"}>Submit parcel</button>
+        </Link>
+      </div>
+    </>
   );
 }

@@ -1,6 +1,4 @@
 "use client";
-
-import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -14,6 +12,7 @@ import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
 export default function StepOne() {
   const router = useRouter();
   const [problem, setProblem] = useState<Problem>();
+  const [error, setError] = useState<string>();
   const [terminals, setTerminals] = useState<TerminalDetails[]>([]);
   const [pickedTerminalId, setPickedTerminalId] = useState<string>();
 
@@ -29,16 +28,18 @@ export default function StepOne() {
 
       const terminals = (await response.json()) as TerminalDetails[];
       setTerminals(terminals);
+      setPickedTerminalId(terminals[0].id);
     };
 
     fetchTerminals();
   }, []);
 
   return (
-    <div className={styles.form}>
+    <div className={"form"}>
       <form
-        onSubmit={() => {
-          router.push(`terminal/${pickedTerminalId}`);
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push(`/terminal/${pickedTerminalId}`);
         }}
       >
         <TerminalPicker
@@ -47,10 +48,14 @@ export default function StepOne() {
             setPickedTerminalId(terminalId);
           }}
         />
-        <button type="submit" disabled={!pickedTerminalId}>
+        <button
+          type="submit"
+          disabled={!pickedTerminalId || !!error || !!problem}
+        >
           Submit
         </button>
         {problem ? JSON.stringify(problem) : null}
+        {error}
       </form>
     </div>
   );

@@ -16,3 +16,9 @@ export const getAll = (): Promise<Response> =>
     ...defaultFetchConfig,
     method: "GET",
   });
+
+export const getOne = (id: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/terminals/${id}`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
