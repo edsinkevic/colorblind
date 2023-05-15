@@ -7,12 +7,12 @@ import { notFound } from "next/navigation";
 
 interface Props {
   params: {
-    code: string;
+    id: string;
   };
 }
 
-export default async function ParcelDetailsPage({ params: { code } }: Props) {
-  const parcelDetails = await detailsGetOne(code);
+export default async function ParcelDetailsPage({ params: { id } }: Props) {
+  const parcelDetails = await detailsGetOne(id);
   const { status } = parcelDetails;
 
   if (status === StatusCodes.OK) {
