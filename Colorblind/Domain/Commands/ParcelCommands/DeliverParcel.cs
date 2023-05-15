@@ -1,3 +1,3 @@
 namespace Domain.Commands.ParcelCommands;
 
-public record DeliverParcel(Guid ParcelId);
+public record DeliverParcel(string Code, Guid TerminalId, int Version);

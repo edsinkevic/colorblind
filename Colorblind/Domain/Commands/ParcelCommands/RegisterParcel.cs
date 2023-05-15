@@ -2,10 +2,8 @@ using Domain.Values;
 
 namespace Domain.Commands.ParcelCommands;
 
-public record RegisterParcel(Guid Id,
-    string Code,
+public record RegisterParcel(
     ParcelSize Size,
-    DateTime CreatedDate,
     string InvoiceEmail,
     string CouponCode,
     string TransactionCode,

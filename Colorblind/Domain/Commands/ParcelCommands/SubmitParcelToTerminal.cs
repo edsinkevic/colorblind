@@ -1,3 +1,3 @@
 namespace Domain.Commands.ParcelCommands;
 
-public record SubmitParcelToTerminal(Guid ParcelId, Guid TerminalId);
+public record SubmitParcelToTerminal(string Code, Guid TerminalId, int Version);

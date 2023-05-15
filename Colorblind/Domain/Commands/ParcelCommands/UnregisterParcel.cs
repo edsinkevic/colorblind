@@ -1,3 +1,3 @@
 namespace Domain.Commands.ParcelCommands;
 
-public record UnregisterParcel(Guid ParcelId);
+public record UnregisterParcel(string Code, int Version);

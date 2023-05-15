@@ -12,6 +12,7 @@ public static class DependencyInjection
             .AddScoped<ITerminalRepository, TerminalRepository>()
             .AddScoped<ISaveChanges, SaveChangesAsync>()
             .AddScoped<IIdGenerator, IdGenerator>()
-            .AddScoped<ICourierRepository, CourierRepository>();
+            .AddScoped<ICourierRepository, CourierRepository>()
+            .AddScoped<IParcelRepository, ParcelRepository>();
     }
 }

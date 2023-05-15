@@ -1,13 +1,7 @@
-using Domain.Entities;
-using Domain.Rules;
+using Domain.Commands;
 using Domain.UseCases.TerminalUseCases;
-using Marten;
-using Marten.Pagination;
-using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using WebApp.Requests;
-using static Domain.Rules.TerminalRules;
 
 namespace WebApp.Controllers;
 
@@ -45,9 +39,7 @@ public class TerminalController : ControllerBase
         CancellationToken ct)
     {
         var command = new RegisterTerminal(Address: request.Address);
-
         var id = useCase.Execute(command, ct);
-
         return Ok(new { id });
     }
 }

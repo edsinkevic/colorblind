@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Domain.Events.TerminalEvents;
-using Domain.Rules;
 using Marten.Pagination;
 
 namespace Domain.Persistence;

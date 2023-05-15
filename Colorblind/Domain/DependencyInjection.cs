@@ -1,4 +1,5 @@
 using Domain.UseCases.CourierUseCases;
+using Domain.UseCases.ParcelUseCases;
 using Domain.UseCases.TerminalUseCases;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,14 @@ public static class DependencyInjection
             .AddScoped<RegisterTerminalUseCase>()
             .AddScoped<GetCourierUseCase>()
             .AddScoped<ListCouriersUseCase>()
-            .AddScoped<RegisterCourierUseCase>();
+            .AddScoped<RegisterCourierUseCase>()
+            .AddScoped<GetParcelUseCase>()
+            .AddScoped<GetParcelByCodeUseCase>()
+            .AddScoped<ListParcelsUseCase>()
+            .AddScoped<RegisterParcelUseCase>()
+            .AddScoped<UnregisterParcelUseCase>()
+            .AddScoped<SubmitParcelToTerminalUseCase>()
+            .AddScoped<ShipParcelFromTerminalUseCase>()
+            .AddScoped<DeliverParcelToTerminalUseCase>();
     }
 }

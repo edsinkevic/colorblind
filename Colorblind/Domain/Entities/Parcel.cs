@@ -14,6 +14,7 @@ public record Parcel(Guid Id,
     ParcelDeliveryType DeliveryType,
     DeliveryInfo SenderDeliveryInfo,
     DeliveryInfo ReceiverDeliveryInfo,
+    int Version,
     ParcelStatus Status = ParcelStatus.Registered,
     Guid? TerminalId = null,
     Guid? CourierId = null

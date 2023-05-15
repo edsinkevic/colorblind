@@ -1,6 +1,6 @@
+using Domain.Commands;
 using Domain.Events.TerminalEvents;
 using Domain.Persistence;
-using Domain.Rules;
 using Mapster;
 
 namespace Domain.UseCases.TerminalUseCases;
