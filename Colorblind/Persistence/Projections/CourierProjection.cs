@@ -5,7 +5,7 @@ using Marten.Events.Projections;
 
 namespace Persistence.Projections;
 
-public class CourierProjection : MultiStreamAggregation<Courier, Guid>
+public class CourierProjection : MultiStreamProjection<Courier, Guid>
 {
     public CourierProjection()
     {

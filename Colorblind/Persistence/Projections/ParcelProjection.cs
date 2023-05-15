@@ -6,7 +6,7 @@ using Marten.Events.Aggregation;
 
 namespace Persistence.Projections;
 
-public class ParcelProjection : SingleStreamAggregation<Parcel>
+public class ParcelProjection : SingleStreamProjection<Parcel>
 {
     public static Parcel Create(ParcelRegistered registered) =>
         Parcel.Create(registered);
