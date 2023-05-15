@@ -1,10 +1,9 @@
-using Domain.Entities;
-using Domain.Events.Terminal;
+using Domain.Events.TerminalEvents;
 using Domain.Persistence;
 using Domain.Rules;
 using Mapster;
 
-namespace Domain.UseCases;
+namespace Domain.UseCases.Terminal;
 
 public class RegisterTerminalUseCase
 {
@@ -23,14 +22,14 @@ public class RegisterTerminalUseCase
         _saveChanges = saveChanges;
     }
 
-    public Guid Execute(
+    public async Task<Guid> Execute(
         RegisterTerminal command,
         CancellationToken ct = default)
     {
         var id = _idGenerator.Generate();
         var @event = command.Adapt<TerminalRegistered>() with { TerminalId = id };
         _terminalRepository.Create(@event);
-        _saveChanges.SaveChanges(ct);
+        await _saveChanges.SaveChanges(ct);
         return id;
     }
 }

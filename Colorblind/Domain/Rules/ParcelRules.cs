@@ -1,6 +1,6 @@
-﻿using Domain.Commands.Parcel;
+﻿using Domain.Commands.ParcelCommands;
 using Domain.Entities;
-using Domain.Events.Parcel;
+using Domain.Events.ParcelEvents;
 using Domain.Values;
 using Mapster;
 

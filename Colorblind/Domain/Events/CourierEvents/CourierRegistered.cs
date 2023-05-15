@@ -1,3 +1,3 @@
-namespace Domain.Events.Courier;
+namespace Domain.Events.CourierEvents;
 
 public record CourierRegistered(Guid CourierId, string Name);

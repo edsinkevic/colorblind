@@ -1,6 +1,6 @@
 using Domain.Values;
 
-namespace Domain.Commands.Parcel;
+namespace Domain.Commands.ParcelCommands;
 
 public record RegisterParcel(Guid Id,
     string Code,

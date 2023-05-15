@@ -1,6 +1,6 @@
 using Domain.Values;
 
-namespace Domain.Events.Parcel;
+namespace Domain.Events.ParcelEvents;
 
 public record ParcelRegistered(Guid Id,
     string Code,

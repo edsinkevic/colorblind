@@ -1,4 +1,4 @@
-using Domain.Events.Parcel;
+using Domain.Events.ParcelEvents;
 using Domain.Values;
 using Mapster;
 

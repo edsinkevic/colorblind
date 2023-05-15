@@ -1,4 +1,4 @@
-using Domain.Commands.Parcel;
+using Domain.Commands.ParcelCommands;
 using Domain.Entities;
 using Domain.Values;
 using Mapster;

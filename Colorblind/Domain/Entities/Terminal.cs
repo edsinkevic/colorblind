@@ -1,5 +1,5 @@
-using Domain.Events.Parcel;
-using Domain.Events.Terminal;
+using Domain.Events.ParcelEvents;
+using Domain.Events.TerminalEvents;
 
 namespace Domain.Entities;
 

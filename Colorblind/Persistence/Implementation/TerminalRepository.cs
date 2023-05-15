@@ -1,5 +1,5 @@
 using Domain.Entities;
-using Domain.Events.Terminal;
+using Domain.Events.TerminalEvents;
 using Domain.Persistence;
 using Marten;
 using Marten.Pagination;

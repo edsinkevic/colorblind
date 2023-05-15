@@ -1,8 +1,8 @@
-using Domain.Commands.Courier;
-using Domain.Commands.Parcel;
+using Domain.Commands.CourierCommands;
+using Domain.Commands.ParcelCommands;
 using Domain.Entities;
-using Domain.Events.Courier;
-using Domain.Events.Parcel;
+using Domain.Events.CourierEvents;
+using Domain.Events.ParcelEvents;
 using Mapster;
 
 namespace Domain.Rules;

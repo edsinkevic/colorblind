@@ -1,8 +1,7 @@
-using Domain.Entities;
 using Domain.Persistence;
 using Marten.Pagination;
 
-namespace Domain.UseCases;
+namespace Domain.UseCases.Terminal;
 
 public class ListTerminalsUseCase
 {
@@ -13,6 +12,6 @@ public class ListTerminalsUseCase
         _terminalRepository = terminalRepository;
     }
 
-    public Task<IPagedList<Terminal>> Execute(int? pageNum, int? pageSize, CancellationToken ct = default) =>
+    public Task<IPagedList<Entities.Terminal>> Execute(int? pageNum, int? pageSize, CancellationToken ct = default) =>
         _terminalRepository.List(pageNum, pageSize, ct);
 }

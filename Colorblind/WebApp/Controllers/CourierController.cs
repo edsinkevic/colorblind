@@ -1,13 +1,8 @@
-using Domain.Commands.Courier;
-using Domain.Entities;
-using Domain.Rules;
-using Marten;
-using Marten.Pagination;
-using Marten.Schema.Identity;
+using Domain.Commands.CourierCommands;
+using Domain.UseCases.CourierUseCases;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using WebApp.Requests;
-using static Domain.Rules.CourierRules;
 
 namespace WebApp.Controllers;
 
@@ -16,22 +11,19 @@ namespace WebApp.Controllers;
 public class CourierController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> Get(IQuerySession session,
+    public async Task<IActionResult> Get(
+        [FromServices] ListCouriersUseCase useCase,
         [FromQuery] string? name,
         [FromQuery] int? pageSize,
         [FromQuery] int? pageNum,
-        CancellationToken ct)
-    {
-        return Ok(await session.Query<Courier>()
-            .Where(x => name == null || x.Name.Contains(name))
-            .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct));
-    }
+        CancellationToken ct) =>
+        Ok(await useCase.Execute(pageNum, pageSize, name, ct));
+
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(IQuerySession session, Guid id)
+    public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, Guid id, CancellationToken ct)
     {
-        var courier = await session.Query<Courier>().FirstOrDefaultAsync(x =>
-            x.Id == id);
+        var courier = await useCase.Execute(id, ct);
 
         return courier is null
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
@@ -39,17 +31,12 @@ public class CourierController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(IDocumentSession documentSession,
+    public async Task<ActionResult> Post([FromServices] RegisterCourierUseCase useCase,
         RegisterCourierRequest request,
         CancellationToken ct)
     {
-        var id = CombGuidIdGeneration.NewGuid();
-
-        var command = new RegisterCourier(CourierId: id, Name: request.Name);
-
-        documentSession.Events.StartStream<Courier>(id, Handle(command));
-
-        await documentSession.SaveChangesAsync(ct);
+        var command = request.Adapt<RegisterCourier>();
+        var id = await useCase.Execute(command, ct);
         return Ok(new { id });
     }
 }

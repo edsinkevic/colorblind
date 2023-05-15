@@ -1,4 +1,4 @@
-using Domain.UseCases;
+using Domain.UseCases.Terminal;
 using Marten;
 using Marten.Events.Daemon.Resiliency;
 using Marten.Events.Projections;

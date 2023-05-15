@@ -1,5 +1,5 @@
-using Domain.Events.Courier;
-using Domain.Events.Parcel;
+using Domain.Events.CourierEvents;
+using Domain.Events.ParcelEvents;
 
 namespace Domain.Entities;
 

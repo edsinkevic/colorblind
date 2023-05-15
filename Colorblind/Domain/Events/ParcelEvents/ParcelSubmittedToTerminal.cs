@@ -1,3 +1,3 @@
-namespace Domain.Events.Parcel;
+namespace Domain.Events.ParcelEvents;
 
 public record ParcelSubmittedToTerminal(Guid ParcelId, Guid TerminalId);

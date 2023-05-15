@@ -1,7 +1,6 @@
-using Domain.Entities;
 using Domain.Persistence;
 
-namespace Domain.UseCases;
+namespace Domain.UseCases.Terminal;
 
 public class GetTerminalUseCase
 {
@@ -12,6 +11,6 @@ public class GetTerminalUseCase
         _terminalRepository = terminalRepository;
     }
 
-    public Task<Terminal?> Execute(Guid id, CancellationToken ct = default) =>
+    public Task<Entities.Terminal?> Execute(Guid id, CancellationToken ct = default) =>
         _terminalRepository.Get(id, ct);
 }

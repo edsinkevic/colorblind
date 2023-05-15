@@ -1,7 +1,7 @@
-using Domain.Commands.Parcel;
+using Domain.Commands.ParcelCommands;
 using Domain.Entities;
-using Domain.Events.Parcel;
-using Domain.Events.Terminal;
+using Domain.Events.ParcelEvents;
+using Domain.Events.TerminalEvents;
 using Mapster;
 
 namespace Domain.Rules;
