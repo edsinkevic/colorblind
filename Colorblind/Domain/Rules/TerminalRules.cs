@@ -1,6 +1,7 @@
 using Domain.Commands.Parcel;
 using Domain.Entities;
 using Domain.Events.Parcel;
+using Domain.Events.Terminal;
 using Mapster;
 
 namespace Domain.Rules;

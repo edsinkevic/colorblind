@@ -6,6 +6,12 @@ export interface PersonInfo {
   takeawayAddress: string;
 }
 
+export interface Courier {
+  id: string;
+  name: string;
+  parcelIds: string[];
+}
+
 export interface DeliveryType {
   from: string;
   to: string;
@@ -35,13 +41,23 @@ export interface Problem {
 export interface ParcelDetails {
   id: string;
   code: string;
-  parcelStatus: string;
+  status: ParcelStatus;
+}
+
+export enum ParcelStatus {
+  REGISTERED = "Registered",
+  UNREGISTERED = "Unregistered",
+  SUBMITTED = "Submitted",
+  SHIPPED = "Shipped",
+  DELIVERED = "Delivered",
 }
 
 export interface TerminalDetails {
   id: string;
   address: string;
+  parcelIds: string[];
 }
+
 export interface RegisterTerminalResponse {
   id: string;
 }
@@ -56,4 +72,3 @@ export enum StatusCodes {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
 }
-

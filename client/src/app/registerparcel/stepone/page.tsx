@@ -1,7 +1,6 @@
 "use client";
 
 import styles from "./page.module.css";
-import { useEffect, useState } from "react";
 import { ParcelInfoForm } from "colorblind/app/registerparcel/stepone/components/ParcelInfoForm";
 import { useRouter } from "next/navigation";
 import { ParcelRegistration } from "colorblind/shared/lib/models/models";
@@ -9,23 +8,15 @@ import { store } from "colorblind/shared/lib/state";
 import { FormWithStatus } from "../components/FormWithStatus";
 
 export default function StepOne() {
-  const [error, setError] = useState<Error>();
   const router = useRouter();
-
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  const [registration, setRegistration] =
-    useState<ParcelRegistration>(defaultRegistration);
 
   return (
     <FormWithStatus current={1}>
       <div className={styles.form}>
         <ParcelInfoForm
-          defaultValue={{ ...registration }}
+          defaultValue={{ ...defaultRegistration }}
           onSubmit={(info) => {
-            setRegistration({ ...registration, ...info });
+            const registration = { ...defaultRegistration, ...info };
             store("registration", registration);
             router.push("/registerparcel/steptwo");
           }}

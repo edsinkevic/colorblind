@@ -3,8 +3,10 @@ using Domain.Entities;
 using Domain.Values;
 using Mapster;
 using Marten;
+using Marten.Linq;
 using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Persistence;
 using WebApp.Requests;
 using static Domain.Rules.ParcelRules;
@@ -23,9 +25,14 @@ public class ParcelController : ControllerBase
     {
         var res = await querySession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
 
-        return res is null
-            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!")
-            : Ok(res);
+        if (res is null)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!");
+        }
+
+        var state = await querySession.Events.FetchStreamStateAsync(res.Id, ct);
+        HttpContext.Response.Headers.Add(HeaderNames.ETag, state.Version.ToString());
+        return Ok(res);
     }
 
     [HttpPost("register")]
@@ -103,7 +110,7 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("{code}/ship/{courierId}")]
+    [HttpPost("{code}/ship/{courierId:guid}")]
     public async Task<IActionResult> Ship(IDocumentSession documentSession,
         string code,
         Guid courierId,
@@ -114,6 +121,11 @@ public class ParcelController : ControllerBase
 
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
+
+        var courier = await GetCourier(documentSession, courierId, ct);
+
+        if (courier is null)
+            return Problem(statusCode: 400, title: $"Courier with code {code} doesn't exist!");
 
         var command = new ShipParcel(parcel.Id, courierId);
 
@@ -138,6 +150,7 @@ public class ParcelController : ControllerBase
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
+
         var command = new DeliverParcel(parcel.Id);
 
         await documentSession.GetAndUpdate<Parcel>(
@@ -155,4 +168,8 @@ public class ParcelController : ControllerBase
             .Query<Parcel>()
             .Where(i => i.Code == code)
             .FirstOrDefaultAsync(ct);
+
+    private static Task<Courier?> GetCourier(IQuerySession documentSession, Guid id, CancellationToken ct) =>
+        documentSession
+            .Query<Courier>().FirstOrDefaultAsync(x => x.Id == id, token: ct);
 }

@@ -9,3 +9,10 @@ export const getFromStore = <T>(key: string): T | undefined | null => {
     return undefined;
   }
 };
+
+const COURIER_STORAGE_KEY = "courier";
+export const storeCourier = (id: string) => {
+  store(COURIER_STORAGE_KEY, [id]);
+};
+
+export const getCourier = () => getFromStore<string>(COURIER_STORAGE_KEY);

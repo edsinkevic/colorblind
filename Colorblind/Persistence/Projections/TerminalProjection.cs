@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Events.Parcel;
+using Domain.Events.Terminal;
 using Marten.Events.Projections;
 
 namespace Persistence.Projections;

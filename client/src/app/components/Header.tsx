@@ -10,6 +10,9 @@ export const Header = () => {
       <Link href={"/admin"} className={styles.headerButton}>
         <h1>Admin environment</h1>
       </Link>
+      <Link href={"/terminal"} className={styles.headerButton}>
+        <h1>Terminal environment</h1>
+      </Link>
       <div className={styles.buttonContainer}>
         <Link href={"/registerparcel/stepone"}>
           <button className={styles.headerButton}>Send Package</button>
