@@ -18,25 +18,32 @@ namespace WebApp.Controllers;
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
+    private readonly IDocumentSession _documentSession;
+
+    public ParcelController(IDocumentSession documentSession)
+    {
+        _documentSession = documentSession;
+    }
+
     [HttpGet("{code}")]
-    public async Task<IActionResult> GetDetails(IQuerySession querySession,
+    public async Task<IActionResult> GetDetails(
         string code,
         CancellationToken ct)
     {
-        var res = await querySession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
+        var res = await _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
 
         if (res is null)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!");
         }
 
-        var state = await querySession.Events.FetchStreamStateAsync(res.Id, ct);
+        var state = await _documentSession.Events.FetchStreamStateAsync(res.Id, ct);
         HttpContext.Response.Headers.Add(HeaderNames.ETag, state.Version.ToString());
         return Ok(res);
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(IDocumentSession documentSession,
+    public async Task<IActionResult> Register(
         RegisterParcelRequest request,
         CancellationToken ct)
     {
@@ -50,26 +57,26 @@ public class ParcelController : ControllerBase
             CreatedDate = createdDate,
         };
 
-        documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
-        await documentSession.SaveChangesAsync(ct);
+        _documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
+        await _documentSession.SaveChangesAsync(ct);
 
         return Created($"parcels/{parcelCode}", new { id = parcelId, code = parcelCode });
     }
 
     [HttpPost("{code}/unregister")]
-    public async Task<IActionResult> Unregister(IDocumentSession documentSession,
+    public async Task<IActionResult> Unregister(
         string code,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
+        var parcel = await GetParcel(code, ct);
 
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
         var command = new UnregisterParcel(parcel.Id);
 
-        await documentSession.GetAndUpdate<Parcel>(
+        await _documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
             eTag.ToExpectedVersion(),
             x => Handle(x, command),
@@ -80,18 +87,18 @@ public class ParcelController : ControllerBase
     }
 
     [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
-    public async Task<IActionResult> SubmitToTerminal(IDocumentSession documentSession,
+    public async Task<IActionResult> SubmitToTerminal(
         string code,
         Guid terminalId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
+        var parcel = await GetParcel(code, ct);
 
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
-        var exists = await documentSession
+        var exists = await _documentSession
             .Query<Terminal>()
             .AnyAsync(x => x.Id == terminalId, token: ct);
 
@@ -100,7 +107,7 @@ public class ParcelController : ControllerBase
 
         var command = new SubmitParcelToTerminal(parcel.Id, terminalId);
 
-        await documentSession.GetAndUpdate<Parcel>(
+        await _documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
             eTag.ToExpectedVersion(),
             x => Handle(x, command),
@@ -111,25 +118,25 @@ public class ParcelController : ControllerBase
     }
 
     [HttpPost("{code}/ship/{courierId:guid}")]
-    public async Task<IActionResult> Ship(IDocumentSession documentSession,
+    public async Task<IActionResult> Ship(
         string code,
         Guid courierId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
+        var parcel = await GetParcel(code, ct);
 
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
 
-        var courier = await GetCourier(documentSession, courierId, ct);
+        var courier = await GetCourier(courierId, ct);
 
         if (courier is null)
             return Problem(statusCode: 400, title: $"Courier with code {code} doesn't exist!");
 
         var command = new ShipParcel(parcel.Id, courierId);
 
-        await documentSession.GetAndUpdate<Parcel>(
+        await _documentSession.GetAndUpdate<Parcel>(
             parcel.Id,
             eTag.ToExpectedVersion(),
             x => Handle(x, command),
@@ -145,7 +152,7 @@ public class ParcelController : ControllerBase
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
+        var parcel = await GetParcel(code, ct);
 
         if (parcel is null)
             return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
@@ -163,13 +170,13 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    private static Task<Parcel?> GetParcel(IQuerySession documentSession, string code, CancellationToken ct) =>
-        documentSession
+    private Task<Parcel?> GetParcel(string code, CancellationToken ct) =>
+        _documentSession
             .Query<Parcel>()
             .Where(i => i.Code == code)
             .FirstOrDefaultAsync(ct);
 
-    private static Task<Courier?> GetCourier(IQuerySession documentSession, Guid id, CancellationToken ct) =>
-        documentSession
+    private Task<Courier?> GetCourier(Guid id, CancellationToken ct) =>
+        _documentSession
             .Query<Courier>().FirstOrDefaultAsync(x => x.Id == id, token: ct);
 }

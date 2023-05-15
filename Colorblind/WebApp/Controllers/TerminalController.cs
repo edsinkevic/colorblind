@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Rules;
+using Domain.UseCases;
 using Marten;
 using Marten.Pagination;
 using Marten.Schema.Identity;
@@ -15,19 +16,22 @@ namespace WebApp.Controllers;
 public class TerminalController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> Get(IDocumentSession documentSession,
+    public async Task<IActionResult> Get(
+        [FromServices] ListTerminalsUseCase useCase,
         [FromQuery] int? pageSize,
         [FromQuery] int? pageNum,
         CancellationToken ct)
     {
-        return Ok(await documentSession.Query<Terminal>().ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct));
+        return Ok(await useCase.Execute(pageNum, pageSize, ct));
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(IDocumentSession documentSession, Guid id)
+    public async Task<IActionResult> Get(
+        [FromServices] GetTerminalUseCase useCase,
+        Guid id,
+        CancellationToken ct)
     {
-        var terminal = await documentSession.Query<Terminal>().FirstOrDefaultAsync(x =>
-            x.Id == id);
+        var terminal = await useCase.Execute(id, ct);
 
         return terminal is null
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
@@ -35,17 +39,15 @@ public class TerminalController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(IDocumentSession documentSession,
+    public ActionResult Post(
+        [FromServices] RegisterTerminalUseCase useCase,
         RegisterTerminalRequest request,
         CancellationToken ct)
     {
-        var id = CombGuidIdGeneration.NewGuid();
+        var command = new RegisterTerminal(Address: request.Address);
 
-        var command = new RegisterTerminal(TerminalId: id, Address: request.Address);
+        var id = useCase.Execute(command, ct);
 
-        documentSession.Events.StartStream<Terminal>(id, Handle(command));
-
-        await documentSession.SaveChangesAsync(ct);
         return Ok(new { id });
     }
 }

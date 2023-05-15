@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using WebApp;
@@ -23,7 +24,7 @@ builder.Services
         o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .AddControllers();
 
-builder.Services.SetupMarten(schemaName, connectionString);
+builder.Services.SetupMarten(schemaName, connectionString).AddDomain().AddPersistence();
 
 var app = builder.Build();
 

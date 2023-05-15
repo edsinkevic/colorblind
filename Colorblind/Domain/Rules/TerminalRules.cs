@@ -19,4 +19,4 @@ public class TerminalRules
     }
 }
 
-public record RegisterTerminal(Guid TerminalId, string Address);
+public record RegisterTerminal(string Address);
