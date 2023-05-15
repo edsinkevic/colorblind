@@ -8,7 +8,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        return services.AddScoped<ITerminalRepository, TerminalRepository>().AddScoped<ISaveChanges, SaveChangesAsync>()
-            .AddScoped<IIdGenerator, IdGenerator>();
+        return services
+            .AddScoped<ITerminalRepository, TerminalRepository>()
+            .AddScoped<ISaveChanges, SaveChangesAsync>()
+            .AddScoped<IIdGenerator, IdGenerator>()
+            .AddScoped<ICourierRepository, CourierRepository>();
     }
 }

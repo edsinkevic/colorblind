@@ -1,6 +1,6 @@
 using Domain.Entities;
 using Domain.Rules;
-using Domain.UseCases.Terminal;
+using Domain.UseCases.TerminalUseCases;
 using Marten;
 using Marten.Pagination;
 using Marten.Schema.Identity;

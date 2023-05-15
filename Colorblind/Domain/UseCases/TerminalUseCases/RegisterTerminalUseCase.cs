@@ -3,7 +3,7 @@ using Domain.Persistence;
 using Domain.Rules;
 using Mapster;
 
-namespace Domain.UseCases.Terminal;
+namespace Domain.UseCases.TerminalUseCases;
 
 public class RegisterTerminalUseCase
 {

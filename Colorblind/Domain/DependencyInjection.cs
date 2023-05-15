@@ -1,7 +1,5 @@
-using Domain.UseCases.Terminal;
-using Marten;
-using Marten.Events.Daemon.Resiliency;
-using Marten.Events.Projections;
+using Domain.UseCases.CourierUseCases;
+using Domain.UseCases.TerminalUseCases;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain;
@@ -12,6 +10,9 @@ public static class DependencyInjection
     {
         return services.AddScoped<GetTerminalUseCase>()
             .AddScoped<ListTerminalsUseCase>()
-            .AddScoped<RegisterTerminalUseCase>();
+            .AddScoped<RegisterTerminalUseCase>()
+            .AddScoped<GetCourierUseCase>()
+            .AddScoped<ListCouriersUseCase>()
+            .AddScoped<RegisterCourierUseCase>();
     }
 }
