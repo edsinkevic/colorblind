@@ -16,7 +16,7 @@ public class SaveChangesAsync : ISaveChanges
     {
         await _documentSession.SaveChangesAsync(ct);
     }
-    
+
     public async Task SaveChanges()
     {
         await _documentSession.SaveChangesAsync();
