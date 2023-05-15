@@ -1,13 +1,14 @@
 using System.Net;
 using System.Text.Json;
+using Domain.Errors;
 
 namespace WebApp;
 
-public class InvalidOperationExceptionMiddleware
+public class DomainErrorMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public InvalidOperationExceptionMiddleware(RequestDelegate next)
+    public DomainErrorMiddleware(RequestDelegate next)
     {
         _next = next;
     }
@@ -18,15 +19,13 @@ public class InvalidOperationExceptionMiddleware
         {
             await _next(context);
         }
-        catch (InvalidOperationException ex)
+        catch (DomainError ex)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
-                title = "Bad request",
-                status = context.Response.StatusCode,
-                detail = ex.Message,
+                title = "Bad request", status = context.Response.StatusCode, detail = ex.Message,
             }));
         }
     }

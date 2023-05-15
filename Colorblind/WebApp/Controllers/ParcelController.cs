@@ -10,8 +10,8 @@ namespace WebApp.Controllers;
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
-    [HttpGet("{code}")]
-    public async Task<IActionResult> GetDetails(
+    [HttpGet("code/{code}")]
+    public async Task<IActionResult> Get(
         [FromServices] GetParcelByCodeUseCase useCase,
         string code,
         CancellationToken ct)
@@ -21,6 +21,26 @@ public class ParcelController : ControllerBase
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!")
             : Ok(res);
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(
+        [FromServices] GetParcelUseCase useCase,
+        Guid id,
+        CancellationToken ct)
+    {
+        var res = await useCase.Execute(id, ct: ct);
+        return res is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel was not found!")
+            : Ok(res);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(
+        [FromServices] ListParcelsUseCase useCase,
+        [FromQuery] int? pageNum,
+        [FromQuery] int? pageSize,
+        CancellationToken ct) =>
+        Ok(await useCase.Execute(pageNum, pageSize, ct: ct));
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(

@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
 }
 
-app.UseMiddleware<InvalidOperationExceptionMiddleware>();
+app.UseMiddleware<DomainErrorMiddleware>();
 
 app.UseCors(options => options.AllowAnyOrigin().WithExposedHeaders("*").AllowAnyMethod().AllowAnyHeader())
     .UseHttpsRedirection()

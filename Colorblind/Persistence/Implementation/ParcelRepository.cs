@@ -19,10 +19,9 @@ public class ParcelRepository : IParcelRepository
     public Task<Parcel?> Get(Guid id, CancellationToken ct = default) =>
         _documentSession.LoadAsync<Parcel>(id, ct);
 
-    public Task<IPagedList<Parcel>> List(int? pageNum, int? pageSize, CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<IPagedList<Parcel>> List(int? pageNum, int? pageSize, CancellationToken ct = default) =>
+        _documentSession.Query<Parcel>()
+            .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct);
 
     public void Create(ParcelRegistered register) =>
         _documentSession.Events.StartStream<Parcel>(register.Id, register);

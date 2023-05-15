@@ -39,7 +39,7 @@ public class ShipParcelFromTerminalUseCase
 
         await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
         {
-            if (aggregate.Status != ParcelStatus.Registered)
+            if (aggregate.Status != ParcelStatus.Submitted)
                 throw new DomainError(
                     "Parcel must have Submitted status!");
 

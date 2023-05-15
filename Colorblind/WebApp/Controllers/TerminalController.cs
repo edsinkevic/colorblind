@@ -33,13 +33,13 @@ public class TerminalController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(
+    public async Task<IActionResult> Post(
         [FromServices] RegisterTerminalUseCase useCase,
         RegisterTerminalRequest request,
         CancellationToken ct)
     {
         var command = new RegisterTerminal(Address: request.Address);
-        var id = useCase.Execute(command, ct);
+        var id = await useCase.Execute(command, ct);
         return Ok(new { id });
     }
 }
