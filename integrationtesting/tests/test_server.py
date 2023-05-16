@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.server import ServerClient
+from server import ServerClient
 
 
 @dataclass
