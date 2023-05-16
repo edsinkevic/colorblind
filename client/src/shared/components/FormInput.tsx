@@ -1,4 +1,5 @@
 import { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import styles from "./page.module.css";
 
 interface Props
   extends DetailedHTMLProps<
@@ -8,9 +9,9 @@ interface Props
 
 export const FormInput = (props: Props) => {
   return (
-    <div>
+    <div className={styles.inputs}>
       <label>{props.placeholder}</label>
-      <input {...props} />
+      <input {...props} className={styles.input}/>
     </div>
   );
 };

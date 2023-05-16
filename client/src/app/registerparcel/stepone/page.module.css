@@ -4,7 +4,8 @@
 
 .form form {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 0px 10px 10px 0px;
+  
   display: grid;
   height: 100%;
 }
@@ -30,5 +31,5 @@
   font-size: medium;
   cursor: pointer;
   margin-top: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }

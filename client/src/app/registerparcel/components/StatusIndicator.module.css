@@ -1,12 +1,12 @@
 .statusIndicator {
-    background-color: lightgray;
+    background-color: #8844cc;
 }
 
 .statusIndicator .item {
     font-size: medium;
     margin-right: 5px;
     margin-bottom: 10px;
-    margin-left: 10px;
+    margin-left: 20px;
     display: grid;
     grid-template-columns: 30px auto;
 }
@@ -36,13 +36,13 @@
 }
 
 .statusIndicator .active {
-    color: rebeccapurple;
+    color: white;
     font-weight: bold;
 }
 
 .statusIndicator label {
     display: inline-block;
-    margin-left: 15px;
+    margin-left: 20px;
     margin-top: 15px;
     margin-bottom: 10px;
 }
