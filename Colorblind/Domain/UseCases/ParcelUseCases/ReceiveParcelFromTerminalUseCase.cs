@@ -38,7 +38,10 @@ public class ReceiveParcelFromTerminalUseCase
                 throw new DomainError("Parcel was not delivered yet!");
             }
 
-            return new ParcelReceived(aggregate.Id);
+            if (aggregate.TerminalId is null)
+                throw new DomainError("Parcel isn't in a terminal!");
+
+            return new ParcelReceived(aggregate.Id, aggregate.TerminalId.Value);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);

@@ -12,4 +12,10 @@ public record Courier(Guid Id,
 
     public Courier Apply(ParcelShipped shipped) =>
         this with { ParcelIds = ParcelIds.Append(shipped.ParcelId).ToList() };
+
+    public Courier Apply(ParcelDelivered @event)
+    {
+        ParcelIds.Remove(@event.ParcelId);
+        return this;
+    }
 }
