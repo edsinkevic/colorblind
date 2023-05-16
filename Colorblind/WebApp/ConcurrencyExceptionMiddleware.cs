@@ -26,7 +26,9 @@ public class ConcurrencyExceptionMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.Conflict;
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
-                title = "Conflict", status = context.Response.StatusCode, detail = ex.Message,
+                title = "Conflict",
+                status = context.Response.StatusCode,
+                detail = ex.Message,
             }));
         }
     }
