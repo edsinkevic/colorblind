@@ -43,7 +43,11 @@ public class ShipParcelFromTerminalUseCase
                 throw new DomainError(
                     "Parcel must have Submitted status!");
 
-            return new ParcelShipped(aggregate.Id, command.CourierId);
+            if (aggregate.TerminalId is null)
+                throw new DomainError(
+                    "Parcel isn't in a terminal!");
+
+            return new ParcelShipped(aggregate.Id, command.CourierId, aggregate.TerminalId.Value);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);

@@ -1,3 +1,3 @@
 namespace Domain.Events.ParcelEvents;
 
-public record ParcelReceived(Guid ParcelId);
+public record ParcelReceived(Guid ParcelId, Guid TerminalId);

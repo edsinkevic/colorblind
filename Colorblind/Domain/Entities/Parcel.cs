@@ -30,7 +30,7 @@ public record Parcel(Guid Id,
         this with { Status = ParcelStatus.Shipped, CourierId = shipped.CourierId };
 
     public Parcel Apply(ParcelDelivered delivered) =>
-        this with { Status = ParcelStatus.Delivered };
+        this with { Status = ParcelStatus.Delivered, TerminalId = delivered.TerminalId };
 
     public Parcel Apply(ParcelReceived @event) =>
         this with { Status = ParcelStatus.Received };
