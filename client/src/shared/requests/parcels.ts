@@ -10,8 +10,14 @@ export const register = (
     body: JSON.stringify(parcelRegistration),
   });
 
-export const detailsGetOne = (code: string): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}`), {
+export const detailsGetOne = (id: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/${id}`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
+
+export const getOneByCode = (code: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/code/${code}`), {
     ...defaultFetchConfig,
     method: "GET",
   });

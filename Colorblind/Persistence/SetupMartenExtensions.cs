@@ -9,7 +9,7 @@ namespace Persistence;
 
 public static class SetupMartenExtensions
 {
-    public static void SetupMarten(this IServiceCollection services,
+    public static IServiceCollection SetupMarten(this IServiceCollection services,
         string schemaName,
         string connectionString)
     {
@@ -28,5 +28,6 @@ public static class SetupMartenExtensions
                     options.Projections.Add<CourierProjection>(ProjectionLifecycle.Inline);
                 }
             ).AddAsyncDaemon(DaemonMode.HotCold);
+        return services;
     }
 }

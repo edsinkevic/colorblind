@@ -54,19 +54,14 @@ export default function StepTwo() {
     const resp = await register(value);
     const { status } = resp;
 
-    if (status === StatusCodes.CREATED) {
-      const body = (await resp.json()) as ParcelRegistrationResponse;
-      router.replace(`/track/${body.code}`);
-      return;
-    }
-
-    if (status === StatusCodes.BAD_REQUEST) {
+    if (status !== StatusCodes.OK) {
       const body = (await resp.json()) as Problem;
       setProblem(body);
       return;
     }
 
-    setError(new Error("Something went supper wrong"));
+    const body = (await resp.json()) as ParcelRegistrationResponse;
+    router.replace(`/track/${body.id}`);
   };
 
   if (!registration) return null;

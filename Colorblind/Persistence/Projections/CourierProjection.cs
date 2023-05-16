@@ -1,11 +1,11 @@
 using Domain.Entities;
-using Domain.Events.Courier;
-using Domain.Events.Parcel;
+using Domain.Events.CourierEvents;
+using Domain.Events.ParcelEvents;
 using Marten.Events.Projections;
 
 namespace Persistence.Projections;
 
-public class CourierProjection : MultiStreamAggregation<Courier, Guid>
+public class CourierProjection : MultiStreamProjection<Courier, Guid>
 {
     public CourierProjection()
     {

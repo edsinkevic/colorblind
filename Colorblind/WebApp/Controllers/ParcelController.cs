@@ -1,16 +1,8 @@
-using Domain.Commands.Parcel;
-using Domain.Entities;
-using Domain.Values;
+using Domain.Commands.ParcelCommands;
+using Domain.UseCases.ParcelUseCases;
 using Mapster;
-using Marten;
-using Marten.Linq;
-using Marten.Schema.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
-using Persistence;
 using WebApp.Requests;
-using static Domain.Rules.ParcelRules;
-
 
 namespace WebApp.Controllers;
 
@@ -18,158 +10,96 @@ namespace WebApp.Controllers;
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
-    [HttpGet("{code}")]
-    public async Task<IActionResult> GetDetails(IQuerySession querySession,
+    [HttpGet("code/{code}")]
+    public async Task<IActionResult> Get(
+        [FromServices] GetParcelByCodeUseCase useCase,
         string code,
         CancellationToken ct)
     {
-        var res = await querySession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
-
-        if (res is null)
-        {
-            return Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!");
-        }
-
-        var state = await querySession.Events.FetchStreamStateAsync(res.Id, ct);
-        HttpContext.Response.Headers.Add(HeaderNames.ETag, state.Version.ToString());
-        return Ok(res);
+        var res = await useCase.Execute(code, ct: ct);
+        return res is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with code {code} was not found!")
+            : Ok(res);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(
+        [FromServices] GetParcelUseCase useCase,
+        Guid id,
+        CancellationToken ct)
+    {
+        var res = await useCase.Execute(id, ct: ct);
+        return res is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel was not found!")
+            : Ok(res);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(
+        [FromServices] ListParcelsUseCase useCase,
+        [FromQuery] int? pageNum,
+        [FromQuery] int? pageSize,
+        CancellationToken ct) =>
+        Ok(await useCase.Execute(pageNum, pageSize, ct: ct));
+
     [HttpPost("register")]
-    public async Task<IActionResult> Register(IDocumentSession documentSession,
+    public async Task<IActionResult> Register(
+        [FromServices] RegisterParcelUseCase useCase,
         RegisterParcelRequest request,
         CancellationToken ct)
     {
-        var parcelId = CombGuidIdGeneration.NewGuid();
-        var parcelCode = Guid.NewGuid().ToString();
-        var createdDate = DateTime.Now;
-        var command = request.Adapt<RegisterParcel>() with
-        {
-            Id = parcelId,
-            Code = parcelCode,
-            CreatedDate = createdDate,
-        };
-
-        documentSession.Events.StartStream<Parcel>(parcelId, Handle(command));
-        await documentSession.SaveChangesAsync(ct);
-
-        return Created($"parcels/{parcelCode}", new { id = parcelId, code = parcelCode });
+        var id = await useCase.Execute(request.Adapt<RegisterParcel>(), ct);
+        return Ok(new { id });
     }
 
     [HttpPost("{code}/unregister")]
-    public async Task<IActionResult> Unregister(IDocumentSession documentSession,
+    public async Task<IActionResult> Unregister(
+        [FromServices] UnregisterParcelUseCase useCase,
         string code,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
-
-        if (parcel is null)
-            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
-
-        var command = new UnregisterParcel(parcel.Id);
-
-        await documentSession.GetAndUpdate<Parcel>(
-            parcel.Id,
-            eTag.ToExpectedVersion(),
-            x => Handle(x, command),
-            ct
-        );
-
+        var command = new UnregisterParcel(code, eTag.ToExpectedVersion());
+        await useCase.Execute(command, ct);
         return Ok();
     }
 
     [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
-    public async Task<IActionResult> SubmitToTerminal(IDocumentSession documentSession,
+    public async Task<IActionResult> SubmitToTerminal(
+        [FromServices] SubmitParcelToTerminalUseCase useCase,
         string code,
         Guid terminalId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
-
-        if (parcel is null)
-            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
-
-        var exists = await documentSession
-            .Query<Terminal>()
-            .AnyAsync(x => x.Id == terminalId, token: ct);
-
-        if (!exists)
-            return Problem(statusCode: 404, title: "Terminal not found");
-
-        var command = new SubmitParcelToTerminal(parcel.Id, terminalId);
-
-        await documentSession.GetAndUpdate<Parcel>(
-            parcel.Id,
-            eTag.ToExpectedVersion(),
-            x => Handle(x, command),
-            ct
-        );
-
+        var command = new SubmitParcelToTerminal(code, terminalId, eTag.ToExpectedVersion());
+        await useCase.Execute(command, ct);
         return Ok();
     }
 
     [HttpPost("{code}/ship/{courierId:guid}")]
-    public async Task<IActionResult> Ship(IDocumentSession documentSession,
+    public async Task<IActionResult> Ship(
+        [FromServices] ShipParcelFromTerminalUseCase useCase,
         string code,
         Guid courierId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
-
-        if (parcel is null)
-            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
-
-        var courier = await GetCourier(documentSession, courierId, ct);
-
-        if (courier is null)
-            return Problem(statusCode: 400, title: $"Courier with code {code} doesn't exist!");
-
-        var command = new ShipParcel(parcel.Id, courierId);
-
-        await documentSession.GetAndUpdate<Parcel>(
-            parcel.Id,
-            eTag.ToExpectedVersion(),
-            x => Handle(x, command),
-            ct
-        );
-
+        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion());
+        await useCase.Execute(command, ct);
         return Ok();
     }
 
-    [HttpPost("{code}/deliver")]
-    public async Task<IActionResult> Deliver(IDocumentSession documentSession,
+    [HttpPost("{code}/deliver/terminal/{terminalId:guid}")]
+    public async Task<IActionResult> Deliver(
+        [FromServices] DeliverParcelToTerminalUseCase useCase,
         string code,
+        Guid terminalId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var parcel = await GetParcel(documentSession, code, ct);
-
-        if (parcel is null)
-            return Problem(statusCode: 404, title: $"Parcel with code {code} doesn't exist!");
-
-
-        var command = new DeliverParcel(parcel.Id);
-
-        await documentSession.GetAndUpdate<Parcel>(
-            parcel.Id,
-            eTag.ToExpectedVersion(),
-            x => Handle(x, command),
-            ct
-        );
-
+        var command = new DeliverParcel(code, terminalId, eTag.ToExpectedVersion());
+        await useCase.Execute(command, ct);
         return Ok();
     }
-
-    private static Task<Parcel?> GetParcel(IQuerySession documentSession, string code, CancellationToken ct) =>
-        documentSession
-            .Query<Parcel>()
-            .Where(i => i.Code == code)
-            .FirstOrDefaultAsync(ct);
-
-    private static Task<Courier?> GetCourier(IQuerySession documentSession, Guid id, CancellationToken ct) =>
-        documentSession
-            .Query<Courier>().FirstOrDefaultAsync(x => x.Id == id, token: ct);
 }
