@@ -11,5 +11,4 @@ public interface IParcelRepository
     public void Create(ParcelRegistered register);
     public Task Update(Guid id, int version, Func<Parcel, object> handle, CancellationToken ct = default);
     public Task<Parcel?> GetByCode(string code, CancellationToken ct = default);
-    public Task<Parcel?> GetByReceiveCode(string code, CancellationToken ct = default);
 }

@@ -24,11 +24,11 @@ public class ReceiveParcelFromTerminalUseCase
         ReceiveParcel command,
         CancellationToken ct = default)
     {
-        var parcel = await _parcelRepository.GetByReceiveCode(command.ReceiveCode, ct);
+        var parcel = await _parcelRepository.GetByCode(command.Code, ct);
 
         if (parcel is null)
         {
-            throw new DomainError($"Parcel with code {command.ReceiveCode} doesn't exist!");
+            throw new DomainError($"Parcel with code {command.Code} doesn't exist!");
         }
 
         await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>

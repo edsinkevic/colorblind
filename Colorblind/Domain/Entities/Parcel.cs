@@ -6,7 +6,6 @@ namespace Domain.Entities;
 
 public record Parcel(Guid Id,
     string Code,
-    string ReceiveCode,
     ParcelSize Size,
     DateTime CreatedDate,
     string InvoiceEmail,

@@ -46,12 +46,8 @@ public class RegisterParcelUseCase
 
         var id = _idGenerator.Generate();
         var code = _idGenerator.Generate().ToString();
-        var receiveCode = _idGenerator.Generate().ToString();
         var date = DateTime.Now;
-        var @event = command.Adapt<ParcelRegistered>() with
-        {
-            Id = id, Code = code, ReceiveCode = receiveCode, CreatedDate = date
-        };
+        var @event = command.Adapt<ParcelRegistered>() with { Id = id, Code = code, CreatedDate = date };
         _parcelRepository.Create(@event);
         await _saveChanges.SaveChanges(ct);
         return id;

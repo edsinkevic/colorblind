@@ -30,8 +30,4 @@ public class ParcelRepository : IParcelRepository
 
     public Task<Parcel?> GetByCode(string code, CancellationToken ct) =>
         _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
-
-    public Task<Parcel?> GetByReceiveCode(string code, CancellationToken ct) =>
-        _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.ReceiveCode == code, token: ct);
-    
 }
