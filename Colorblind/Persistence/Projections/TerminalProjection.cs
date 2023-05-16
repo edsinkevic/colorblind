@@ -1,10 +1,11 @@
 using Domain.Entities;
-using Domain.Events.Parcel;
+using Domain.Events.ParcelEvents;
+using Domain.Events.TerminalEvents;
 using Marten.Events.Projections;
 
 namespace Persistence.Projections;
 
-public class TerminalProjection : MultiStreamAggregation<Terminal, Guid>
+public class TerminalProjection : MultiStreamProjection<Terminal, Guid>
 {
     public TerminalProjection()
     {

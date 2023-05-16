@@ -7,6 +7,9 @@ export const Header = () => {
       <Link href="/" className={styles.titleContainer}>
         <button className={styles.headerButton}>FastMail</button>
       </Link>
+      <Link href={"/terminal"} className={styles.headerButton}>
+        <h1>Terminal environment</h1>
+      </Link>
       <div className={styles.buttonContainer}>
         <Link href={"/admin"}>
           <button className={styles.headerButton}>Admin environment</button>

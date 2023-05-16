@@ -1,4 +1,5 @@
-using Domain.Events.Parcel;
+using Domain.Events.ParcelEvents;
+using Domain.Events.TerminalEvents;
 
 namespace Domain.Entities;
 
@@ -12,5 +13,3 @@ public record Terminal(Guid Id,
     public Terminal Apply(ParcelSubmittedToTerminal submittedToTerminal) =>
         this with { ParcelIds = ParcelIds.Append(submittedToTerminal.ParcelId).ToList() };
 }
-
-public record TerminalRegistered(Guid TerminalId, string Address);

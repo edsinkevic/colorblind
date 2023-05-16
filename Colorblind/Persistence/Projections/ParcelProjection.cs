@@ -1,12 +1,12 @@
 using Domain.Entities;
-using Domain.Events.Parcel;
+using Domain.Events.ParcelEvents;
 using Domain.Values;
 using Mapster;
 using Marten.Events.Aggregation;
 
 namespace Persistence.Projections;
 
-public class ParcelProjection : SingleStreamAggregation<Parcel>
+public class ParcelProjection : SingleStreamProjection<Parcel>
 {
     public static Parcel Create(ParcelRegistered registered) =>
         Parcel.Create(registered);

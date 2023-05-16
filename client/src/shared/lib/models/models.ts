@@ -1,11 +1,15 @@
-import { StringLiteral } from "typescript";
-
 export interface PersonInfo {
   fullname: string;
   phoneNumber: string;
   email: string;
   terminalId?: string;
   takeawayAddress: string;
+}
+
+export interface Courier {
+  id: string;
+  name: string;
+  parcelIds: string[];
 }
 
 export interface DeliveryType {
@@ -25,7 +29,7 @@ export interface ParcelRegistration {
 }
 
 export interface ParcelRegistrationResponse {
-  code: string;
+  id: string;
 }
 
 export interface Problem {
@@ -37,20 +41,23 @@ export interface Problem {
 export interface ParcelDetails {
   id: string;
   code: string;
-  size: string;
-  createdDate: string;
-  invoiceEmail: string;
-  transactionCode: string;
-  deliveryType: DeliveryType;
-  senderDeliveryInfo: PersonInfo;
-  receiverDeliveryInfo: PersonInfo;
-  parcelStatus: string;
+  status: ParcelStatus;
+}
+
+export enum ParcelStatus {
+  REGISTERED = "Registered",
+  UNREGISTERED = "Unregistered",
+  SUBMITTED = "Submitted",
+  SHIPPED = "Shipped",
+  DELIVERED = "Delivered",
 }
 
 export interface TerminalDetails {
   id: string;
   address: string;
+  parcelIds: string[];
 }
+
 export interface RegisterTerminalResponse {
   id: string;
 }
@@ -65,4 +72,3 @@ export enum StatusCodes {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
 }
-
