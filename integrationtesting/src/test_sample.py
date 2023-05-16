@@ -1,11 +1,8 @@
 import time
-
-import requests as requests
-from selenium import webdriver
-from selenium.webdriver.chrome.webdriver import WebDriver
-import os
 from dataclasses import dataclass
 
+from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 
