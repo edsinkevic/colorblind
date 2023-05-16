@@ -21,13 +21,13 @@ public class TerminalProjection : MultiStreamProjection<Terminal, Guid>
 
     public static Terminal Handle(Terminal terminal, ParcelSubmittedToTerminal submittedToTerminal) =>
         terminal.Apply(submittedToTerminal);
-    
+
     public static Terminal Handle(Terminal terminal, ParcelShipped @event) =>
         terminal.Apply(@event);
-    
+
     public static Terminal Handle(Terminal terminal, ParcelReceived @event) =>
         terminal.Apply(@event);
-    
+
     public static Terminal Handle(Terminal terminal, ParcelDelivered @event) =>
         terminal.Apply(@event);
 }

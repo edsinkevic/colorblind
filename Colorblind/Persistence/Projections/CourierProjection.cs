@@ -19,7 +19,7 @@ public class CourierProjection : MultiStreamProjection<Courier, Guid>
 
     public static Courier Handle(Courier courier, ParcelShipped shipped) =>
         courier.Apply(shipped);
-    
+
     public static Courier Handle(Courier courier, ParcelDelivered @event) =>
         courier.Apply(@event);
 }

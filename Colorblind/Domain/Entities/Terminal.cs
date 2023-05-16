@@ -8,7 +8,7 @@ public record Terminal(Guid Id,
     List<Guid> ParcelIds)
 {
     public static Terminal Create(TerminalRegistered create) =>
-        new (create.TerminalId, create.Address, new List<Guid>());
+        new(create.TerminalId, create.Address, new List<Guid>());
 
     public Terminal Apply(ParcelSubmittedToTerminal submittedToTerminal) =>
         this with { ParcelIds = ParcelIds.Append(submittedToTerminal.ParcelId).ToList() };
