@@ -18,13 +18,11 @@ config: Config = Config(
 def test_scenario():
     server = ServerClient(config.server_url)
 
-    from_terminal = default_terminal("Druskio g. 5")
-    response = server.register_terminal(from_terminal)
+    response = server.register_terminal(default_terminal("Druskio g. 5"))
     response.raise_for_status()
     from_terminal_id = response.json()['id']
 
-    to_terminal = default_terminal("Giluzės g. 5")
-    response = server.register_terminal(to_terminal)
+    response = server.register_terminal(default_terminal("Giluzės g. 5"))
     response.raise_for_status()
     to_terminal_id = response.json()['id']
 
@@ -55,8 +53,28 @@ def test_scenario():
     response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1)
     response.raise_for_status()
 
+    response = server.get_courier(courier_id)
+    response.raise_for_status()
+    courier = response.json()
+    assert len(courier['parcelIds']) == 1
+
+    response = server.get_terminal(from_terminal_id)
+    response.raise_for_status()
+    terminal = response.json()
+    assert len(terminal['parcelIds']) == 0
+
     response = server.deliver_parcel(parcel_code, to_terminal_id, parcel_version + 2)
     response.raise_for_status()
+
+    response = server.get_courier(courier_id)
+    response.raise_for_status()
+    courier = response.json()
+    assert len(courier['parcelIds']) == 0
+
+    response = server.get_terminal(to_terminal_id)
+    response.raise_for_status()
+    terminal = response.json()
+    assert len(terminal['parcelIds']) == 1
 
     response = server.get_parcel_by_code(parcel_code)
     response.raise_for_status()
@@ -70,6 +88,11 @@ def test_scenario():
     response.raise_for_status()
     resp = response.json()
     assert resp['status'] == "Received"
+
+    response = server.get_terminal(to_terminal_id)
+    response.raise_for_status()
+    terminal = response.json()
+    assert len(terminal['parcelIds']) == 0
 
 
 def default_headers(version: int):
