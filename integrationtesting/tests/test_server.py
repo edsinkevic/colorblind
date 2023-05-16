@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import requests as requests
+from src.server import ServerClient
 
 
 @dataclass
@@ -16,67 +16,59 @@ config: Config = Config(
 
 
 def test_scenario():
+    server = ServerClient(config.server_url)
+
     from_terminal = default_terminal("Druskio g. 5")
-    response = requests.post(f"{config.server_url}/terminals/", json=from_terminal,
-                             headers={"Content-type": "application/json"})
+    response = server.register_terminal(from_terminal)
     response.raise_for_status()
     from_terminal_id = response.json()['id']
 
     to_terminal = default_terminal("Giluzės g. 5")
-    response = requests.post(f"{config.server_url}/terminals/", json=to_terminal,
-                             headers={"Content-type": "application/json"})
+    response = server.register_terminal(to_terminal)
     response.raise_for_status()
     to_terminal_id = response.json()['id']
 
-    response = requests.post(f"{config.server_url}/couriers", json=default_courier(),
-                             headers={"Content-type": "application/json"})
+    response = server.register_courier(default_courier())
     response.raise_for_status()
-
     resp = response.json()
     courier_id = resp['id']
 
-    response = requests.post(f"{config.server_url}/parcels/register",
-                             json=default_registration(from_terminal_id, to_terminal_id),
-                             headers={"Content-type": "application/json"})
+    response = server.register_parcel(default_registration(from_terminal_id, to_terminal_id))
     response.raise_for_status()
     resp = response.json()
     parcel_id = resp['id']
 
-    response = requests.get(f"{config.server_url}/parcels/{parcel_id}", headers={"Content-type": "application/json"})
+    response = server.get_parcel(parcel_id)
     response.raise_for_status()
     resp = response.json()
     parcel_code = resp['code']
+    parcel_version = resp['version']
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/submit/terminal/{from_terminal_id}",
-                             headers=default_headers(1))
+    response = server.submit_parcel_to_terminal(parcel_code, from_terminal_id, parcel_version)
     response.raise_for_status()
 
-    response = requests.get(f"{config.server_url}/terminals/{from_terminal_id}")
+    response = server.get_terminal(from_terminal_id)
     response.raise_for_status()
-
     terminal = response.json()
-
     assert len(terminal['parcelIds']) == 1 and terminal['parcelIds'][0] == parcel_id
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/ship/{courier_id}", headers=default_headers(2))
+    response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1)
     response.raise_for_status()
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/deliver/terminal/{to_terminal_id}",
-                             headers=default_headers(3))
+    response = server.deliver_parcel(parcel_code, to_terminal_id, parcel_version + 2)
     response.raise_for_status()
 
-    response = requests.get(f"{config.server_url}/parcels/code/{parcel_code}")
+    response = server.get_parcel_by_code(parcel_code)
+    response.raise_for_status()
     resp = response.json()
-
     assert resp['status'] == "Delivered"
 
-    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/receive",
-                             headers=default_headers(4))
+    response = server.receive_parcel(parcel_code, parcel_version + 3)
     response.raise_for_status()
 
-    response = requests.get(f"{config.server_url}/parcels/code/{parcel_code}")
+    response = server.get_parcel(parcel_id)
+    response.raise_for_status()
     resp = response.json()
-
     assert resp['status'] == "Received"
 
 
