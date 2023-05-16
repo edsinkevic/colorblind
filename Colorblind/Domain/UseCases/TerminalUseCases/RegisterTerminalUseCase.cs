@@ -1,4 +1,4 @@
-using Domain.Commands;
+using Domain.Commands.TerminalCommands;
 using Domain.Events.TerminalEvents;
 using Domain.Persistence;
 using Mapster;

@@ -32,6 +32,9 @@ public record Parcel(Guid Id,
     public Parcel Apply(ParcelDelivered delivered) =>
         this with { Status = ParcelStatus.Delivered };
 
+    public Parcel Apply(ParcelReceived @event) =>
+        this with { Status = ParcelStatus.Received };
+
     public Parcel Apply(ParcelUnregistered unregistered) =>
         this with { Status = ParcelStatus.Unregistered };
 }

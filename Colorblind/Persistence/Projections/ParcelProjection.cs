@@ -1,7 +1,5 @@
 using Domain.Entities;
 using Domain.Events.ParcelEvents;
-using Domain.Values;
-using Mapster;
 using Marten.Events.Aggregation;
 
 namespace Persistence.Projections;
@@ -22,4 +20,7 @@ public class ParcelProjection : SingleStreamProjection<Parcel>
 
     public static Parcel Handle(Parcel parcel, ParcelDelivered delivered) =>
         parcel.Apply(delivered);
+
+    public static Parcel Handle(Parcel parcel, ParcelReceived @event) =>
+        parcel.Apply(@event);
 }
