@@ -102,4 +102,16 @@ public class ParcelController : ControllerBase
         await useCase.Execute(command, ct);
         return Ok();
     }
+
+    [HttpPost("{receiveCode}/receive")]
+    public async Task<IActionResult> Deliver(
+        [FromServices] ReceiveParcelFromTerminalUseCase useCase,
+        string receiveCode,
+        [FromHeader(Name = "If-Match")] string eTag,
+        CancellationToken ct)
+    {
+        var command = new ReceiveParcel(receiveCode, eTag.ToExpectedVersion());
+        await useCase.Execute(command, ct);
+        return Ok();
+    }
 }

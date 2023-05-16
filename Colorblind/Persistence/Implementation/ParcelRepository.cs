@@ -1,7 +1,6 @@
 using Domain.Entities;
 using Domain.Events.ParcelEvents;
 using Domain.Persistence;
-using Mapster;
 using Marten;
 using Marten.Pagination;
 
@@ -31,4 +30,8 @@ public class ParcelRepository : IParcelRepository
 
     public Task<Parcel?> GetByCode(string code, CancellationToken ct) =>
         _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
+
+    public Task<Parcel?> GetByReceiveCode(string code, CancellationToken ct) =>
+        _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.ReceiveCode == code, token: ct);
+    
 }

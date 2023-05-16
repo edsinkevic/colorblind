@@ -6,5 +6,6 @@ public enum ParcelStatus
     Submitted = 8,
     Shipped = 16,
     Delivered = 32,
-    Unregistered = 64
+    Unregistered = 64,
+    Received = 128
 }
