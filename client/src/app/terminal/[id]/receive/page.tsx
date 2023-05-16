@@ -1,7 +1,7 @@
 "use client";
 import { MouseEventHandler, useState } from "react";
 import { FormInput } from "colorblind/shared/components/FormInput";
-import { getOneByCode, submit } from "colorblind/shared/requests/parcels";
+import { getOneByCode, receive } from "colorblind/shared/requests/parcels";
 import {
   ParcelDetails,
   ParcelStatus,
@@ -22,8 +22,7 @@ export default function TerminalSubmit({ params: { id } }: Props) {
   const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
 
-  const onApplyCode: MouseEventHandler = async (e) => {
-    e.preventDefault();
+  const fetchParcel = async () => {
     const parcelResponse = await getOneByCode(code);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
@@ -33,13 +32,18 @@ export default function TerminalSubmit({ params: { id } }: Props) {
 
     const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
 
-    if (fetchedParcel.status !== ParcelStatus.REGISTERED) {
-      setError("Parcel must have registered status!");
+    if (fetchedParcel.status !== ParcelStatus.DELIVERED) {
+      setError("Parcel was not delivered yet!");
       return;
     }
 
     setParcel(fetchedParcel);
     setError(undefined);
+  };
+
+  const onApplyCode: MouseEventHandler = async (e) => {
+    e.preventDefault();
+    await fetchParcel();
   };
 
   const onLockerOpen: MouseEventHandler = async (e) => {
@@ -53,7 +57,15 @@ export default function TerminalSubmit({ params: { id } }: Props) {
     e.preventDefault();
     if (!parcel || error) return;
 
-    const response = await submit(code, id, parcel.version);
+    const response = await receive(code, parcel.version.toString());
+
+    if (response.status === StatusCodes.Conflict) {
+      const problem = (await response.json()) as Problem;
+      setError(problem.detail);
+      await fetchParcel();
+      return;
+    }
+
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
       setError(problem.detail);
