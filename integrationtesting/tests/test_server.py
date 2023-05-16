@@ -1,13 +1,6 @@
-import json
-from pprint import pprint
-
-import requests as requests
-from selenium import webdriver
-from selenium.webdriver.chrome.webdriver import WebDriver
-import os
 from dataclasses import dataclass
 
-from selenium.webdriver.common.by import By
+import requests as requests
 
 
 @dataclass
@@ -76,6 +69,15 @@ def test_scenario():
     resp = response.json()
 
     assert resp['status'] == "Delivered"
+
+    response = requests.post(f"{config.server_url}/parcels/{parcel_code}/receive",
+                             headers=default_headers(4))
+    response.raise_for_status()
+
+    response = requests.get(f"{config.server_url}/parcels/code/{parcel_code}")
+    resp = response.json()
+
+    assert resp['status'] == "Received"
 
 
 def default_headers(version: int):
