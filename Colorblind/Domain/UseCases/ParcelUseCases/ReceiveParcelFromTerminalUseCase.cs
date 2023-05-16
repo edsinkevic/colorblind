@@ -38,7 +38,7 @@ public class ReceiveParcelFromTerminalUseCase
                 throw new DomainError("Parcel was not delivered yet!");
             }
 
-            return new ParcelReceived(parcel.Id);
+            return new ParcelReceived(aggregate.Id);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
