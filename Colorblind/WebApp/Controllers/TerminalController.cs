@@ -1,4 +1,4 @@
-using Domain.Commands;
+using Domain.Commands.TerminalCommands;
 using Domain.UseCases.TerminalUseCases;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;

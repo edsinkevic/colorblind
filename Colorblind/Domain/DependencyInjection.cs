@@ -22,6 +22,7 @@ public static class DependencyInjection
             .AddScoped<UnregisterParcelUseCase>()
             .AddScoped<SubmitParcelToTerminalUseCase>()
             .AddScoped<ShipParcelFromTerminalUseCase>()
-            .AddScoped<DeliverParcelToTerminalUseCase>();
+            .AddScoped<DeliverParcelToTerminalUseCase>()
+            .AddScoped<ReceiveParcelFromTerminalUseCase>();
     }
 }

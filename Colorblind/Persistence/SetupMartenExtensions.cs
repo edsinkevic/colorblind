@@ -27,7 +27,7 @@ public static class SetupMartenExtensions
                     options.Projections.Add<TerminalProjection>(ProjectionLifecycle.Inline);
                     options.Projections.Add<CourierProjection>(ProjectionLifecycle.Inline);
                 }
-            ).AddAsyncDaemon(DaemonMode.HotCold);
+            ).UseLightweightSessions().AddAsyncDaemon(DaemonMode.HotCold);
         return services;
     }
 }
