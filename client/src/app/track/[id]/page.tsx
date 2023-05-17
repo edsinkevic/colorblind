@@ -26,7 +26,7 @@ export default async function ParcelDetailsPage({ params: { id } }: Props) {
           <p>
             Place your order into the locker located at :
             {/* Retreive locker address based on terminalId */}
-            {body.senderDeliveryInfo.parcelLockerAddress}
+            {/* {body.senderDeliveryInfo.parcelLockerAddress} */}
           </p>
         </div>
       </div>
