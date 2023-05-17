@@ -47,7 +47,12 @@ public class DeliverParcelToTerminalUseCase
                 throw new DomainError(
                     "Parcel must have Shipped status");
 
-            return new ParcelDelivered(aggregate.Id, command.TerminalId);
+            var courierId = aggregate.CourierId;
+            if (courierId is null)
+                throw new DomainError(
+                    "Parcel doesn't have a courier!");
+
+            return new ParcelDelivered(aggregate.Id, command.TerminalId, courierId.Value);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
