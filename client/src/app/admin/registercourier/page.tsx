@@ -33,7 +33,7 @@ export default function RegisterCourier() {
 
   return (
     <div>
-      <form>
+      <form onSubmit={onSubmit}>
         <FormInput
           value={name}
           placeholder={"Name"}
