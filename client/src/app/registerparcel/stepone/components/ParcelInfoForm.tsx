@@ -34,30 +34,33 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         />
       </div>
       <label>Delivery type</label>
-      <div>
-        <span>From</span>
-        <PickerFromArray
-          array={deliveryTypes}
-          onSubmit={(from) =>
-            setState({
-              ...state,
-              deliveryType: { ...state.deliveryType, from },
-            })
-          }
-        />
+      <div className={styles.from_to_container}>
+        <div>
+          <span>From</span>
+          <PickerFromArray
+            array={deliveryTypes}
+            onSubmit={(from) =>
+              setState({
+                ...state,
+                deliveryType: { ...state.deliveryType, from },
+              })
+            }
+          />
+        </div>
+        <div>
+          <span>To</span>
+          <PickerFromArray
+            array={deliveryTypes}
+            onSubmit={(to) =>
+              setState({
+                ...state,
+                deliveryType: { ...state.deliveryType, to },
+              })
+            }
+          />
+        </div>
       </div>
-      <div>
-        <span>To</span>
-        <PickerFromArray
-          array={deliveryTypes}
-          onSubmit={(to) =>
-            setState({
-              ...state,
-              deliveryType: { ...state.deliveryType, to },
-            })
-          }
-        />
-      </div>
+      
       <button type={"submit"}>Next</button>
     </form>
   );
