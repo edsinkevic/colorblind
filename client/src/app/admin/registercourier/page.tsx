@@ -6,7 +6,7 @@ import { FormInput } from "colorblind/shared/components/FormInput";
 import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/couriers";
 
-export default function StepOne() {
+export default function RegisterCourier() {
   const [error, setError] = useState<Error>();
   const router = useRouter();
   const [problem, setProblem] = useState<Problem>();

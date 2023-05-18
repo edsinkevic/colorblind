@@ -14,7 +14,7 @@ interface Props {
   params: { id: string };
 }
 
-export default function TerminalSubmit({ params: { id } }: Props) {
+export default function TerminalReceive({ params: { id } }: Props) {
   const [error, setError] = useState<string>();
   const [code, setCode] = useState<string>("");
   const [parcel, setParcel] = useState<ParcelDetails>();
