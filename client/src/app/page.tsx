@@ -14,6 +14,11 @@ export default function Home() {
           <button className={styles.bigButton}>Track package</button>
         </Link>
         <div>
+          <Link href={"/registration/courier"}>
+            <button className={styles.bigButton}>Registration</button>
+          </Link>
+        </div>
+        <div>
           <button className={styles.bigButton}>Help</button>
         </div>
       </div>
