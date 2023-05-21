@@ -46,6 +46,7 @@ export interface ParcelBase {
 
 export interface ParcelDetails extends ParcelBase {
   status: ParcelStatus;
+  version: number;
 }
 
 export interface ParcelDetailsForTerminal extends ParcelBase {
@@ -75,9 +76,18 @@ export interface RegisterTerminal {
   address: string;
 }
 
+export interface RegisterCourier {
+  name: string;
+}
+
+export interface RegisterCourierResponse {
+  id: string;
+}
+
 export enum StatusCodes {
   OK = 200,
   CREATED = 201,
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
+  Conflict = 409,
 }
