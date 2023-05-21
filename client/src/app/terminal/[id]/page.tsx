@@ -15,7 +15,7 @@ export default function TerminalHome({ params: { id } }: Props) {
           <h1>Terminal</h1>
             <p>Enter courier</p>
             <Link href={`/terminal/${id}/courier`}>
-              <button className={styles.bigButton}>Courier environment</button>
+              <button className={styles.bigButton}>Courier login</button>
             </Link>
           
             <p>Submit a parcel to this terminal</p>

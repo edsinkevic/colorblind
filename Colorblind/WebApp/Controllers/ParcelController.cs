@@ -64,6 +64,27 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("terminal/{terminalId:guid}")]
+    public async Task<IActionResult> GetInTerminal(
+        [FromServices] GetParcelsInTerminalUseCase useCase,
+        Guid terminalId,
+        CancellationToken ct)
+    {
+        var res = await useCase.Execute(terminalId, ct);
+        return Ok(res);
+    }
+
+    [HttpGet("courier/{courierId:guid}/{terminalId:guid}")]
+    public async Task<IActionResult> GetByCourierForTerminal(
+        [FromServices] GetParcelsByCourierForTerminalUseCase useCase,
+        Guid courierId,
+        Guid terminalId,
+        CancellationToken ct)
+    {
+        var res = await useCase.Execute(courierId, terminalId, ct);
+        return Ok(res);
+    }
+
     [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
     public async Task<IActionResult> SubmitToTerminal(
         [FromServices] SubmitParcelToTerminalUseCase useCase,

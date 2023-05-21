@@ -9,6 +9,12 @@ import {
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { getOne } from "colorblind/shared/requests/terminal";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+
+const logout = (router: AppRouterInstance, terminalId: string, alertMessage: string) => {
+  router.push(`/terminal/${terminalId}`);
+  alert(alertMessage);
+};
 
 interface Props {
   params: {
@@ -22,7 +28,19 @@ export default function TerminalCourierEnvironment({
 }: Props) {
   const [courier, setCourier] = useState<Courier>();
   const [terminal, setTerminal] = useState<TerminalDetails>();
+  const [logoutTimer, setLogoutTimer] = useState<number>(60);
   const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLogoutTimer(logoutTimer - 1);
+      if (logoutTimer <= 1) {
+        logout(router, id, "You have been logged out due to inactivity");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [logoutTimer, id, router]);
 
   useEffect(() => {
     const initCourier = async () => {
@@ -30,7 +48,6 @@ export default function TerminalCourierEnvironment({
 
       if (response.status !== StatusCodes.OK) {
         notFound();
-        return;
       }
 
       setCourier(await response.json());
@@ -40,10 +57,10 @@ export default function TerminalCourierEnvironment({
       const response = await getOne(id);
       if (response.status !== StatusCodes.OK) {
         notFound();
-        return;
       }
 
-      setTerminal(await response.json());
+      const terminal = await response.json();
+      setTerminal(terminal);
     };
     initCourier();
     initTerminal();
@@ -56,7 +73,15 @@ export default function TerminalCourierEnvironment({
   return (
     <div className={"form"}>
       <h1>Viewing as {courier.name}</h1>
-      <h2>Submitted parcels: {terminal.parcelIds}</h2>
+      
+      <button onClick={() => router.push(`/terminal/${id}/courier/${courierId}/terminalparcels`)}>View terminal parcels</button>
+      <br />
+      <button onClick={() => router.push(`/terminal/${id}/courier/${courierId}/courierparcels`)}>Deliver parcel</button>
+      <div>
+        <label>For safety reasons you will be logged out in {logoutTimer} seconds of inactivity</label>
+        <br />
+        <button onClick={() => logout(router, id, "Log out successful")}>Logout</button>
+      </div>
     </div>
   );
 }

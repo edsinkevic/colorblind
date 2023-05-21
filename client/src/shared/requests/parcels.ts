@@ -16,16 +16,56 @@ export const detailsGetOne = (id: string): Promise<Response> =>
     method: "GET",
   });
 
+export const detailsGetByTerminalId = (terminalID: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/terminal/${terminalID}`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
+
+export const detailsGetByCourierIdForTerminal = (courierID: string, terminalID: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/courier/${courierID}/${terminalID}`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
+
 export const getOneByCode = (code: string): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/code/${code}`), {
     ...defaultFetchConfig,
     method: "GET",
   });
 
+export const ship = (
+  code: string,
+  courierId: string,
+  version: number
+): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}`), {
+    ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      "If-Match": `"${version}"`,
+    },
+    method: "POST",
+  });
+
+export const deliver = (
+  code: string,
+  terminalId: string,
+  version: number
+): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/${code}/deliver/terminal/${terminalId}`), {
+    ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      "If-Match": `"${version}"`,
+    },
+    method: "POST",
+  });
+
 export const submit = (
   code: string,
   terminalId: string,
-  version: string
+  version: number
 ): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/${code}/submit/terminal/${terminalId}`), {
     ...defaultFetchConfig,

@@ -1,7 +1,7 @@
 "use client";
 import { MouseEventHandler, useState } from "react";
 import { FormInput } from "colorblind/shared/components/FormInput";
-import { detailsGetOne, submit } from "colorblind/shared/requests/parcels";
+import { detailsGetOne, getOneByCode, submit } from "colorblind/shared/requests/parcels";
 import {
   ParcelDetails,
   ParcelStatus,
@@ -18,27 +18,27 @@ export default function TerminalSubmit({ params: { id } }: Props) {
   const [error, setError] = useState<string>();
   const [code, setCode] = useState<string>("");
   const [parcel, setParcel] = useState<ParcelDetails>();
-  const [parcelVersion, setParcelVersion] = useState<string>();
+  const [parcelVersion, setParcelVersion] = useState<number>();
   const [lockerNumber, setLockerNumber] = useState<number>();
   const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
 
   const onApplyCode: MouseEventHandler = async (e) => {
     e.preventDefault();
-    const parcelResponse = await detailsGetOne(code);
+    const parcelResponse = await getOneByCode(code);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
       setError(problem.detail);
       return;
     }
 
-    const version = parcelResponse.headers.get("ETag");
+    const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
+    const version = fetchedParcel.version;
 
     if (!version) {
       setError("Couldn't get parcel version");
       return;
     }
-    const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
 
     if (fetchedParcel.status !== ParcelStatus.REGISTERED) {
       setError("Parcel must have registered status!");
