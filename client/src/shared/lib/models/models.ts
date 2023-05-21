@@ -38,11 +38,20 @@ export interface Problem {
   title: string;
 }
 
-export interface ParcelDetails {
+export interface ParcelBase {
   id: string;
+  version: number;
   code: string;
+}
+
+export interface ParcelDetails extends ParcelBase {
   status: ParcelStatus;
 }
+
+export interface ParcelDetailsForTerminal extends ParcelBase {
+  deliveryTerminalAddress: string; 
+}
+
 
 export enum ParcelStatus {
   REGISTERED = "Registered",

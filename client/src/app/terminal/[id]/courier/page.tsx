@@ -19,6 +19,7 @@ export default function PickCourier({ params: { id } }: Props) {
   const [problem, setProblem] = useState<Problem>();
   const [error, setError] = useState<string>();
   const [courierName, setCourierName] = useState<string>();
+  const [courierPassword, setCourierPassword] = useState<string>();
   const [courier, setCourier] = useState<Courier>();
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function PickCourier({ params: { id } }: Props) {
   }, [courierName]);
 
   return (
-    <div className={"form"}>
+    <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -54,14 +55,24 @@ export default function PickCourier({ params: { id } }: Props) {
         }}
       >
         <FormInput
+          placeholder="Username"
           value={courierName}
           onChange={(e) => {
             e.preventDefault();
             setCourierName(e.target.value);
           }}
         />
-        <button type="submit" disabled={!courierName}>
-          Submit
+        <FormInput
+          type="password"
+          placeholder="Password"
+          value={courierPassword}
+          onChange={(e) => {
+            e.preventDefault();
+            setCourierPassword(e.target.value);
+          }}
+        />
+        <button style={{ float: "right" }} type="submit" disabled={!courierName}>
+          Login
         </button>
         {problem ? JSON.stringify(problem) : null}
         {error}
