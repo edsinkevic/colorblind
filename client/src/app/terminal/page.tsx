@@ -5,9 +5,9 @@ import {
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { getAll } from "colorblind/shared/requests/terminal";
-import StepOneClient from "colorblind/app/terminal/components/page-client";
+import PickTerminalClient from "colorblind/app/terminal/components/page-client";
 
-export default async function StepOne() {
+export default async function PickTerminal() {
   const response = await getAll();
 
   if (response.status !== StatusCodes.OK) {
@@ -17,5 +17,5 @@ export default async function StepOne() {
 
   const terminals = (await response.json()) as TerminalDetails[];
 
-  return <StepOneClient terminals={terminals} />;
+  return <PickTerminalClient terminals={terminals} />;
 }

@@ -2,19 +2,25 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Problem, TerminalDetails } from "colorblind/shared/lib/models/models";
-import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
 import styles from "../page.module.css";
+import { Select } from "antd";
 
 type Props = {
   terminals: TerminalDetails[];
 };
 
-export default function StepOneClient({ terminals }: Props) {
+export default function PickTerminalClient({ terminals }: Props) {
   const router = useRouter();
   const [problem, setProblem] = useState<Problem>();
   const [error, setError] = useState<string>();
   const [pickedTerminalId, setPickedTerminalId] = useState<string>();
 
+  const terminalOptions = terminals.map((terminal) => ({
+    value: terminal.id,
+    label: terminal.address,
+  }));
+
+  const onSelect = (id: string) => setPickedTerminalId(id);
   return (
     <div className={styles.form}>
       <form
@@ -25,11 +31,10 @@ export default function StepOneClient({ terminals }: Props) {
       >
         <h1>Select a terminal</h1>
         <div>
-          <TerminalPicker
-            terminals={terminals}
-            onSubmit={(terminalId) => {
-              setPickedTerminalId(terminalId);
-            }}
+          <Select
+            options={terminalOptions}
+            onChange={onSelect}
+            placeholder="Please select!"
           />
           <button
             type="submit"
