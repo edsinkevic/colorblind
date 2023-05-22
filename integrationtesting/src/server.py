@@ -22,15 +22,15 @@ class ServerClient:
         return requests.post(f"{self.url}/parcels/{_code}/submit/terminal/{_terminal_id}",
                              headers=default_headers(version))
 
-    def ship_parcel(self, _code: str, _courier_id: str, version: int):
-        return requests.post(f"{self.url}/parcels/{_code}/ship/{_courier_id}", headers=default_headers(version))
+    def ship_parcel(self, _code: str, _courier_id: str, version: int, _locker_number: int):
+        return requests.post(f"{self.url}/parcels/{_code}/ship/{_courier_id}/{_locker_number}", headers=default_headers(version))
 
     def deliver_parcel(self, _code: str, _terminal_id: str, version: int):
         return requests.post(f"{self.url}/parcels/{_code}/deliver/terminal/{_terminal_id}",
                              headers=default_headers(version))
 
-    def receive_parcel(self, _code: str, version: int):
-        return requests.post(f"{self.url}/parcels/{_code}/receive/",
+    def receive_parcel(self, _code: str, version: int, _locker_number: int):
+        return requests.post(f"{self.url}/parcels/{_code}/receive/{_locker_number}",
                              headers=default_headers(version))
 
     def register_terminal(self, _obj: dict):
