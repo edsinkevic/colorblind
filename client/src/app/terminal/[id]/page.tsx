@@ -22,8 +22,8 @@ export default function TerminalHome({ params: { id } }: Props) {
             <button className={styles.bigButton}>Submit parcel</button>
           </Link>
           <p>Receive a parcel in this terminal</p>
-          <Link href={`/terminal/${id}/submit`}>
-            <button className={styles.bigButton}>Submit parcel</button>
+          <Link href={`/terminal/${id}/receive`}>
+            <button className={styles.bigButton}>Receive parcel</button>
           </Link>
         </div>
       </div>

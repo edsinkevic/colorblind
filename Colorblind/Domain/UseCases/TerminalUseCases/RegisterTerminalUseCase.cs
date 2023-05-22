@@ -1,4 +1,5 @@
 using Domain.Commands.TerminalCommands;
+using Domain.Entities;
 using Domain.Events.TerminalEvents;
 using Domain.Persistence;
 using Mapster;
@@ -27,7 +28,18 @@ public class RegisterTerminalUseCase
         CancellationToken ct = default)
     {
         var id = _idGenerator.Generate();
-        var @event = command.Adapt<TerminalRegistered>() with { TerminalId = id };
+
+        var lockers = new List<Locker>();
+        var number = 1;
+        foreach (var locker in command.Lockers)
+        {
+            for (var i = 0; i < locker.Count; i++) 
+            {
+                lockers.Add(new Locker(number, locker.Size, null));
+                number++;
+            }
+        }
+        var @event = new TerminalRegistered(id, command.Address, lockers);
         _terminalRepository.Create(@event);
         await _saveChanges.SaveChanges(ct);
         return id;

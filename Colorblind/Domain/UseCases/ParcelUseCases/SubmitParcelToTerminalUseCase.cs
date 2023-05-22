@@ -23,7 +23,7 @@ public class SubmitParcelToTerminalUseCase
         _saveChanges = saveChanges;
     }
 
-    public async Task Execute(
+    public async Task<int> Execute(
         SubmitParcelToTerminal command,
         CancellationToken ct = default)
     {
@@ -36,16 +36,18 @@ public class SubmitParcelToTerminalUseCase
 
         if (terminal is null)
             throw new DomainError("Terminal not found");
+        
+        if (parcel.Status != ParcelStatus.Registered)
+            throw new DomainError("Parcel must have Registered status");
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
+        var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
+
+        await _parcelRepository.Update(parcel.Id, parcel.Version, aggregate =>
         {
-            if (aggregate.Status != ParcelStatus.Registered)
-                throw new DomainError(
-                    "Parcel must have Registered status");
-
-            return new ParcelSubmittedToTerminal(aggregate.Id, command.TerminalId);
+            return new ParcelSubmittedToTerminal(aggregate.Id, command.TerminalId, lockerNumber);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
+        return lockerNumber;
     }
 }

@@ -90,23 +90,23 @@ public class ParcelController : ControllerBase
         [FromServices] SubmitParcelToTerminalUseCase useCase,
         string code,
         Guid terminalId,
-        [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new SubmitParcelToTerminal(code, terminalId, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var command = new SubmitParcelToTerminal(code, terminalId);
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
-    [HttpPost("{code}/ship/{courierId:guid}")]
+    [HttpPost("{code}/ship/{courierId:guid}/{lockerNumber:int}")]
     public async Task<IActionResult> Ship(
         [FromServices] ShipParcelFromTerminalUseCase useCase,
         string code,
         Guid courierId,
+        int lockerNumber,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion());
+        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion(), lockerNumber);
         await useCase.Execute(command, ct);
         return Ok();
     }
@@ -116,22 +116,22 @@ public class ParcelController : ControllerBase
         [FromServices] DeliverParcelToTerminalUseCase useCase,
         string code,
         Guid terminalId,
-        [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new DeliverParcel(code, terminalId, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var command = new DeliverParcel(code, terminalId);
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
-    [HttpPost("{code}/receive")]
+    [HttpPost("{code}/receive/{lockerNumber:int}")]
     public async Task<IActionResult> Receive(
         [FromServices] ReceiveParcelFromTerminalUseCase useCase,
         string code,
+        int lockerNumber,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new ReceiveParcel(code, eTag.ToExpectedVersion());
+        var command = new ReceiveParcel(code, eTag.ToExpectedVersion(), lockerNumber);
         await useCase.Execute(command, ct);
         return Ok();
     }

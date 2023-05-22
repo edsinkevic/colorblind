@@ -47,7 +47,7 @@ public class ShipParcelFromTerminalUseCase
                 throw new DomainError(
                     "Parcel isn't in a terminal!");
 
-            return new ParcelShipped(aggregate.Id, command.CourierId, aggregate.TerminalId.Value);
+            return new ParcelShipped(aggregate.Id, command.CourierId, aggregate.TerminalId.Value, command.LockerNumber);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);

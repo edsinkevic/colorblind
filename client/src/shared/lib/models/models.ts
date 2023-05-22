@@ -46,7 +46,15 @@ export interface ParcelBase {
 
 export interface ParcelDetails extends ParcelBase {
   status: ParcelStatus;
-  version: number;
+  lockerNumber: number | null;
+}
+
+export interface SubmitResponse {
+  lockerNumber: number;
+}
+
+export interface DeliverResponse {
+  lockerNumber: number;
 }
 
 export interface ParcelDetailsForTerminal extends ParcelBase {

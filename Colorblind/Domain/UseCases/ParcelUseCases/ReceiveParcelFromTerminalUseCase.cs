@@ -41,7 +41,7 @@ public class ReceiveParcelFromTerminalUseCase
             if (aggregate.TerminalId is null)
                 throw new DomainError("Parcel isn't in a terminal!");
 
-            return new ParcelReceived(aggregate.Id, aggregate.TerminalId.Value);
+            return new ParcelReceived(aggregate.Id, aggregate.TerminalId.Value, command.LockerNumber);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);

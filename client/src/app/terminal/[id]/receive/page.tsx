@@ -49,28 +49,26 @@ export default function TerminalReceive({ params: { id } }: Props) {
   const onLockerOpen: MouseEventHandler = async (e) => {
     e.preventDefault();
     if (!parcel || error) return;
-
-    setLockerNumber(Math.floor(Math.random() * 20));
-  };
-
-  const onSubmit: MouseEventHandler = async (e) => {
-    e.preventDefault();
-    if (!parcel || error) return;
-
-    const response = await receive(code, parcel.version.toString());
-
+    const response = await receive(code, parcel.version.toString(), parcel.lockerNumber!);
+  
     if (response.status === StatusCodes.Conflict) {
       const problem = (await response.json()) as Problem;
       setError(problem.detail);
       await fetchParcel();
       return;
     }
-
+  
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
       setError(problem.detail);
       return;
     }
+
+    setLockerNumber(parcel.lockerNumber!);
+  };
+
+  const onSubmit: MouseEventHandler = async (e) => {
+    e.preventDefault();
 
     setError(undefined);
     await router.push(`/terminal/${id}`);

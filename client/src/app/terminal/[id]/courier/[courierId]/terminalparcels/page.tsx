@@ -36,12 +36,12 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     const onShip: MouseEventHandler = async (e) => {
         e.preventDefault();
         if (error || !selectedParcel) return;
-        const response = await ship(selectedParcel.code, courierId, selectedParcel.version);
+        const response = await ship(selectedParcel.code, courierId, selectedParcel.version, selectedParcel.lockerNumber!);
         if (response.status !== StatusCodes.OK) {
             notFound();
         }
 
-        setLockerNumber(Math.floor(Math.random() * 20));
+        setLockerNumber(selectedParcel.lockerNumber!);
     };
 
     const onSelect: MouseEventHandler = async (e) => {

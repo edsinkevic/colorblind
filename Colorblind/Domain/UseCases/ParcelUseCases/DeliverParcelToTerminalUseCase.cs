@@ -23,7 +23,7 @@ public class DeliverParcelToTerminalUseCase
         _saveChanges = saveChanges;
     }
 
-    public async Task Execute(
+    public async Task<int> Execute(
         DeliverParcel command,
         CancellationToken ct = default)
     {
@@ -37,7 +37,9 @@ public class DeliverParcelToTerminalUseCase
         if (terminal is null)
             throw new DomainError("Terminal not found");
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
+        var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
+
+        await _parcelRepository.Update(parcel.Id, parcel.Version, aggregate =>
         {
             if (aggregate.ReceiverDeliveryInfo.TerminalId != command.TerminalId)
                 throw new DomainError(
@@ -51,10 +53,11 @@ public class DeliverParcelToTerminalUseCase
             if (courierId is null)
                 throw new DomainError(
                     "Parcel doesn't have a courier!");
-
-            return new ParcelDelivered(aggregate.Id, command.TerminalId, courierId.Value);
+            
+            return new ParcelDelivered(aggregate.Id, command.TerminalId, courierId.Value, lockerNumber);
         }, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
+        return lockerNumber;
     }
 }

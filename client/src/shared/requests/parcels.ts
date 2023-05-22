@@ -37,9 +37,10 @@ export const getOneByCode = (code: string): Promise<Response> =>
 export const ship = (
   code: string,
   courierId: string,
-  version: number
+  version: number,
+  lockerNumber: number
 ): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}`), {
+  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}/${lockerNumber}`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
@@ -65,18 +66,17 @@ export const deliver = (
 export const submit = (
   code: string,
   terminalId: string,
-  version: number
 ): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/${code}/submit/terminal/${terminalId}`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
-      "If-Match": `"${version}"`,
     },
     method: "POST",
   });
-export const receive = (code: string, version: string): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/receive`), {
+
+export const receive = (code: string, version: string, lockerNumber: number): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/${code}/receive/${lockerNumber}`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
