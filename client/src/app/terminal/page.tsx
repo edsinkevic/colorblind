@@ -1,67 +1,21 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import {
   Problem,
   StatusCodes,
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { getAll } from "colorblind/shared/requests/terminal";
-import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
-import styles from "./page.module.css";
+import StepOneClient from "colorblind/app/terminal/components/page-client";
 
-export default function StepOne() {
-  const router = useRouter();
-  const [problem, setProblem] = useState<Problem>();
-  const [error, setError] = useState<string>();
-  const [terminals, setTerminals] = useState<TerminalDetails[]>([]);
-  const [pickedTerminalId, setPickedTerminalId] = useState<string>();
+export default async function StepOne() {
+  const response = await getAll();
 
-  useEffect(() => {
-    const fetchTerminals = async () => {
-      const response = await getAll();
+  if (response.status !== StatusCodes.OK) {
+    const problem = (await response.json()) as Problem;
+    throw new Error(problem.detail);
+  }
 
-      if (response.status !== StatusCodes.OK) {
-        const body = (await response.json()) as Problem;
-        setProblem(body);
-        return;
-      }
+  const terminals = (await response.json()) as TerminalDetails[];
 
-      const terminals = (await response.json()) as TerminalDetails[];
-      setTerminals(terminals);
-      setPickedTerminalId(terminals[0].id);
-    };
-
-    fetchTerminals();
-  }, []);
-
-  return (
-    <div className={styles.form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push(`/terminal/${pickedTerminalId}`);
-        }}
-      >
-        <h1>Select a terminal</h1>
-        <div>
-          <TerminalPicker
-            terminals={terminals}
-            onSubmit={(terminalId) => {
-              setPickedTerminalId(terminalId);
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!pickedTerminalId || !!error || !!problem}
-          >
-            Submit
-          </button>
-
-        </div>
-        {problem ? JSON.stringify(problem) : null}
-        {error}
-      </form>
-    </div>
-  );
+  return <StepOneClient terminals={terminals} />;
 }
