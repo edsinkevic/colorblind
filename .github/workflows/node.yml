@@ -22,4 +22,4 @@ jobs:
       run: npm install
     - name: Build
       working-directory: ./client
-      run: export BUILD_ENVIRONMENT=local && npm run build --if-present --no-static
+      run: npm run build --if-present

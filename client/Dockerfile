@@ -28,8 +28,6 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 
-ENV BUILD_ENVIRONMENT local
-
 RUN yarn build
 
 # If using npm comment out above and use below instead

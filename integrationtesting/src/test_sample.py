@@ -20,7 +20,6 @@ config: Config = Config(
 
 def test_register_parcel():
     options = webdriver.ChromeOptions()
-    options.headless = True
     driver: WebDriver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
     driver.get(config.client_url)
