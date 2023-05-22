@@ -7,6 +7,10 @@ import { getAll } from "colorblind/shared/requests/terminal";
 import StepTwoClient from "colorblind/app/registerparcel/steptwo/components/page-client";
 
 export default async function StepTwo() {
+  if (process.env.BUILD_ENVIRONMENT === "local") {
+    return null;
+  }
+
   const response = await getAll();
 
   if (response.status !== StatusCodes.OK) {

@@ -8,6 +8,10 @@ import { getAll } from "colorblind/shared/requests/terminal";
 import PickTerminalClient from "colorblind/app/terminal/components/page-client";
 
 export default async function PickTerminal() {
+  if (process.env.BUILD_ENVIRONMENT === "local") {
+    return null;
+  }
+
   const response = await getAll();
 
   if (response.status !== StatusCodes.OK) {
