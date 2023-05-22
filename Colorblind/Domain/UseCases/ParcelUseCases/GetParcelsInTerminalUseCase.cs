@@ -16,7 +16,7 @@ public class GetParcelsInTerminalUseCase
 
     public async Task<List<ParcelInTerminalDTO>> Execute(Guid terminalId, CancellationToken ct = default)
     {
-        var parcels = await _parcelRepository.ListByTerminal(terminalId, ct);
+        var parcels = await _parcelRepository.ListShippableByTerminal(terminalId, ct);
         return parcels;
     }
 }
