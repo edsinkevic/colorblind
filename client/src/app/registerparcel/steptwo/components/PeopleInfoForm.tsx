@@ -50,15 +50,31 @@ export const PeopleInfoForm = ({
 
   const handleSubmitWithValidation = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.senderDeliveryInfo?.terminalId) {
+
+    const { senderDeliveryInfo, receiverDeliveryInfo } = form;
+
+    if (!senderDeliveryInfo?.terminalId || !receiverDeliveryInfo?.terminalId) {
       alert("Please select terminal");
       return;
     }
-    if (!form.receiverDeliveryInfo?.terminalId) {
-      alert("Please select terminal");
+
+    if (senderDeliveryInfo?.terminalId === receiverDeliveryInfo?.terminalId) {
+      alert("Pick different source and destination terminals");
       return;
     }
     handleSubmit(e);
+  };
+
+  const selectProps = {
+    status:
+      form.receiverDeliveryInfo?.terminalId ===
+        form.senderDeliveryInfo?.terminalId &&
+      form.receiverDeliveryInfo?.terminalId
+        ? ("error" as "error")
+        : undefined,
+    showSearch: true,
+    options: terminalOptions,
+    placeholder: "Please select",
   };
 
   return (
@@ -92,11 +108,7 @@ export const PeopleInfoForm = ({
           onChange={handleChange}
         />
         <label>Terminal</label>
-        <Select
-          options={terminalOptions}
-          onChange={onChangeFrom}
-          placeholder="Please select"
-        />
+        <Select {...selectProps} onChange={onChangeFrom} />
       </div>
       <div className={styles.receiver}>
         <h2>Receiver</h2>
@@ -126,11 +138,7 @@ export const PeopleInfoForm = ({
           country={"lt"}
         />
         <label>Terminal</label>
-        <Select
-          options={terminalOptions}
-          onChange={onChangeTo}
-          placeholder="Please select"
-        />
+        <Select {...selectProps} onChange={onChangeTo} />
       </div>
       <button type="submit">Next</button>
     </form>

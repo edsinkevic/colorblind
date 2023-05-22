@@ -8,4 +8,7 @@ export const defaultFetchConfig = {
   headers: {
     "Content-Type": "application/json",
   },
+  next: {
+    revalidate: 2,
+  },
 };
