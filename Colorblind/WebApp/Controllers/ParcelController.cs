@@ -94,8 +94,8 @@ public class ParcelController : ControllerBase
         CancellationToken ct)
     {
         var command = new SubmitParcelToTerminal(code, terminalId, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
     [HttpPost("{code}/ship/{courierId:guid}")]
@@ -107,8 +107,8 @@ public class ParcelController : ControllerBase
         CancellationToken ct)
     {
         var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
     [HttpPost("{code}/deliver/terminal/{terminalId:guid}")]
@@ -120,8 +120,8 @@ public class ParcelController : ControllerBase
         CancellationToken ct)
     {
         var command = new DeliverParcel(code, terminalId, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
     [HttpPost("{code}/receive")]
@@ -132,7 +132,7 @@ public class ParcelController : ControllerBase
         CancellationToken ct)
     {
         var command = new ReceiveParcel(code, eTag.ToExpectedVersion());
-        await useCase.Execute(command, ct);
-        return Ok();
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 }

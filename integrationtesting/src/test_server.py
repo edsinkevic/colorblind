@@ -48,7 +48,7 @@ def test_scenario():
     response = server.get_terminal(from_terminal_id)
     response.raise_for_status()
     terminal = response.json()
-    assert len(terminal['parcelIds']) == 1 and terminal['parcelIds'][0] == parcel_id
+    assert len(get_parcels(terminal)) == 1 and get_parcels(terminal)[0] == parcel_id
 
     response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1)
     response.raise_for_status()
@@ -61,7 +61,7 @@ def test_scenario():
     response = server.get_terminal(from_terminal_id)
     response.raise_for_status()
     terminal = response.json()
-    assert len(terminal['parcelIds']) == 0
+    assert len(get_parcels(terminal)) == 0
 
     response = server.deliver_parcel(parcel_code, to_terminal_id, parcel_version + 2)
     response.raise_for_status()
@@ -74,7 +74,7 @@ def test_scenario():
     response = server.get_terminal(to_terminal_id)
     response.raise_for_status()
     terminal = response.json()
-    assert len(terminal['parcelIds']) == 1
+    assert len(get_parcels(terminal)) == 1
 
     response = server.get_parcel_by_code(parcel_code)
     response.raise_for_status()
@@ -92,12 +92,14 @@ def test_scenario():
     response = server.get_terminal(to_terminal_id)
     response.raise_for_status()
     terminal = response.json()
-    assert len(terminal['parcelIds']) == 0
+    assert len(get_parcels(terminal)) == 0
 
 
 def default_headers(version: int):
     return {"Content-type": "application/json", "If-Match": f'''"{version}"'''}
 
+def get_parcels(terminal):
+    return [locker['parcelId'] for locker in terminal['lockers'] if locker['parcelId'] is not None]
 
 def default_registration(from_terminal, to_terminal):
     return {"size": "S", "couponCode": "123", "transactionCode": "123",
@@ -115,4 +117,4 @@ def default_courier():
 
 
 def default_terminal(address: str):
-    return {"address": address}
+    return {"address": address, "lockers":  [ { "size": "S", "count": 10 }, { "size": "M", "count": 10 }, { "size": "L", "count": 10}]}

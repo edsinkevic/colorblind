@@ -1,7 +1,7 @@
 "use client";
 
-import { ParcelDetails, ParcelDetailsForTerminal, Problem, StatusCodes } from "colorblind/shared/lib/models/models";
-import { deliver, detailsGetByCourierIdForTerminal, detailsGetByTerminalId, getOneByCode, ship } from "colorblind/shared/requests/parcels";
+import { DeliverResponse, ParcelDetails, ParcelDetailsForTerminal, Problem, StatusCodes } from "colorblind/shared/lib/models/models";
+import { deliver, detailsGetByCourierIdForTerminal, getOneByCode } from "colorblind/shared/requests/parcels";
 import { notFound } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 
@@ -38,10 +38,13 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
         if (error || !selectedParcel) return;
         const response = await deliver(selectedParcel.code, id, selectedParcel.version);
         if (response.status !== StatusCodes.OK) {
-            notFound();
+            const problem = (await response.json()) as Problem;
+            setError(problem.detail);
+            return;
         }
 
-        setLockerNumber(Math.floor(Math.random() * 20));
+        const { lockerNumber } = await response.json() as DeliverResponse;
+        setLockerNumber(lockerNumber);
     };
 
     const onSelect: MouseEventHandler = async (e) => {

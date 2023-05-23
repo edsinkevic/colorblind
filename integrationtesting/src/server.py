@@ -30,7 +30,7 @@ class ServerClient:
                              headers=default_headers(version))
 
     def receive_parcel(self, _code: str, version: int):
-        return requests.post(f"{self.url}/parcels/{_code}/receive/",
+        return requests.post(f"{self.url}/parcels/{_code}/receive",
                              headers=default_headers(version))
 
     def register_terminal(self, _obj: dict):

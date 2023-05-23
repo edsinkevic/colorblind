@@ -37,7 +37,7 @@ public class ParcelRepository : IParcelRepository
 
         var parcels = await _documentSession.Query<Parcel>()
             .Include(x => x.ReceiverDeliveryInfo.TerminalId, destinations)
-            .Where(x => terminal.ParcelIds.Contains(x.Id) && x.Status == ParcelStatus.Submitted)
+            .Where(x => x.TerminalId == terminalId && x.Status == ParcelStatus.Submitted)
             .ToListAsync(token: ct);
 
         return parcels

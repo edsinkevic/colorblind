@@ -1,5 +1,6 @@
 using Domain.Commands.TerminalCommands;
 using Domain.UseCases.TerminalUseCases;
+using Domain.Values;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
 
@@ -38,7 +39,7 @@ public class TerminalController : ControllerBase
         RegisterTerminalRequest request,
         CancellationToken ct)
     {
-        var command = new RegisterTerminal(Address: request.Address);
+        var command = new RegisterTerminal(Address: request.Address, request.Lockers);
         var id = await useCase.Execute(command, ct);
         return Ok(new { id });
     }

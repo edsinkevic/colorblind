@@ -75,7 +75,8 @@ export const submit = (
     },
     method: "POST",
   });
-export const receive = (code: string, version: string): Promise<Response> =>
+
+export const receive = (code: string, version: number): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/${code}/receive`), {
     ...defaultFetchConfig,
     headers: {

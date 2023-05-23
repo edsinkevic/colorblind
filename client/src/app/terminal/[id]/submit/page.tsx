@@ -7,6 +7,7 @@ import {
   ParcelStatus,
   Problem,
   StatusCodes,
+  SubmitResponse,
 } from "colorblind/shared/lib/models/models";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +20,6 @@ export default function TerminalSubmit({ params: { id } }: Props) {
   const [code, setCode] = useState<string>("");
   const [parcel, setParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
-  const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
 
   const onApplyCode: MouseEventHandler = async (e) => {
@@ -32,35 +32,30 @@ export default function TerminalSubmit({ params: { id } }: Props) {
     }
 
     const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
-
-    if (fetchedParcel.status !== ParcelStatus.REGISTERED) {
-      setError("Parcel must have registered status!");
-      return;
-    }
-
     setParcel(fetchedParcel);
     setError(undefined);
   };
 
-  const onLockerOpen: MouseEventHandler = async (e) => {
+  const onConfirm: MouseEventHandler = async (e) => {
     e.preventDefault();
-    if (!parcel || error) return;
-
-    setLockerNumber(Math.floor(Math.random() * 20));
-  };
-
-  const onSubmit: MouseEventHandler = async (e) => {
-    e.preventDefault();
-    if (!parcel || error) return;
-
+    if (error || !parcel) return;
     const response = await submit(code, id, parcel.version);
     if (response.status !== StatusCodes.OK) {
-      const problem = (await response.json()) as Problem;
+      const problem = await response.json() as Problem;
       setError(problem.detail);
       return;
     }
 
+    const { lockerNumber } = await response.json() as SubmitResponse;
+
+    setLockerNumber(lockerNumber);
     setError(undefined);
+  };
+
+  const onSubmit: MouseEventHandler = async (e) => {
+    e.preventDefault();
+    if (error) return;
+
     await router.push(`/terminal/${id}`);
   };
 
@@ -74,11 +69,10 @@ export default function TerminalSubmit({ params: { id } }: Props) {
       />
       {parcel ? JSON.stringify(parcel) : null}
       <button onClick={onApplyCode}>Apply code</button>
-      {parcel ? <button onClick={onLockerOpen}>Open locker</button> : null}
+      {parcel ? <button onClick={onConfirm}>Confirm</button> : null}
       {lockerNumber ? (
         <button onClick={onSubmit}>Close locker {lockerNumber}</button>
       ) : null}
-      {successMessage}
       {error}
     </form>
   );
