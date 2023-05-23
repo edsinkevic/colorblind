@@ -20,14 +20,14 @@ public record Terminal(Guid Id,
 
     public Terminal Apply(ParcelReceived @event)
     {
-        Lockers[@event.LockerNumber - 1].RemoveParcel();
+        RemoveParcel(@event.ParcelId);
         return this;
     }
 
     public Terminal Apply(ParcelShipped @event)
     {
 
-        Lockers[@event.LockerNumber - 1].RemoveParcel();
+        RemoveParcel(@event.ParcelId);
         return this;
     }
 
@@ -35,6 +35,18 @@ public record Terminal(Guid Id,
     {
         InsertParcel(@event.ParcelId, @event.LockerNumber);
         return this;
+    }
+
+    public void RemoveParcel(Guid parcelId)
+    {
+        var locker = Lockers.Where(l => l.ParcelId == parcelId).Single();
+        locker.RemoveParcel();
+    }
+
+    public int GetLockerNumber(Guid parcelId)
+    {
+        var locker = Lockers.Where(l => l.ParcelId == parcelId).Single();
+        return locker.Number;
     }
 
     public void InsertParcel(Guid parcelId, int lockerNumber)

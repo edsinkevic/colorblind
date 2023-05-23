@@ -43,8 +43,7 @@ public class ParcelRepository : IParcelRepository
         return parcels
             .Select(x =>
                 new ParcelInTerminalDTO(x.Id, x.Code, x.Version,
-                    destinations[x.ReceiverDeliveryInfo.TerminalId].Address,
-                    x.LockerNumber!.Value))
+                    destinations[x.ReceiverDeliveryInfo.TerminalId].Address))
             .ToList();
     }
 

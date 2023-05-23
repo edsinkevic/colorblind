@@ -37,10 +37,9 @@ export const getOneByCode = (code: string): Promise<Response> =>
 export const ship = (
   code: string,
   courierId: string,
-  version: number,
-  lockerNumber: number
+  version: number
 ): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}/${lockerNumber}`), {
+  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
@@ -77,8 +76,8 @@ export const submit = (
     method: "POST",
   });
 
-export const receive = (code: string, version: string, lockerNumber: number): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/receive/${lockerNumber}`), {
+export const receive = (code: string, version: number): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/${code}/receive`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,

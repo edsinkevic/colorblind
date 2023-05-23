@@ -51,7 +51,7 @@ def test_scenario():
     terminal = response.json()
     assert len(get_parcels(terminal)) == 1 and get_parcels(terminal)[0] == parcel_id
 
-    response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1, locker_number)
+    response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1)
     response.raise_for_status()
 
     response = server.get_courier(courier_id)
@@ -83,7 +83,7 @@ def test_scenario():
     assert resp['status'] == "Delivered"
     locker_number = resp['lockerNumber']
 
-    response = server.receive_parcel(parcel_code, parcel_version + 3, locker_number)
+    response = server.receive_parcel(parcel_code, parcel_version + 3)
     response.raise_for_status()
 
     response = server.get_parcel(parcel_id)

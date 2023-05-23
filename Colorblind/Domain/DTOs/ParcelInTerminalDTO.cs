@@ -4,6 +4,5 @@ public record ParcelInTerminalDTO(
     Guid Id,
     string Code,
     int version,
-    string DeliveryTerminalAddress,
-    int LockerNumber
+    string DeliveryTerminalAddress
 );

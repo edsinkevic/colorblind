@@ -98,18 +98,17 @@ public class ParcelController : ControllerBase
         return Ok(new { lockerNumber });
     }
 
-    [HttpPost("{code}/ship/{courierId:guid}/{lockerNumber:int}")]
+    [HttpPost("{code}/ship/{courierId:guid}")]
     public async Task<IActionResult> Ship(
         [FromServices] ShipParcelFromTerminalUseCase useCase,
         string code,
         Guid courierId,
-        int lockerNumber,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion(), lockerNumber);
-        await useCase.Execute(command, ct);
-        return Ok();
+        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion());
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 
     [HttpPost("{code}/deliver/terminal/{terminalId:guid}")]
@@ -125,16 +124,15 @@ public class ParcelController : ControllerBase
         return Ok(new { lockerNumber });
     }
 
-    [HttpPost("{code}/receive/{lockerNumber:int}")]
+    [HttpPost("{code}/receive")]
     public async Task<IActionResult> Receive(
         [FromServices] ReceiveParcelFromTerminalUseCase useCase,
         string code,
-        int lockerNumber,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new ReceiveParcel(code, eTag.ToExpectedVersion(), lockerNumber);
-        await useCase.Execute(command, ct);
-        return Ok();
+        var command = new ReceiveParcel(code, eTag.ToExpectedVersion());
+        var lockerNumber = await useCase.Execute(command, ct);
+        return Ok(new { lockerNumber });
     }
 }

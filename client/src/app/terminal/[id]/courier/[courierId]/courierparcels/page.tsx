@@ -1,7 +1,7 @@
 "use client";
 
 import { DeliverResponse, ParcelDetails, ParcelDetailsForTerminal, Problem, StatusCodes } from "colorblind/shared/lib/models/models";
-import { deliver, detailsGetByCourierIdForTerminal, detailsGetByTerminalId, getOneByCode, ship } from "colorblind/shared/requests/parcels";
+import { deliver, detailsGetByCourierIdForTerminal, getOneByCode } from "colorblind/shared/requests/parcels";
 import { notFound } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 

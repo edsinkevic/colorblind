@@ -17,7 +17,6 @@ public record Parcel(Guid Id,
     int Version,
     ParcelStatus Status = ParcelStatus.Registered,
     Guid? TerminalId = null,
-    int? LockerNumber = null,
     Guid? CourierId = null
 )
 {
@@ -25,16 +24,16 @@ public record Parcel(Guid Id,
         registered.Adapt<Parcel>() with { Status = ParcelStatus.Registered };
 
     public Parcel Apply(ParcelSubmittedToTerminal submittedToTerminal) =>
-        this with { Status = ParcelStatus.Submitted, TerminalId = submittedToTerminal.TerminalId, LockerNumber = submittedToTerminal.LockerNumber };
+        this with { Status = ParcelStatus.Submitted, TerminalId = submittedToTerminal.TerminalId };
 
     public Parcel Apply(ParcelShipped shipped) =>
-        this with { Status = ParcelStatus.Shipped, CourierId = shipped.CourierId, TerminalId = null, LockerNumber = null };
+        this with { Status = ParcelStatus.Shipped, CourierId = shipped.CourierId, TerminalId = null };
 
     public Parcel Apply(ParcelDelivered delivered) =>
-        this with { Status = ParcelStatus.Delivered, TerminalId = delivered.TerminalId, CourierId = null, LockerNumber = delivered.LockerNumber };
+        this with { Status = ParcelStatus.Delivered, TerminalId = delivered.TerminalId, CourierId = null };
 
     public Parcel Apply(ParcelReceived @event) =>
-        this with { Status = ParcelStatus.Received, TerminalId = null, LockerNumber = null };
+        this with { Status = ParcelStatus.Received, TerminalId = null };
 
     public Parcel Apply(ParcelUnregistered unregistered) =>
         this with { Status = ParcelStatus.Unregistered };
