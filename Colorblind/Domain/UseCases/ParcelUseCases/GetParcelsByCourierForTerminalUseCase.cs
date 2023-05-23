@@ -16,7 +16,7 @@ public class GetParcelsByCourierForTerminalUseCase
 
     public async Task<List<ParcelToTerminalDTO>> Execute(Guid courierId, Guid terminalId, CancellationToken ct = default)
     {
-        var parcels = await _parcelRepository.ListByCourierForTerminal(courierId, terminalId, ct);
+        var parcels = await _parcelRepository.ListDeliverableByCourierForTerminal(courierId, terminalId, ct);
         return parcels;
     }
 }

@@ -31,13 +31,16 @@ public class RegisterParcelUseCase
         CancellationToken ct = default)
     {
         var fromTerminalId = command.SenderDeliveryInfo.TerminalId;
+        var toTerminalId = command.ReceiverDeliveryInfo.TerminalId;
+        if (fromTerminalId == toTerminalId)
+            throw new DomainError("Source and destination terminals cannot be the same!");
+
         var fromTerminal = await _terminalRepository.Get(fromTerminalId, ct);
         if (fromTerminal is null)
         {
             throw new DomainError($"Terminal {fromTerminalId} doesn't exist!");
         }
 
-        var toTerminalId = command.ReceiverDeliveryInfo.TerminalId;
         var toTerminal = await _terminalRepository.Get(toTerminalId, ct);
         if (toTerminal is null)
         {

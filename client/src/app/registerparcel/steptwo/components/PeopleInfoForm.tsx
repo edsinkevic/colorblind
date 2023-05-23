@@ -1,10 +1,13 @@
-import styles from "../page.module.css"
+import styles from "../page.module.css";
 
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
-import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
-import { PersonInfo, TerminalDetails } from "colorblind/shared/lib/models/models";
+import {
+  PersonInfo,
+  TerminalDetails,
+} from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
+import { Select } from "antd";
 
 interface Props {
   onSubmit: (data: PeopleInfo) => void;
@@ -17,7 +20,11 @@ export interface PeopleInfo {
   receiverDeliveryInfo?: PersonInfo;
 }
 
-export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => {
+export const PeopleInfoForm = ({
+  defaultValue,
+  onSubmit,
+  terminals,
+}: Props) => {
   const {
     values: form,
     handleChange,
@@ -28,17 +35,46 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => 
     onSubmit: onSubmit,
   });
 
+  const terminalOptions = terminals.map((terminal) => ({
+    value: terminal.id,
+    label: terminal.address,
+  }));
+
+  const onChangeFrom = (id: string) => {
+    setFieldValue("senderDeliveryInfo.terminalId", id);
+  };
+
+  const onChangeTo = (id: string) => {
+    setFieldValue("receiverDeliveryInfo.terminalId", id);
+  };
+
   const handleSubmitWithValidation = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.senderDeliveryInfo?.terminalId) {
-      alert("Please select terminal")
-      return;
-    }
-    if (!form.receiverDeliveryInfo?.terminalId) {
+
+    const { senderDeliveryInfo, receiverDeliveryInfo } = form;
+
+    if (!senderDeliveryInfo?.terminalId || !receiverDeliveryInfo?.terminalId) {
       alert("Please select terminal");
       return;
     }
+
+    if (senderDeliveryInfo?.terminalId === receiverDeliveryInfo?.terminalId) {
+      alert("Pick different source and destination terminals");
+      return;
+    }
     handleSubmit(e);
+  };
+
+  const selectProps = {
+    status:
+      form.receiverDeliveryInfo?.terminalId ===
+        form.senderDeliveryInfo?.terminalId &&
+      form.receiverDeliveryInfo?.terminalId
+        ? ("error" as "error")
+        : undefined,
+    showSearch: true,
+    options: terminalOptions,
+    placeholder: "Please select",
   };
 
   return (
@@ -72,12 +108,7 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => 
           onChange={handleChange}
         />
         <label>Terminal</label>
-        <TerminalPicker
-          nonOption="Select terminal"
-          terminals={terminals}
-          onSubmit={(id) => {
-            setFieldValue("senderDeliveryInfo.terminalId", id);
-          }} />
+        <Select {...selectProps} onChange={onChangeFrom} />
       </div>
       <div className={styles.receiver}>
         <h2>Receiver</h2>
@@ -107,12 +138,7 @@ export const PeopleInfoForm = ({ defaultValue, onSubmit, terminals }: Props) => 
           country={"lt"}
         />
         <label>Terminal</label>
-        <TerminalPicker
-          nonOption="Select terminal"
-          terminals={terminals}
-          onSubmit={(id) => {
-            setFieldValue("receiverDeliveryInfo.terminalId", id);
-          }} />
+        <Select {...selectProps} onChange={onChangeTo} />
       </div>
       <button type="submit">Next</button>
     </form>

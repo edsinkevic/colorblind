@@ -16,12 +16,16 @@ import { getFromStore } from "colorblind/shared/lib/state";
 import { FormWithStatus } from "../components/FormWithStatus";
 import { getAll } from "colorblind/shared/requests/terminal";
 
+type Props = {
+  terminals: TerminalDetails[];
+};
+
 export default function StepTwo() {
   const [registration, setRegistration] = useState<ParcelRegistration>();
   const [error, setError] = useState<Error>();
   const router = useRouter();
-  const [problem, setProblem] = useState<Problem>();
   const [terminals, setTerminals] = useState<TerminalDetails[]>([]);
+  const [problem, setProblem] = useState<Problem>();
 
   useEffect(() => {
     const reg = getFromStore<ParcelRegistration>("registration");

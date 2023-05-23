@@ -7,8 +7,8 @@ import {
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { getAll } from "colorblind/shared/requests/terminal";
-import { TerminalPicker } from "colorblind/shared/components/TerminalPicker";
 import styles from "./page.module.css";
+import { Select } from "antd";
 
 export default function StepOne() {
   const router = useRouter();
@@ -35,6 +35,12 @@ export default function StepOne() {
     fetchTerminals();
   }, []);
 
+  const terminalOptions = terminals.map((terminal) => ({
+    value: terminal.id,
+    label: terminal.address,
+  }));
+
+  const onSelect = (id: string) => setPickedTerminalId(id);
   return (
     <div className={styles.form}>
       <form
@@ -45,11 +51,10 @@ export default function StepOne() {
       >
         <h1>Select a terminal</h1>
         <div>
-          <TerminalPicker
-            terminals={terminals}
-            onSubmit={(terminalId) => {
-              setPickedTerminalId(terminalId);
-            }}
+          <Select
+            options={terminalOptions}
+            onChange={onSelect}
+            placeholder="Please select!"
           />
           <button
             type="submit"
@@ -57,7 +62,6 @@ export default function StepOne() {
           >
             Submit
           </button>
-
         </div>
         {problem ? JSON.stringify(problem) : null}
         {error}

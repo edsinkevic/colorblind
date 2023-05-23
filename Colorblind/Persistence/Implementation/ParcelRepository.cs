@@ -1,7 +1,9 @@
 using Domain.DTOs;
 using Domain.Entities;
+using Domain.Errors;
 using Domain.Events.ParcelEvents;
 using Domain.Persistence;
+using Domain.Values;
 using Marten;
 using Marten.Pagination;
 
@@ -23,31 +25,41 @@ public class ParcelRepository : IParcelRepository
         _documentSession.Query<Parcel>()
             .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct);
 
-    public Task<List<ParcelInTerminalDTO>> ListByTerminal(Guid terminalId, CancellationToken ct = default)
+    public async Task<List<ParcelInTerminalDTO>> ListShippableByTerminal(Guid terminalId,
+        CancellationToken ct = default)
     {
-        var parcels = _documentSession.Query<Parcel>()
-            .Where(i => i.TerminalId == terminalId)
-            .ToListAsync(ct);
+        var terminal = await _documentSession.LoadAsync<Terminal>(terminalId, ct);
 
-        return parcels.ContinueWith(p => p.Result.Select(p => new ParcelInTerminalDTO(
-            p.Id,
-            p.Code,
-            p.Version,
-            _documentSession.Query<Terminal>().Where(t => t.Id == p.ReceiverDeliveryInfo.TerminalId).Select(t => t.Address).FirstOrDefault() ?? string.Empty
-        )).ToList(), ct);
+        if (terminal is null)
+            throw new DomainError("Terminal does not exist!");
+
+        var destinations = new Dictionary<Guid, Terminal>();
+
+        var parcels = await _documentSession.Query<Parcel>()
+            .Include(x => x.ReceiverDeliveryInfo.TerminalId, destinations)
+            .Where(x => terminal.ParcelIds.Contains(x.Id) && x.Status == ParcelStatus.Submitted)
+            .ToListAsync(token: ct);
+
+        return parcels
+            .Select(x =>
+                new ParcelInTerminalDTO(x.Id, x.Code, x.Version,
+                    destinations[x.ReceiverDeliveryInfo.TerminalId].Address))
+            .ToList();
     }
 
-    public Task<List<ParcelToTerminalDTO>> ListByCourierForTerminal(Guid courierId, Guid terminalId, CancellationToken ct)
+    public async Task<List<ParcelToTerminalDTO>> ListDeliverableByCourierForTerminal(Guid courierId,
+        Guid terminalId,
+        CancellationToken ct)
     {
-        var parcels = _documentSession.Query<Parcel>()
+        var parcels = await _documentSession.Query<Parcel>()
             .Where(i => i.ReceiverDeliveryInfo.TerminalId == terminalId && i.CourierId == courierId)
+            .Select(p => new ParcelToTerminalDTO(
+                p.Id,
+                p.Code,
+                p.Version))
             .ToListAsync(ct);
-        
-        return parcels.ContinueWith(p => p.Result.Select(p => new ParcelToTerminalDTO(
-            p.Id,
-            p.Code,
-            p.Version
-        )).ToList(), ct);
+
+        return parcels.ToList();
     }
 
     public void Create(ParcelRegistered register) =>

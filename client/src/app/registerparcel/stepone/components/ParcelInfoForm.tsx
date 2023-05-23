@@ -19,7 +19,8 @@ const deliveryTypes = ["Terminal", "Address"];
 export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
   const [state, setState] = useState<ParcelInfo>(defaultValue);
   return (
-    <form className={styles.form}
+    <form
+      className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(state);
@@ -60,7 +61,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           />
         </div>
       </div>
-      
+
       <button type={"submit"}>Next</button>
     </form>
   );
