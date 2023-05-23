@@ -44,7 +44,6 @@ def test_scenario():
 
     response = server.submit_parcel_to_terminal(parcel_code, from_terminal_id, parcel_version)
     response.raise_for_status()
-    locker_number = response.json()['lockerNumber']
 
     response = server.get_terminal(from_terminal_id)
     response.raise_for_status()
@@ -81,7 +80,6 @@ def test_scenario():
     response.raise_for_status()
     resp = response.json()
     assert resp['status'] == "Delivered"
-    locker_number = resp['lockerNumber']
 
     response = server.receive_parcel(parcel_code, parcel_version + 3)
     response.raise_for_status()
