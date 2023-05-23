@@ -66,11 +66,13 @@ export const deliver = (
 export const submit = (
   code: string,
   terminalId: string,
+  version: number
 ): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/${code}/submit/terminal/${terminalId}`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
+      "If-Match": `"${version}"`,
     },
     method: "POST",
   });

@@ -18,12 +18,28 @@ interface Props {
 export default function TerminalSubmit({ params: { id } }: Props) {
   const [error, setError] = useState<string>();
   const [code, setCode] = useState<string>("");
+  const [parcel, setParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
   const router = useRouter();
 
   const onApplyCode: MouseEventHandler = async (e) => {
     e.preventDefault();
-    const response = await submit(code, id);
+    const parcelResponse = await getOneByCode(code);
+    if (parcelResponse.status !== StatusCodes.OK) {
+      const problem = (await parcelResponse.json()) as Problem;
+      setError(problem.detail);
+      return;
+    }
+
+    const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
+    setParcel(fetchedParcel);
+    setError(undefined);
+  };
+
+  const onConfirm: MouseEventHandler = async (e) => {
+    e.preventDefault();
+    if (error || !parcel) return;
+    const response = await submit(code, id, parcel.version);
     if (response.status !== StatusCodes.OK) {
       const problem = await response.json() as Problem;
       setError(problem.detail);
@@ -51,7 +67,9 @@ export default function TerminalSubmit({ params: { id } }: Props) {
           setCode(e.target.value);
         }}
       />
+      {parcel ? JSON.stringify(parcel) : null}
       <button onClick={onApplyCode}>Apply code</button>
+      {parcel ? <button onClick={onConfirm}>Confirm</button> : null}
       {lockerNumber ? (
         <button onClick={onSubmit}>Close locker {lockerNumber}</button>
       ) : null}

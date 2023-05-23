@@ -42,7 +42,7 @@ public class SubmitParcelToTerminalUseCase
 
         var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
 
-        await _parcelRepository.Update(parcel.Id, parcel.Version, aggregate =>
+        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
         {
             return new ParcelSubmittedToTerminal(aggregate.Id, command.TerminalId, lockerNumber);
         }, ct: ct);

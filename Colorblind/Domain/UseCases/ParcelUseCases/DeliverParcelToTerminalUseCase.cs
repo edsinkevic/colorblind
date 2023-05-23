@@ -39,7 +39,7 @@ public class DeliverParcelToTerminalUseCase
 
         var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
 
-        await _parcelRepository.Update(parcel.Id, parcel.Version, aggregate =>
+        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
         {
             if (aggregate.ReceiverDeliveryInfo.TerminalId != command.TerminalId)
                 throw new DomainError(

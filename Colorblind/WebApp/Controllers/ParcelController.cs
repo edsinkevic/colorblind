@@ -90,9 +90,10 @@ public class ParcelController : ControllerBase
         [FromServices] SubmitParcelToTerminalUseCase useCase,
         string code,
         Guid terminalId,
+        [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new SubmitParcelToTerminal(code, terminalId);
+        var command = new SubmitParcelToTerminal(code, terminalId, eTag.ToExpectedVersion());
         var lockerNumber = await useCase.Execute(command, ct);
         return Ok(new { lockerNumber });
     }
@@ -116,9 +117,10 @@ public class ParcelController : ControllerBase
         [FromServices] DeliverParcelToTerminalUseCase useCase,
         string code,
         Guid terminalId,
+        [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new DeliverParcel(code, terminalId);
+        var command = new DeliverParcel(code, terminalId, eTag.ToExpectedVersion());
         var lockerNumber = await useCase.Execute(command, ct);
         return Ok(new { lockerNumber });
     }
