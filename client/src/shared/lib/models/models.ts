@@ -58,9 +58,8 @@ export interface DeliverResponse {
 }
 
 export interface ParcelDetailsForTerminal extends ParcelBase {
-  deliveryTerminalAddress: string; 
+  deliveryTerminalAddress: string;
 }
-
 
 export enum ParcelStatus {
   REGISTERED = "Registered",
@@ -82,6 +81,12 @@ export interface RegisterTerminalResponse {
 
 export interface RegisterTerminal {
   address: string;
+  lockers: RegisterLocker[];
+}
+
+export interface RegisterLocker {
+  size: string;
+  count: number;
 }
 
 export interface RegisterCourier {

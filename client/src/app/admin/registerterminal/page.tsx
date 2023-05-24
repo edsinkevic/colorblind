@@ -14,7 +14,13 @@ export default function StepOne() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const resp = await register({ address });
+    const resp = await register({
+      address,
+      lockers: [
+        { size: "M", count: 5 },
+        { size: "XL", count: 10 },
+      ],
+    });
 
     if (resp.status === StatusCodes.OK) {
       // Decide what to do next
