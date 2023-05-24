@@ -44,7 +44,7 @@ public class SubmitParcelToTerminalUseCase
 
         var @event = new ParcelSubmittedToTerminal(parcel.Id, command.TerminalId, lockerNumber);
 
-        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
+        _parcelRepository.Update(parcel.Id, command.Version, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
 

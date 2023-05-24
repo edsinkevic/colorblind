@@ -55,7 +55,7 @@ public class ReceiveParcelFromTerminalUseCase
 
         var @event = new ParcelReceived(parcel.Id, parcel.TerminalId!.Value);
 
-        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
+        _parcelRepository.Update(parcel.Id, command.Version, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
 
