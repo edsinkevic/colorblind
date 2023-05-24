@@ -55,10 +55,14 @@ export default function StepOne() {
             options={terminalOptions}
             onChange={onSelect}
             placeholder="Please select!"
+            allowClear
           />
+        
           <button
             type="submit"
             disabled={!pickedTerminalId || !!error || !!problem}
+            className={styles.bigButton}
+            style={{'margin':30}}
           >
             Submit
           </button>

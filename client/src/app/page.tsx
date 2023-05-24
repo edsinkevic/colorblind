@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import { Button } from "antd";
 
 export default function Home() {
   return (
@@ -7,12 +8,12 @@ export default function Home() {
       <div>
         <div>
           <Link href={"/registerparcel/stepone"}>
-            <button className={styles.bigButton}>Send package</button>
+            <button className={styles.bigButton}>Send package</button>            
           </Link>
         </div>
-        <Link href={"/track"}>
-          <button className={styles.bigButton}>Track package</button>
-        </Link>
+          <Link href={"/track"}>
+            <button className={styles.bigButton}>Track package</button>
+          </Link>
         <div>
           <button className={styles.bigButton}>Help</button>
         </div>

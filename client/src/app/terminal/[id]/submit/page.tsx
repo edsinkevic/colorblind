@@ -1,4 +1,5 @@
 "use client";
+import styles from "../../page.module.css"
 import { MouseEventHandler, useState } from "react";
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { getOneByCode, submit } from "colorblind/shared/requests/parcels";
@@ -60,20 +61,24 @@ export default function TerminalSubmit({ params: { id } }: Props) {
   };
 
   return (
-    <form>
-      <FormInput
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-        }}
-      />
-      {parcel ? JSON.stringify(parcel) : null}
-      <button onClick={onApplyCode}>Apply code</button>
-      {parcel ? <button onClick={onConfirm}>Confirm</button> : null}
-      {lockerNumber ? (
-        <button onClick={onSubmit}>Close locker {lockerNumber}</button>
-      ) : null}
-      {error}
-    </form>
+    <div className={styles.form}>
+      <form>
+        <h1>Submit a parcel</h1>
+        <p>Enter the order code to open a locker.</p>
+        <FormInput
+          value={code}
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+        />
+        
+        <button onClick={onApplyCode} className={styles.bigButton}>Apply code</button> <br/>
+        {parcel ? <button className={styles.bigButton} onClick={onConfirm}>Confirm</button> : null} <br/>
+        {lockerNumber ? (
+          <button className={styles.bigButton} onClick={onSubmit}>Close locker {lockerNumber}</button>
+        ) : null}
+        {error}
+      </form>
+    </div>
   );
 }

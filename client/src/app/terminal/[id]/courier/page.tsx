@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -47,15 +48,16 @@ export default function PickCourier({ params: { id } }: Props) {
   }, [courierName]);
 
   return (
-    <div>
+    <div className={styles.form}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           if (courier) router.push(`/terminal/${id}/courier/${courier.id}`);
         }}
       >
+        <h1>Log-in</h1>
         <FormInput
-          placeholder="Username"
+          placeholder="Username "
           value={courierName}
           onChange={(e) => {
             e.preventDefault();
@@ -64,14 +66,14 @@ export default function PickCourier({ params: { id } }: Props) {
         />
         <FormInput
           type="password"
-          placeholder="Password"
+          placeholder="Password "
           value={courierPassword}
           onChange={(e) => {
             e.preventDefault();
             setCourierPassword(e.target.value);
           }}
         />
-        <button style={{ float: "right" }} type="submit" disabled={!courierName}>
+        <button type="submit" className={styles.bigButton} disabled={!courierName}>
           Login
         </button>
         {problem ? JSON.stringify(problem) : null}

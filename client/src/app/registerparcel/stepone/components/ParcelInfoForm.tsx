@@ -2,6 +2,7 @@ import styles from "./ParcelInfoForm.module.css";
 import { useState } from "react";
 import { DeliveryType } from "../../../../shared/lib/models/models";
 import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
+import { Button, Select } from "antd";
 
 interface ParcelInfo {
   deliveryType: DeliveryType;
@@ -15,6 +16,10 @@ interface Props {
 
 const sizes = ["S", "M", "L", "XL", "XXL"];
 const deliveryTypes = ["Terminal", "Address"];
+
+const random = [
+  {label: "random", value:"random"},
+]
 
 export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
   const [state, setState] = useState<ParcelInfo>(defaultValue);
@@ -62,7 +67,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         </div>
       </div>
 
-      <button type={"submit"}>Next</button>
+      <button type={"submit"} className={styles.bigButton}>Next</button>
     </form>
   );
 }

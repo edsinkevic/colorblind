@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/couriers";
+import styles from "./page.module.css";
 
 export default function RegisterCourier() {
   const [error, setError] = useState<Error>();
@@ -32,8 +33,9 @@ export default function RegisterCourier() {
   const [name, setName] = useState<string>("");
 
   return (
-    <div>
+    <div className={styles.form}>
       <form onSubmit={onSubmit}>
+        <h1>Create a new courier</h1>
         <FormInput
           value={name}
           placeholder={"Name"}
@@ -42,7 +44,7 @@ export default function RegisterCourier() {
             setName(e.target.value);
           }}
         ></FormInput>
-        <button type="submit">Submit</button>
+        <button type="submit" className={styles.bigButton}>Submit</button>
         {problem ? JSON.stringify(problem) : null}
         {error ? error.message : null}
       </form>

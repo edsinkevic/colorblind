@@ -4,6 +4,7 @@ import { DeliverResponse, ParcelDetails, ParcelDetailsForTerminal, Problem, Stat
 import { deliver, detailsGetByCourierIdForTerminal, getOneByCode } from "colorblind/shared/requests/parcels";
 import { notFound } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
+import styles from "./page.module.css";
 
 interface Props {
     params: {
@@ -76,7 +77,7 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
         setSelectedParcel(undefined);
     };
 
-    return (<div>{
+    return (<div className={styles.info}>{
         parcels.length === 0 ?
             <h1>No parcels for this terminal</h1>
             : <div>
@@ -88,9 +89,9 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
                             ? <div>
                                 <span>Locker {lockerNumber} opened.</span>
                                 <br />
-                                <button onClick={onDone}>Parcel placed</button>
+                                <button className={styles.bigButton} onClick={onDone}>Parcel placed</button>
                             </div>
-                            : <button onClick={onDeliver}>Deliver</button>
+                            : <button className={styles.bigButton} onClick={onDeliver}>Deliver</button>
                         }
                     </div>
                     : <ul>
@@ -98,7 +99,7 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
                             <span>Parcel id: </span>
                             {parcel.id}
                             <br />
-                            <button onClick={onSelect} id={parcel.code}>Select</button>
+                            <button className={styles.bigButton} onClick={onSelect} id={parcel.code}>Select</button>
                         </li>)}
                     </ul>
                 }

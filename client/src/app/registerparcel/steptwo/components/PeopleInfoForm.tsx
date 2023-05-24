@@ -1,5 +1,4 @@
 import styles from "../page.module.css";
-
 import { FormInput } from "colorblind/shared/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
 import {
@@ -7,7 +6,8 @@ import {
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
-import { Select } from "antd";
+import { Select, Button } from "antd";
+
 
 interface Props {
   onSubmit: (data: PeopleInfo) => void;
@@ -140,7 +140,7 @@ export const PeopleInfoForm = ({
         <label>Terminal</label>
         <Select {...selectProps} onChange={onChangeTo} />
       </div>
-      <button type="submit">Next</button>
+      <button type={"submit"} className={styles.bigButton}>Next</button>
     </form>
   );
 };
