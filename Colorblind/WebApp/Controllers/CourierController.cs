@@ -37,9 +37,9 @@ public class CourierController : ControllerBase
         Guid id,
         CancellationToken ct)
     {
-            var command = new ApproveCourier(id);
-            await useCase.Execute(command, ct);
-            return Ok();
+        var command = new ApproveCourier(id);
+        await useCase.Execute(command, ct);
+        return Ok();
     }
 
     [AllowAnonymous]
