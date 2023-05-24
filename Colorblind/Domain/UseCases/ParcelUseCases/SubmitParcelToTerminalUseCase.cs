@@ -36,18 +36,18 @@ public class SubmitParcelToTerminalUseCase
 
         if (terminal is null)
             throw new DomainError("Terminal not found");
-        
+
         if (parcel.Status != ParcelStatus.Registered)
             throw new DomainError("Parcel must have Registered status");
 
         var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
-        {
-            return new ParcelSubmittedToTerminal(aggregate.Id, command.TerminalId, lockerNumber);
-        }, ct: ct);
+        var @event = new ParcelSubmittedToTerminal(parcel.Id, command.TerminalId, lockerNumber);
+
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
+
         return lockerNumber;
     }
 }
