@@ -12,6 +12,8 @@ public static class DependencyInjection
             .AddScoped<ITerminalRepository, TerminalRepository>()
             .AddScoped<ISaveChanges, SaveChangesAsync>()
             .AddScoped<IIdGenerator, IdGenerator>()
+            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<IJwtUtils, JwtUtils>()
             .AddScoped<ICourierRepository, CourierRepository>()
             .AddScoped<IParcelRepository, ParcelRepository>()
             .Decorate<IParcelRepository, ParcelRepositoryLoggingDecorator>();

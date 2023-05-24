@@ -3,13 +3,16 @@ using Domain.UseCases.CourierUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
+using WebApi.Authorization;
 
 namespace WebApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("couriers")]
 public class CourierController : ControllerBase
 {
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Get(
         [FromServices] ListCouriersUseCase useCase,
@@ -19,7 +22,27 @@ public class CourierController : ControllerBase
         CancellationToken ct) =>
         Ok(await useCase.Execute(pageNum, pageSize, name, ct));
 
+    [HttpGet("unapproved")]
+    public async Task<IActionResult> Get(
+        [FromServices] ListUnapprovedCouriersUseCase useCase,
+        [FromQuery] string? name,
+        [FromQuery] int? pageSize,
+        [FromQuery] int? pageNum,
+        CancellationToken ct) =>
+        Ok(await useCase.Execute(pageNum, pageSize, name, ct));
 
+    [HttpPost("{id:guid}/approve")]
+    public async Task<IActionResult> Approve(
+        [FromServices] ApproveCourierUseCase useCase,
+        Guid id,
+        CancellationToken ct)
+    {
+            var command = new ApproveCourier(id);
+            await useCase.Execute(command, ct);
+            return Ok();
+    }
+
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, Guid id, CancellationToken ct)
     {
@@ -30,7 +53,8 @@ public class CourierController : ControllerBase
             : Ok(courier);
     }
 
-    [HttpPost]
+    [AllowAnonymous]
+    [HttpPost("register")]
     public async Task<ActionResult> Post([FromServices] RegisterCourierUseCase useCase,
         RegisterCourierRequest request,
         CancellationToken ct)
@@ -38,5 +62,15 @@ public class CourierController : ControllerBase
         var command = request.Adapt<RegisterCourier>();
         var id = await useCase.Execute(command, ct);
         return Ok(new { id });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("authenticate")]
+    public async Task<ActionResult> Authenticate([FromServices] AuthenticateCourierUseCase useCase,
+        AuthenticateCourierRequest request,
+        CancellationToken ct)
+    {
+        var token = await useCase.Execute(request.Adapt<AuthenticateCourier>(), ct);
+        return Ok(new { token });
     }
 }

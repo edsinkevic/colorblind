@@ -9,9 +9,10 @@ public class CourierProjection : MultiStreamProjection<Courier, Guid>
 {
     public CourierProjection()
     {
-        Identity<CourierRegistered>(x => x.CourierId);
+        Identity<CourierRegistered>(x => x.Id);
         Identity<ParcelShipped>(x => x.CourierId);
         Identity<ParcelDelivered>(x => x.CourierId);
+        Identity<CourierApproved>(x => x.Id);
     }
 
     public static Courier Create(CourierRegistered registered) =>
@@ -20,6 +21,9 @@ public class CourierProjection : MultiStreamProjection<Courier, Guid>
     public static Courier Handle(Courier courier, ParcelShipped shipped) =>
         courier.Apply(shipped);
 
+    public static Courier Handle(Courier courier, CourierApproved @event) =>
+        courier.Apply(@event);
+    
     public static Courier Handle(Courier courier, ParcelDelivered @event) =>
         courier.Apply(@event);
 }
