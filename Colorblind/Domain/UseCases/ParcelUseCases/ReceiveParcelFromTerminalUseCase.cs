@@ -48,15 +48,14 @@ public class ReceiveParcelFromTerminalUseCase
 
         var lockerNumber = terminal.GetLockerNumber(parcel.Id);
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
+        if (parcel.Status != ParcelStatus.Delivered)
         {
-            if (aggregate.Status != ParcelStatus.Delivered)
-            {
-                throw new DomainError("Parcel was not delivered yet!");
-            }
+            throw new DomainError("Parcel was not delivered yet!");
+        }
 
-            return new ParcelReceived(aggregate.Id, aggregate.TerminalId!.Value);
-        }, ct: ct);
+        var @event = new ParcelReceived(parcel.Id, parcel.TerminalId!.Value);
+
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
 

@@ -30,13 +30,13 @@ public class UnregisterParcelUseCase
             throw new DomainError($"Parcel with code {command.Code} doesn't exist!");
         }
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
-        {
-            if (aggregate.Status != ParcelStatus.Registered)
-                throw new DomainError(
-                    "Cannot unregister a parcel that passed the registration point");
-            return new ParcelUnregistered(aggregate.Id);
-        }, ct);
+        if (parcel.Status != ParcelStatus.Registered)
+            throw new DomainError(
+                "Cannot unregister a parcel that passed the registration point");
+
+        var @event = new ParcelUnregistered(parcel.Id);
+
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct);
 
         await _saveChanges.SaveChanges(ct);
     }

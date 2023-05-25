@@ -43,22 +43,20 @@ public class ShipParcelFromTerminalUseCase
         if (parcel.TerminalId is null)
             throw new DomainError(
                 "Parcel isn't in a terminal!");
-        
+
         var terminal = await _terminalRepository.Get(parcel.TerminalId.Value, ct);
 
         if (terminal is null)
             throw new DomainError("Terminal not found");
 
         var lockerNumber = terminal.GetLockerNumber(parcel.Id);
-        
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
-        {
-            if (aggregate.Status != ParcelStatus.Submitted)
-                throw new DomainError(
-                    "Parcel must have Submitted status!");
 
-            return new ParcelShipped(aggregate.Id, command.CourierId, aggregate.TerminalId!.Value);
-        }, ct: ct);
+        if (parcel.Status != ParcelStatus.Submitted)
+            throw new DomainError(
+                "Parcel must have Submitted status!");
+        var @event = new ParcelShipped(parcel.Id, command.CourierId, parcel.TerminalId!.Value);
+
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
         return lockerNumber;

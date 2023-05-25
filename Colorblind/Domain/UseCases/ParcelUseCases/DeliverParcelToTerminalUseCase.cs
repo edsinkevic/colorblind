@@ -32,6 +32,14 @@ public class DeliverParcelToTerminalUseCase
         if (parcel is null)
             throw new DomainError($"Parcel with code {command.Code} doesn't exist!");
 
+        if (parcel.Status != ParcelStatus.Shipped)
+            throw new DomainError(
+                "Parcel must have Shipped status");
+
+        if (parcel.ReceiverDeliveryInfo.TerminalId != command.TerminalId)
+            throw new DomainError(
+                "Parcel was delivered to wrong terminal!");
+
         var terminal = await _terminalRepository.Get(command.TerminalId, ct);
 
         if (terminal is null)
@@ -39,25 +47,12 @@ public class DeliverParcelToTerminalUseCase
 
         var lockerNumber = terminal.GetEmptyLocker(parcel.Size);
 
-        await _parcelRepository.Update(parcel.Id, command.Version, aggregate =>
-        {
-            if (aggregate.ReceiverDeliveryInfo.TerminalId != command.TerminalId)
-                throw new DomainError(
-                    "Parcel was delivered to wrong terminal!");
+        var @event = new ParcelDelivered(parcel.Id, command.TerminalId, parcel.CourierId!.Value, lockerNumber);
 
-            if (aggregate.Status != ParcelStatus.Shipped)
-                throw new DomainError(
-                    "Parcel must have Shipped status");
-
-            var courierId = aggregate.CourierId;
-            if (courierId is null)
-                throw new DomainError(
-                    "Parcel doesn't have a courier!");
-            
-            return new ParcelDelivered(aggregate.Id, command.TerminalId, courierId.Value, lockerNumber);
-        }, ct: ct);
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
+        
         return lockerNumber;
     }
 }

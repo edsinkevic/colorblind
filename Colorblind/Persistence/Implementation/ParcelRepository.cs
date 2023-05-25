@@ -65,8 +65,8 @@ public class ParcelRepository : IParcelRepository
     public void Create(ParcelRegistered register) =>
         _documentSession.Events.StartStream<Parcel>(register.Id, register);
 
-    public Task Update(Guid id, int version, Func<Parcel, object> handle, CancellationToken ct = default) =>
-        _documentSession.GetAndUpdate(id, version, handle, ct);
+    public void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default) =>
+        _documentSession.Events.Append(id, expectedVersionAfterAppend, @event);
 
     public Task<Parcel?> GetByCode(string code, CancellationToken ct) =>
         _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);

@@ -11,7 +11,7 @@ public interface IParcelRepository
     Task<IPagedList<Parcel>> List(int? pageNum, int? pageSize, CancellationToken ct = default);
     Task<List<ParcelInTerminalDTO>> ListShippableByTerminal(Guid terminalId, CancellationToken ct = default);
     void Create(ParcelRegistered register);
-    Task Update(Guid id, int version, Func<Parcel, object> handle, CancellationToken ct = default);
+    void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default);
     Task<Parcel?> GetByCode(string code, CancellationToken ct = default);
     Task<List<ParcelToTerminalDTO>> ListDeliverableByCourierForTerminal(Guid courierId, Guid terminalId, CancellationToken ct);
 }
