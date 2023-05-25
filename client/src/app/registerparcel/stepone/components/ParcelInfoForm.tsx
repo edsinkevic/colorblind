@@ -1,4 +1,5 @@
-import styles from "./ParcelInfoForm.module.css";
+// import styles from "./ParcelInfoForm.module.css";
+import styles from "../page.module.css";
 import { useState } from "react";
 import { DeliveryType } from "../../../../shared/lib/models/models";
 import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
@@ -17,9 +18,14 @@ interface Props {
 const sizes = ["S", "M", "L", "XL", "XXL"];
 const deliveryTypes = ["Terminal", "Address"];
 
-const random = [
-  {label: "random", value:"random"},
-]
+const sizeOptions = sizes.map((size) => ({
+  value: size,
+  label: size,
+}));
+const deliveryTypeOptions = deliveryTypes.map((deliveryType) => ({
+  value: deliveryType,
+  label: deliveryType,
+}));
 
 export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
   const [state, setState] = useState<ParcelInfo>(defaultValue);
@@ -31,39 +37,60 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         onSubmit(state);
       }}
     >
-      <label>Package information</label>
+      <h2>Package information</h2>
       <div>
-        <span>Size</span>
-        <PickerFromArray
-          array={sizes}
-          onSubmit={(size) => setState({ ...state, size })}
-        />
-      </div>
-      <label>Delivery type</label>
-      <div className={styles.from_to_container}>
-        <div>
-          <span>From</span>
-          <PickerFromArray
-            array={deliveryTypes}
-            onSubmit={(from) =>
-              setState({
-                ...state,
-                deliveryType: { ...state.deliveryType, from },
-              })
-            }
+        <div className={styles.leftSide}>
+          <p>Size</p>
+        </div>
+        <div className={styles.rightSide}>
+          <Select
+            options={sizeOptions}
+            onChange={(size) => setState({ ...state, size })}
+            allowClear
+            placeholder="Size"
+            defaultValue={"S"}
           />
         </div>
+      </div>
+      <h2>Delivery type</h2>
+      <div className={styles.from_to_container}>
         <div>
-          <span>To</span>
-          <PickerFromArray
-            array={deliveryTypes}
-            onSubmit={(to) =>
-              setState({
-                ...state,
-                deliveryType: { ...state.deliveryType, to },
-              })
-            }
-          />
+          <div className={styles.leftSide}>
+            <p>From</p>
+          </div>
+          <div className={styles.rightSide}>
+            <Select
+              options={deliveryTypeOptions}
+              onChange={(from) =>
+                setState({
+                  ...state,
+                  deliveryType: { ...state.deliveryType, from },
+                })
+              }
+              placeholder="Terminal"
+              defaultValue={"Terminal"}
+              allowClear
+            />
+          </div>
+        </div>
+        <div>
+          <div className={styles.leftSide}>
+            <p>To</p>
+          </div>
+          <div className={styles.rightSide}>
+            <Select
+              options={deliveryTypeOptions}
+              onChange={(to) =>
+                setState({
+                  ...state,
+                  deliveryType: { ...state.deliveryType, to },
+                })
+              }
+              placeholder="Terminal"
+              defaultValue={"Terminal"}
+              allowClear
+            />
+          </div>
         </div>
       </div>
 

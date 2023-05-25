@@ -71,8 +71,7 @@ export default function TerminalSubmit({ params: { id } }: Props) {
             setCode(e.target.value);
           }}
         />
-        
-        <button onClick={onApplyCode} className={styles.bigButton}>Apply code</button> <br/>
+        {!parcel ? <><button onClick={onApplyCode} className={styles.bigButton}>Apply code</button> <br/></>: null}
         {parcel ? <button className={styles.bigButton} onClick={onConfirm}>Confirm</button> : null} <br/>
         {lockerNumber ? (
           <button className={styles.bigButton} onClick={onSubmit}>Close locker {lockerNumber}</button>

@@ -87,7 +87,7 @@ export default function TerminalReceive({ params: { id } }: Props) {
             setCode(e.target.value);
           }}
         />
-        {parcel ? JSON.stringify(parcel) : null}
+        {parcel ? JSON.stringify(parcel) : null }
         <button className={styles.bigButton} onClick={onApplyCode}>Apply code</button>
         {parcel ? <button className={styles.bigButton} onClick={onLockerOpen}>Open locker</button> : null}
         {lockerNumber ? (
