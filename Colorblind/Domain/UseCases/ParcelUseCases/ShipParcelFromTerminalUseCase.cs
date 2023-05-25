@@ -56,7 +56,7 @@ public class ShipParcelFromTerminalUseCase
                 "Parcel must have Submitted status!");
         var @event = new ParcelShipped(parcel.Id, command.CourierId, parcel.TerminalId!.Value);
 
-        _parcelRepository.Update(parcel.Id, command.Version, @event, ct: ct);
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct: ct);
 
         await _saveChanges.SaveChanges(ct);
         return lockerNumber;

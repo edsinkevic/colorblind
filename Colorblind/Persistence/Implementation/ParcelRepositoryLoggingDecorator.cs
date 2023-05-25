@@ -52,10 +52,10 @@ public class ParcelRepositoryLoggingDecorator : IParcelRepository
         _parcelRepository.Create(register);
     }
 
-    public void Update(Guid id, int expectedVersion, object @event, CancellationToken ct = default)
+    public void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default)
     {
-        _logger.LogInformation("Trying to update parcel of id={} and version={}: {}", id, expectedVersion, @event);
-        _parcelRepository.Update(id, expectedVersion, @event, ct);
+        _logger.LogInformation("Trying to update parcel of id={} and version={}: {}", id, expectedVersionAfterAppend, @event);
+        _parcelRepository.Update(id, expectedVersionAfterAppend, @event, ct);
     }
 
     public Task<Parcel?> GetByCode(string code, CancellationToken ct)

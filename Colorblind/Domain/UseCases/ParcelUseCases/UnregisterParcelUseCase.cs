@@ -36,7 +36,7 @@ public class UnregisterParcelUseCase
 
         var @event = new ParcelUnregistered(parcel.Id);
 
-        _parcelRepository.Update(parcel.Id, command.Version, @event, ct);
+        _parcelRepository.Update(parcel.Id, command.Version + 1, @event, ct);
 
         await _saveChanges.SaveChanges(ct);
     }
