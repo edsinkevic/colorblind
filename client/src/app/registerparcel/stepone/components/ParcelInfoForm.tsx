@@ -43,12 +43,9 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           <p>Size</p>
         </div>
         <div className={styles.rightSide}>
-          <Select
-            options={sizeOptions}
-            onChange={(size) => setState({ ...state, size })}
-            allowClear
-            placeholder="Size"
-            defaultValue={"S"}
+          <PickerFromArray
+            array={sizes}
+            onSubmit={(size) => setState({ ...state, size })}
           />
         </div>
       </div>
@@ -59,17 +56,14 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
             <p>From</p>
           </div>
           <div className={styles.rightSide}>
-            <Select
-              options={deliveryTypeOptions}
-              onChange={(from) =>
+            <PickerFromArray
+              array={deliveryTypes}
+              onSubmit={(from) =>
                 setState({
                   ...state,
                   deliveryType: { ...state.deliveryType, from },
                 })
               }
-              placeholder="Terminal"
-              defaultValue={"Terminal"}
-              allowClear
             />
           </div>
         </div>
@@ -78,17 +72,14 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
             <p>To</p>
           </div>
           <div className={styles.rightSide}>
-            <Select
-              options={deliveryTypeOptions}
-              onChange={(to) =>
+            <PickerFromArray
+              array={deliveryTypes}
+              onSubmit={(to) =>
                 setState({
                   ...state,
                   deliveryType: { ...state.deliveryType, to },
                 })
               }
-              placeholder="Terminal"
-              defaultValue={"Terminal"}
-              allowClear
             />
           </div>
         </div>

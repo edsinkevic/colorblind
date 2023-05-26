@@ -84,14 +84,14 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
                 <h1>Parcels for terminal</h1>
                 {selectedParcel
                     ? <div>
-                        {JSON.stringify(selectedParcel)}
+                        <span>Deliver {selectedParcel.code} order</span>
                         {lockerNumber
                             ? <div>
                                 <span>Locker {lockerNumber} opened.</span>
                                 <br />
                                 <button className={styles.bigButton} onClick={onDone}>Parcel placed</button>
                             </div>
-                            : <button className={styles.bigButton} onClick={onDeliver}>Deliver</button>
+                            : <><br/><button className={styles.bigButton} onClick={onDeliver}>Deliver</button></>
                         }
                     </div>
                     : <ul>

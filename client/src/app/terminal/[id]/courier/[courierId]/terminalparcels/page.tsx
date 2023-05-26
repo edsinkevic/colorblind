@@ -85,14 +85,14 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
                 <h1>Parcels in terminal</h1>
                 {selectedParcel
                     ? <div>
-                        {JSON.stringify(selectedParcel)}
+                        <span>Order {selectedParcel.code} selected</span>
                         {lockerNumber
                             ? <div>
                                 <span>Locker {lockerNumber} opened.</span>
                                 <br />
-                                <button onClick={onDone}>Parcel retrieved</button>
+                                <button  className={styles.bigButton} onClick={onDone}>Parcel retrieved</button>
                             </div>
-                            : <button onClick={onShip}>Ship</button>
+                            : <><br/><button  className={styles.bigButton} onClick={onShip}>Ship</button></>
                         }
                     </div>
                     : <ul>

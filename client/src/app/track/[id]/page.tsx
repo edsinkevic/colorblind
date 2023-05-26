@@ -22,7 +22,6 @@ export default async function ParcelDetailsPage({ params: { id } }: Props) {
   const { status } = parcelDetails;
 
   if (status === StatusCodes.OK) {
-    let progressBar;
     const body = (await parcelDetails.json()) as ParcelDetails;
     
     return (
