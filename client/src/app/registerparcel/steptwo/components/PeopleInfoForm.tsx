@@ -106,6 +106,7 @@ export const PeopleInfoForm = ({
         />
         <span>Terminal</span>
         <Select
+          id={"select-from"}
           optionFilterProp={"label"}
           className={styles.terminalSelect}
           {...selectProps}
@@ -142,6 +143,7 @@ export const PeopleInfoForm = ({
         />
         <span>Terminal</span>
         <Select
+          id={"select-to"}
           optionFilterProp={"label"}
           className={styles.terminalSelect}
           {...selectProps}
@@ -149,7 +151,11 @@ export const PeopleInfoForm = ({
           placeholder={"Select terminal"}
         />
       </div>
-      <Button htmlType={"submit"} className={styles.bigButton}>
+      <Button
+        id={"next-button-2"}
+        htmlType={"submit"}
+        className={styles.bigButton}
+      >
         Next
       </Button>
     </form>

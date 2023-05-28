@@ -91,7 +91,11 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         </div>
       </div>
 
-      <Button htmlType={"submit"} className={styles.bigButton}>
+      <Button
+        id={"next-button-1"}
+        htmlType={"submit"}
+        className={styles.bigButton}
+      >
         Next
       </Button>
     </form>
