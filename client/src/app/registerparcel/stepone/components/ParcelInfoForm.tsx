@@ -43,10 +43,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         <div className={styles.rightSide}>
           <Select
             defaultValue={sizes[0]}
-            options={sizes.map((size) => ({
-              label: size,
-              value: size,
-            }))}
+            options={sizeOptions}
             onChange={(size) =>
               setState({
                 ...state,
@@ -65,10 +62,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           <div className={styles.rightSide}>
             <Select
               defaultValue={deliveryTypes[0]}
-              options={deliveryTypes.map((size) => ({
-                label: size,
-                value: size,
-              }))}
+              options={deliveryTypeOptions}
               onChange={(from) =>
                 setState({
                   ...state,
@@ -85,10 +79,7 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           <div className={styles.rightSide}>
             <Select
               defaultValue={deliveryTypes[0]}
-              options={deliveryTypes.map((size) => ({
-                label: size,
-                value: size,
-              }))}
+              options={deliveryTypeOptions}
               onChange={(to) =>
                 setState({
                   ...state,
