@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Button, Form, Input, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {
   params: { id: string };
@@ -27,12 +28,7 @@ export default function TerminalSubmit({ params: { id } }: Props) {
     const parcelResponse = await getOneByCode(code);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
-      notificationApi.error({
-        message: problem.title,
-        description: problem.detail,
-        placement: "bottomLeft",
-        duration: 5,
-      });
+      defaultError(notificationApi, problem);
       return;
     }
 
@@ -45,17 +41,11 @@ export default function TerminalSubmit({ params: { id } }: Props) {
     const response = await submit(code, id, parcel.version);
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      notificationApi.error({
-        message: problem.title,
-        description: problem.detail,
-        placement: "bottomLeft",
-        duration: 5,
-      });
+      defaultError(notificationApi, problem);
       return;
     }
 
     const { lockerNumber } = (await response.json()) as SubmitResponse;
-
     setLockerNumber(lockerNumber);
   };
 

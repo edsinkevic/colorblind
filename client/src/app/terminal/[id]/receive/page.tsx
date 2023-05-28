@@ -10,6 +10,8 @@ import {
 } from "colorblind/shared/lib/models/models";
 import { useRouter } from "next/navigation";
 import { Button, Form, Input, Row } from "antd";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {
   params: { id: string };
@@ -22,24 +24,29 @@ export default function TerminalReceive({ params: { id } }: Props) {
   const [lockerNumber, setLockerNumber] = useState<number>();
   const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
+  const [notificationApi, notificationContext] = useNotification();
 
   const fetchParcel = async () => {
     const parcelResponse = await getOneByCode(code);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
     const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
 
     if (fetchedParcel.status !== ParcelStatus.DELIVERED) {
-      setError("Parcel was not delivered yet!");
+      notificationApi.error({
+        message: "Error",
+        description: `Parcel is ${fetchedParcel.status.toLocaleLowerCase()}!`,
+        placement: "bottomLeft",
+        duration: 5,
+      });
       return;
     }
 
     setParcel(fetchedParcel);
-    setError(undefined);
   };
 
   const onApplyCode: MouseEventHandler = async () => {
@@ -47,19 +54,19 @@ export default function TerminalReceive({ params: { id } }: Props) {
   };
 
   const onLockerOpen: MouseEventHandler = async () => {
-    if (!parcel || error) return;
+    if (!parcel) return;
     const response = await receive(code, parcel.version);
 
-    if (response.status === StatusCodes.Conflict) {
+    if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       await fetchParcel();
       return;
     }
 
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
@@ -77,6 +84,7 @@ export default function TerminalReceive({ params: { id } }: Props) {
 
   return (
     <Form className={styles.form}>
+      {notificationContext}
       <Row justify={"center"}>
         <span className={styles.title}>Enter parcel code</span>
       </Row>

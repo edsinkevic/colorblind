@@ -15,6 +15,7 @@ import {
 } from "colorblind/shared/lib/models/models";
 import { AutoComplete, Button, Form, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {}
 
@@ -41,12 +42,7 @@ export default function ParcelDetailsPage({}: Props) {
 
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      notificationApi.error({
-        message: problem.title,
-        description: problem.detail,
-        placement: "bottomLeft",
-        duration: 5,
-      });
+      defaultError(notificationApi, problem);
       return;
     }
 
