@@ -9,7 +9,7 @@ from config import config
 
 def test_register_parcel():
     options = webdriver.ChromeOptions()
-    options.add_argument("headless")
+    options.headless = True
     driver: WebDriver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
     driver.get(config.client_url)
