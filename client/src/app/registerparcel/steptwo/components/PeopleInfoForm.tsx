@@ -1,13 +1,11 @@
 import styles from "../page.module.css";
-import { FormInput } from "colorblind/shared/components/FormInput";
 import { ColorblindPhoneInput } from "colorblind/shared/components/PhoneInput";
 import {
   PersonInfo,
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { useFormik } from "formik";
-import { Select, Button } from "antd";
-
+import { Button, Input, Select } from "antd";
 
 interface Props {
   onSubmit: (data: PeopleInfo) => void;
@@ -81,15 +79,15 @@ export const PeopleInfoForm = ({
     <form onSubmit={handleSubmitWithValidation}>
       <div className={styles.sender}>
         <h2>Sender</h2>
-        <FormInput
-          key={0}
+        <span>Full name</span>
+        <Input
           value={form.senderDeliveryInfo?.fullname}
           name={"senderDeliveryInfo.fullname"}
           placeholder={"Full name"}
           onChange={handleChange}
         />
-        <FormInput
-          key={1}
+        <span>Email</span>
+        <Input
           value={form?.senderDeliveryInfo?.email}
           name={"senderDeliveryInfo.email"}
           placeholder={"Email"}
@@ -97,7 +95,6 @@ export const PeopleInfoForm = ({
         />
         <ColorblindPhoneInput
           className={styles.telContainer}
-          key={2}
           inputProps={{
             name: "senderDeliveryInfo.phoneNumber",
             value: form?.senderDeliveryInfo?.phoneNumber,
@@ -107,20 +104,27 @@ export const PeopleInfoForm = ({
           country={"lt"}
           onChange={handleChange}
         />
-        <label>Terminal</label>
-        <Select {...selectProps} onChange={onChangeFrom} />
+        <span>Terminal</span>
+        <Select
+          optionFilterProp={"label"}
+          className={styles.terminalSelect}
+          {...selectProps}
+          onChange={onChangeFrom}
+          placeholder={"Select terminal"}
+        />
       </div>
       <div className={styles.receiver}>
         <h2>Receiver</h2>
-        <FormInput
-          key={3}
+        <span>Full name</span>
+        <Input
           value={form.receiverDeliveryInfo?.fullname}
           name={"receiverDeliveryInfo.fullname"}
           placeholder={"Full name"}
           onChange={handleChange}
         />
-        <FormInput
-          key={4}
+
+        <span>Email</span>
+        <Input
           value={form.receiverDeliveryInfo?.email}
           name={"receiverDeliveryInfo.email"}
           placeholder={"Email"}
@@ -128,7 +132,6 @@ export const PeopleInfoForm = ({
         />
         <ColorblindPhoneInput
           className={styles.telContainer}
-          key={5}
           inputProps={{
             name: "receiverDeliveryInfo.phoneNumber",
             value: form.receiverDeliveryInfo?.phoneNumber,
@@ -137,10 +140,18 @@ export const PeopleInfoForm = ({
           }}
           country={"lt"}
         />
-        <label>Terminal</label>
-        <Select {...selectProps} onChange={onChangeTo} />
+        <span>Terminal</span>
+        <Select
+          optionFilterProp={"label"}
+          className={styles.terminalSelect}
+          {...selectProps}
+          onChange={onChangeTo}
+          placeholder={"Select terminal"}
+        />
       </div>
-      <button type={"submit"} className={styles.bigButton}>Next</button>
+      <Button htmlType={"submit"} className={styles.bigButton}>
+        Next
+      </Button>
     </form>
   );
 };

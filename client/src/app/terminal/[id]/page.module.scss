@@ -21,7 +21,7 @@
   width: 100%;
 }
 
-.info p{
+.info p {
   margin-bottom: 0;
 }
 
@@ -37,9 +37,9 @@
   cursor: pointer;
   margin-top: 15px;
   margin-bottom: 10px;
-}
 
-.bigButton:hover{
-  transition: 0.3s;
-  background-color: rgb(145, 92, 197);
+  &:hover {
+    transition: 0.3s;
+    background-color: rgb(145, 92, 197);
+  }
 }

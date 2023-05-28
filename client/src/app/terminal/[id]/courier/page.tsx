@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./page.module.css";
+import styles from "colorblind/shared/styles/littleForms.module.scss";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -9,7 +9,7 @@ import {
   StatusCodes,
 } from "colorblind/shared/lib/models/models";
 import { query } from "colorblind/shared/requests/couriers";
-import { FormInput } from "colorblind/shared/components/FormInput";
+import { Button, Form, Input, Row } from "antd";
 
 interface Props {
   params: { id: string };
@@ -48,37 +48,49 @@ export default function PickCourier({ params: { id } }: Props) {
   }, [courierName]);
 
   return (
-    <div className={styles.form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (courier) router.push(`/terminal/${id}/courier/${courier.id}`);
-        }}
-      >
-        <h1>Log-in</h1>
-        <FormInput
-          placeholder="Username "
+    <Form
+      className={styles.form}
+      onFinish={(e) => {
+        if (courier) router.push(`/terminal/${id}/courier/${courier.id}`);
+      }}
+    >
+      <Row justify={"center"}>
+        <span className={styles.title}>Log-in</span>
+      </Row>
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
+          placeholder="Username"
           value={courierName}
           onChange={(e) => {
-            e.preventDefault();
             setCourierName(e.target.value);
           }}
         />
-        <FormInput
+      </Row>
+
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
           type="password"
           placeholder="Password "
           value={courierPassword}
           onChange={(e) => {
-            e.preventDefault();
             setCourierPassword(e.target.value);
           }}
         />
-        <button type="submit" className={styles.bigButton} disabled={!courierName}>
-          Login
-        </button>
-        {problem ? JSON.stringify(problem) : null}
-        {error}
-      </form>
-    </div>
+      </Row>
+
+      <Row justify={"center"}>
+        <Button
+          htmlType="submit"
+          className={styles.bigButton}
+          disabled={!courierName}
+        >
+          Submit
+        </Button>
+      </Row>
+      {problem ? JSON.stringify(problem) : null}
+      {error}
+    </Form>
   );
 }

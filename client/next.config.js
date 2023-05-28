@@ -1,4 +1,5 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
+const { join } = require("path");
 
 module.exports = () => {
   return {

@@ -1,7 +1,6 @@
 "use client";
-import styles from "../../page.module.css"
+import styles from "colorblind/shared/styles/littleForms.module.scss";
 import { MouseEventHandler, useState } from "react";
-import { FormInput } from "colorblind/shared/components/FormInput";
 import { getOneByCode, receive } from "colorblind/shared/requests/parcels";
 import {
   ParcelDetails,
@@ -10,6 +9,7 @@ import {
   StatusCodes,
 } from "colorblind/shared/lib/models/models";
 import { useRouter } from "next/navigation";
+import { Button, Form, Input, Row } from "antd";
 
 interface Props {
   params: { id: string };
@@ -42,60 +42,78 @@ export default function TerminalReceive({ params: { id } }: Props) {
     setError(undefined);
   };
 
-  const onApplyCode: MouseEventHandler = async (e) => {
-    e.preventDefault();
+  const onApplyCode: MouseEventHandler = async () => {
     await fetchParcel();
   };
 
-  const onLockerOpen: MouseEventHandler = async (e) => {
-    e.preventDefault();
+  const onLockerOpen: MouseEventHandler = async () => {
     if (!parcel || error) return;
     const response = await receive(code, parcel.version);
-  
+
     if (response.status === StatusCodes.Conflict) {
       const problem = (await response.json()) as Problem;
       setError(problem.detail);
       await fetchParcel();
       return;
     }
-  
+
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
       setError(problem.detail);
       return;
     }
 
-    const { lockerNumber } = (await response.json()) as { lockerNumber: number };
+    const { lockerNumber } = (await response.json()) as {
+      lockerNumber: number;
+    };
 
     setLockerNumber(lockerNumber);
   };
 
-  const onSubmit: MouseEventHandler = async (e) => {
-    e.preventDefault();
-
+  const onSubmit: MouseEventHandler = async () => {
     setError(undefined);
     await router.push(`/terminal/${id}`);
   };
 
   return (
-    <div className={styles.form}>
-      <form>
-        <h1>Enter parcel code</h1>
-        <FormInput
+    <Form className={styles.form}>
+      <Row justify={"center"}>
+        <span className={styles.title}>Enter parcel code</span>
+      </Row>
+      <Row justify={"center"}>
+        <span>Enter the tracking code to open a locker.</span>
+      </Row>
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
           value={code}
           onChange={(e) => {
             setCode(e.target.value);
           }}
         />
-        
-        {!parcel ? <><button className={styles.bigButton} onClick={onApplyCode}>Apply code</button> <br/> </> : null}
-        {parcel ? <button className={styles.bigButton} onClick={onLockerOpen}>Open locker</button> : null} <br/> 
-        {lockerNumber ? (
-          <button className={styles.bigButton} onClick={onSubmit}>Close locker {lockerNumber}</button>
-        ) : null}
-        {successMessage}
-        {error}
-      </form>
-    </div>
+      </Row>
+      <Row justify={"center"}>
+        <Button className={styles.bigButton} onClick={onApplyCode}>
+          Apply code
+        </Button>
+      </Row>
+      {parcel ? (
+        <Row justify={"center"}>
+          <Button className={styles.bigButton} onClick={onLockerOpen}>
+            Open locker
+          </Button>
+        </Row>
+      ) : null}{" "}
+      <br />
+      {lockerNumber ? (
+        <Row justify={"center"}>
+          <Button className={styles.bigButton} onClick={onSubmit}>
+            Close locker {lockerNumber}
+          </Button>
+        </Row>
+      ) : null}
+      {successMessage}
+      {error}
+    </Form>
   );
 }

@@ -1,8 +1,6 @@
-// import styles from "./ParcelInfoForm.module.css";
 import styles from "../page.module.css";
 import { useState } from "react";
-import { DeliveryType } from "../../../../shared/lib/models/models";
-import { PickerFromArray } from "colorblind/shared/components/PickerFromArray";
+import { DeliveryType } from "colorblind/shared/lib/models/models";
 import { Button, Select } from "antd";
 
 interface ParcelInfo {
@@ -43,9 +41,18 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           <p>Size</p>
         </div>
         <div className={styles.rightSide}>
-          <PickerFromArray
-            array={sizes}
-            onSubmit={(size) => setState({ ...state, size })}
+          <Select
+            defaultValue={sizes[0]}
+            options={sizes.map((size) => ({
+              label: size,
+              value: size,
+            }))}
+            onChange={(size) =>
+              setState({
+                ...state,
+                size,
+              })
+            }
           />
         </div>
       </div>
@@ -56,9 +63,13 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
             <p>From</p>
           </div>
           <div className={styles.rightSide}>
-            <PickerFromArray
-              array={deliveryTypes}
-              onSubmit={(from) =>
+            <Select
+              defaultValue={deliveryTypes[0]}
+              options={deliveryTypes.map((size) => ({
+                label: size,
+                value: size,
+              }))}
+              onChange={(from) =>
                 setState({
                   ...state,
                   deliveryType: { ...state.deliveryType, from },
@@ -72,9 +83,13 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
             <p>To</p>
           </div>
           <div className={styles.rightSide}>
-            <PickerFromArray
-              array={deliveryTypes}
-              onSubmit={(to) =>
+            <Select
+              defaultValue={deliveryTypes[0]}
+              options={deliveryTypes.map((size) => ({
+                label: size,
+                value: size,
+              }))}
+              onChange={(to) =>
                 setState({
                   ...state,
                   deliveryType: { ...state.deliveryType, to },
@@ -85,7 +100,9 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
         </div>
       </div>
 
-      <button type={"submit"} className={styles.bigButton}>Next</button>
+      <Button htmlType={"submit"} className={styles.bigButton}>
+        Next
+      </Button>
     </form>
   );
 }
