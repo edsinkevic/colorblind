@@ -8,6 +8,6 @@ class Config:
 
 
 config: Config = Config(
-    client_url="http://localhost:3000",
-    server_url="http://localhost:8080"
+    client_url="http://localhost:8080",
+    server_url="http://localhost:8080/api/"
 )
