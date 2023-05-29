@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { fetchCourier } from "colorblind/shared/requests/couriers";
@@ -71,17 +72,33 @@ export default function TerminalCourierEnvironment({
   }
 
   return (
-    <div className={"form"}>
-      <h1>Viewing as {courier.name}</h1>
-      
-      <button onClick={() => router.push(`/terminal/${id}/courier/${courierId}/terminalparcels`)}>View terminal parcels</button>
-      <br />
-      <button onClick={() => router.push(`/terminal/${id}/courier/${courierId}/courierparcels`)}>Deliver parcel</button>
-      <div>
-        <label>For safety reasons you will be logged out in {logoutTimer} seconds of inactivity</label>
+    <>
+      <div className={styles.info}>
+        <button 
+          className={styles.bigButton} 
+          onClick={() => router.push(`/terminal/${id}/courier/${courierId}/terminalparcels`)}>
+            View terminal parcels
+        </button>
         <br />
-        <button onClick={() => logout(router, id, "Log out successful")}>Logout</button>
+        <button 
+          className={styles.bigButton}
+          onClick={() => router.push(`/terminal/${id}/courier/${courierId}/courierparcels`)}>
+            Deliver parcel
+        </button>
+        <div>
+          <button 
+            className={styles.bigButtonLogout}
+            onClick={() => logout(router, id, "Log out successful")}>
+              Logout
+          </button>
+          <br />
+          <label>For safety reasons you will be logged out in {logoutTimer} seconds of inactivity</label>
+        </div>
+
       </div>
-    </div>
+      <div className={styles.intro}>
+        <h1>Viewing as Courier: <h2>{courier.name}</h2></h1>
+      </div>
+    </>
   );
 }

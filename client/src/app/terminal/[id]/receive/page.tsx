@@ -1,6 +1,6 @@
 "use client";
+import styles from "colorblind/shared/styles/littleForms.module.scss";
 import { MouseEventHandler, useState } from "react";
-import { FormInput } from "colorblind/shared/components/FormInput";
 import { getOneByCode, receive } from "colorblind/shared/requests/parcels";
 import {
   ParcelDetails,
@@ -9,6 +9,9 @@ import {
   StatusCodes,
 } from "colorblind/shared/lib/models/models";
 import { useRouter } from "next/navigation";
+import { Button, Form, Input, Row } from "antd";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {
   params: { id: string };
@@ -21,77 +24,104 @@ export default function TerminalReceive({ params: { id } }: Props) {
   const [lockerNumber, setLockerNumber] = useState<number>();
   const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
+  const [notificationApi, notificationContext] = useNotification();
 
   const fetchParcel = async () => {
     const parcelResponse = await getOneByCode(code);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
     const fetchedParcel = (await parcelResponse.json()) as ParcelDetails;
 
     if (fetchedParcel.status !== ParcelStatus.DELIVERED) {
-      setError("Parcel was not delivered yet!");
+      notificationApi.error({
+        message: "Error",
+        description: `Parcel is ${fetchedParcel.status.toLocaleLowerCase()}!`,
+        placement: "bottomLeft",
+        duration: 5,
+      });
       return;
     }
 
     setParcel(fetchedParcel);
-    setError(undefined);
   };
 
-  const onApplyCode: MouseEventHandler = async (e) => {
-    e.preventDefault();
+  const onApplyCode: MouseEventHandler = async () => {
     await fetchParcel();
   };
 
-  const onLockerOpen: MouseEventHandler = async (e) => {
-    e.preventDefault();
-    if (!parcel || error) return;
+  const onLockerOpen: MouseEventHandler = async () => {
+    if (!parcel) return;
     const response = await receive(code, parcel.version);
-  
-    if (response.status === StatusCodes.Conflict) {
+
+    if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       await fetchParcel();
       return;
     }
-  
+
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
-    const { lockerNumber } = (await response.json()) as { lockerNumber: number };
+    const { lockerNumber } = (await response.json()) as {
+      lockerNumber: number;
+    };
 
     setLockerNumber(lockerNumber);
   };
 
-  const onSubmit: MouseEventHandler = async (e) => {
-    e.preventDefault();
-
+  const onSubmit: MouseEventHandler = async () => {
     setError(undefined);
     await router.push(`/terminal/${id}`);
   };
 
   return (
-    <form>
-      <FormInput
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-        }}
-      />
-      {parcel ? JSON.stringify(parcel) : null}
-      <button onClick={onApplyCode}>Apply code</button>
-      {parcel ? <button onClick={onLockerOpen}>Open locker</button> : null}
+    <Form className={styles.form}>
+      {notificationContext}
+      <Row justify={"center"}>
+        <span className={styles.title}>Enter parcel code</span>
+      </Row>
+      <Row justify={"center"}>
+        <span>Enter the tracking code to open a locker.</span>
+      </Row>
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
+          value={code}
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+        />
+      </Row>
+      <Row justify={"center"}>
+        <Button className={styles.bigButton} onClick={onApplyCode}>
+          Apply code
+        </Button>
+      </Row>
+      {parcel ? (
+        <Row justify={"center"}>
+          <Button className={styles.bigButton} onClick={onLockerOpen}>
+            Open locker
+          </Button>
+        </Row>
+      ) : null}{" "}
+      <br />
       {lockerNumber ? (
-        <button onClick={onSubmit}>Close locker {lockerNumber}</button>
+        <Row justify={"center"}>
+          <Button className={styles.bigButton} onClick={onSubmit}>
+            Close locker {lockerNumber}
+          </Button>
+        </Row>
       ) : null}
       {successMessage}
       {error}
-    </form>
+    </Form>
   );
 }

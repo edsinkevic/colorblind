@@ -7,8 +7,8 @@ import {
   TerminalDetails,
 } from "colorblind/shared/lib/models/models";
 import { getAll } from "colorblind/shared/requests/terminal";
-import styles from "./page.module.css";
-import { Select } from "antd";
+import { Button, Form, Row, Select } from "antd";
+import styles from "colorblind/shared/styles/littleForms.module.scss";
 
 export default function StepOne() {
   const router = useRouter();
@@ -16,7 +16,6 @@ export default function StepOne() {
   const [error, setError] = useState<string>();
   const [terminals, setTerminals] = useState<TerminalDetails[]>([]);
   const [pickedTerminalId, setPickedTerminalId] = useState<string>();
-
   useEffect(() => {
     const fetchTerminals = async () => {
       const response = await getAll();
@@ -42,30 +41,35 @@ export default function StepOne() {
 
   const onSelect = (id: string) => setPickedTerminalId(id);
   return (
-    <div className={styles.form}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push(`/terminal/${pickedTerminalId}`);
-        }}
-      >
-        <h1>Select a terminal</h1>
-        <div>
-          <Select
-            options={terminalOptions}
-            onChange={onSelect}
-            placeholder="Please select!"
-          />
-          <button
-            type="submit"
-            disabled={!pickedTerminalId || !!error || !!problem}
-          >
-            Submit
-          </button>
-        </div>
-        {problem ? JSON.stringify(problem) : null}
-        {error}
-      </form>
-    </div>
+    <Form
+      className={styles.form}
+      onFinish={(e) => {
+        router.push(`/terminal/${pickedTerminalId}`);
+      }}
+    >
+      <Row justify={"center"}>
+        <span className={styles.title}>Select a terminal</span>
+      </Row>
+      <Row justify={"center"}>
+        <Select
+          className={styles.select}
+          options={terminalOptions}
+          onChange={onSelect}
+          placeholder="Please select!"
+          allowClear
+        />
+      </Row>
+      <Row justify={"center"}>
+        <Button
+          htmlType="submit"
+          disabled={!pickedTerminalId || !!error || !!problem}
+          className={styles.bigButton}
+        >
+          Submit
+        </Button>
+      </Row>
+      {problem ? JSON.stringify(problem) : null}
+      {error}
+    </Form>
   );
 }

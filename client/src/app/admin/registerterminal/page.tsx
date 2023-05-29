@@ -1,11 +1,11 @@
 "use client";
 
-import styles from "./page.module.css";
+import styles from "colorblind/shared/styles/littleForms.module.scss";
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FormInput } from "colorblind/shared/components/FormInput";
 import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/terminal";
+import { Button, Form, Input, Row } from "antd";
 
 export default function StepOne() {
   const [error, setError] = useState<Error>();
@@ -13,7 +13,6 @@ export default function StepOne() {
   const [problem, setProblem] = useState<Problem>();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const resp = await register({
       address,
       lockers: [
@@ -39,20 +38,27 @@ export default function StepOne() {
   const [address, setAddress] = useState<string>("");
 
   return (
-    <div className={styles.form}>
-      <form onSubmit={onSubmit}>
-        <FormInput
+    <Form onFinish={onSubmit} className={styles.form}>
+      <Row justify={"center"}>
+        <span className={styles.title}>Register terminal</span>
+      </Row>
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
           value={address}
           placeholder={"Address"}
           onChange={(e) => {
-            e.preventDefault();
             setAddress(e.target.value);
           }}
-        ></FormInput>
-        <button type="submit">Submit</button>
-        {problem ? JSON.stringify(problem) : null}
-        {error ? error.message : null}
-      </form>
-    </div>
+        ></Input>
+      </Row>
+      <Row justify={"center"}>
+        <Button htmlType="submit" className={styles.bigButton}>
+          Submit
+        </Button>
+      </Row>
+      {problem ? JSON.stringify(problem) : null}
+      {error ? error.message : null}
+    </Form>
   );
 }

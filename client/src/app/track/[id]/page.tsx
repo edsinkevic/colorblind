@@ -1,3 +1,5 @@
+"use client";
+
 import { detailsGetOne } from "colorblind/shared/requests/parcels";
 import {
   ParcelDetails,
@@ -5,6 +7,7 @@ import {
 } from "colorblind/shared/lib/models/models";
 import { notFound } from "next/navigation";
 import styles from "./page.module.css";
+import { Progress } from "antd";
 
 interface Props {
   params: {
@@ -18,19 +21,31 @@ export default async function ParcelDetailsPage({ params: { id } }: Props) {
 
   if (status === StatusCodes.OK) {
     const body = (await parcelDetails.json()) as ParcelDetails;
+
     return (
       <div className={styles.info}>
         <div>
           <h1>Order placed!</h1>
           <p>Your order code is: {body.code}</p>
           <p>
-            Place your order into the locker located at :
+            Order status :{body.status}
             {/* Retreive locker address based on terminalId */}
             {/* {body.senderDeliveryInfo.parcelLockerAddress} */}
           </p>
+          <Progress
+            className={styles.progressBar}
+            percent={body.version * 20}
+            status="active"
+            strokeColor={{
+              "0%": "#9c2298",
+              "100%": "#5384b2",
+            }}
+            size={[650, 20]}
+            showInfo={false}
+          />
         </div>
       </div>
-    )
+    );
   }
 
   if (status === StatusCodes.NOT_FOUND) {

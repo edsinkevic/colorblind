@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import styles from "colorblind/shared/styles/littleForms.module.scss";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Courier,
@@ -8,7 +9,9 @@ import {
   StatusCodes,
 } from "colorblind/shared/lib/models/models";
 import { query } from "colorblind/shared/requests/couriers";
-import { FormInput } from "colorblind/shared/components/FormInput";
+import { Button, Form, Input, Row } from "antd";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {
   params: { id: string };
@@ -16,67 +19,70 @@ interface Props {
 
 export default function PickCourier({ params: { id } }: Props) {
   const router = useRouter();
-  const [problem, setProblem] = useState<Problem>();
-  const [error, setError] = useState<string>();
   const [courierName, setCourierName] = useState<string>();
   const [courierPassword, setCourierPassword] = useState<string>();
-  const [courier, setCourier] = useState<Courier>();
+  const [notificationApi, notificationContext] = useNotification();
 
-  useEffect(() => {
-    const fetchCourier = async () => {
-      const response = await query(courierName);
+  const onSubmit = async () => {
+    const response = await query(courierName);
 
-      if (response.status !== StatusCodes.OK) {
-        const body = (await response.json()) as Problem;
-        setProblem(body);
-        return;
-      }
+    if (response.status !== StatusCodes.OK) {
+      const body = (await response.json()) as Problem;
+      defaultError(notificationApi, body);
+      return;
+    }
 
-      const couriers = (await response.json()) as Courier[];
+    const couriers = (await response.json()) as Courier[];
 
-      if (couriers.length === 0) {
-        setError("Courier not found!");
-        return;
-      }
+    if (couriers.length === 0) {
+      notificationApi.error({
+        message: "Could not log in",
+        description: "Courier not found!",
+      });
+      return;
+    }
 
-      setCourier(couriers[0]);
-      setError(undefined);
-    };
-
-    fetchCourier();
-  }, [courierName]);
+    router.push(`/terminal/${id}/courier/${couriers[0].id}`);
+  };
 
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (courier) router.push(`/terminal/${id}/courier/${courier.id}`);
-        }}
-      >
-        <FormInput
+    <Form className={styles.form} onFinish={onSubmit}>
+      {notificationContext}
+      <Row justify={"center"}>
+        <span className={styles.title}>Log-in</span>
+      </Row>
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
           placeholder="Username"
           value={courierName}
           onChange={(e) => {
-            e.preventDefault();
             setCourierName(e.target.value);
           }}
         />
-        <FormInput
+      </Row>
+
+      <Row justify={"center"}>
+        <Input
+          className={styles.input}
           type="password"
-          placeholder="Password"
+          placeholder="Password "
           value={courierPassword}
           onChange={(e) => {
-            e.preventDefault();
             setCourierPassword(e.target.value);
           }}
         />
-        <button style={{ float: "right" }} type="submit" disabled={!courierName}>
-          Login
-        </button>
-        {problem ? JSON.stringify(problem) : null}
-        {error}
-      </form>
-    </div>
+      </Row>
+
+      <Row justify={"center"}>
+        <Button
+          htmlType="submit"
+          className={styles.bigButton}
+          disabled={!courierName}
+        >
+          Submit
+        </Button>
+      </Row>
+    </Form>
   );
 }

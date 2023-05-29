@@ -4,6 +4,7 @@ import { ParcelDetails, ParcelDetailsForTerminal, Problem, StatusCodes } from "c
 import { detailsGetByTerminalId, getOneByCode, ship } from "colorblind/shared/requests/parcels";
 import { notFound } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
+import styles from "./page.module.css";
 
 interface Props {
     params: {
@@ -77,21 +78,21 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
         setSelectedParcel(undefined);
     };
 
-    return (<div>{
+    return (<div className={styles.info}>{
         parcels.length === 0 ?
             <h1>No parcels in terminal</h1>
             : <div>
                 <h1>Parcels in terminal</h1>
                 {selectedParcel
                     ? <div>
-                        {JSON.stringify(selectedParcel)}
+                        <span>Order {selectedParcel.code} selected</span>
                         {lockerNumber
                             ? <div>
                                 <span>Locker {lockerNumber} opened.</span>
                                 <br />
-                                <button onClick={onDone}>Parcel retrieved</button>
+                                <button  className={styles.bigButton} onClick={onDone}>Parcel retrieved</button>
                             </div>
-                            : <button onClick={onShip}>Ship</button>
+                            : <><br/><button  className={styles.bigButton} onClick={onShip}>Ship</button></>
                         }
                     </div>
                     : <ul>
@@ -102,7 +103,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
                             <span>Delivery address: </span>
                             {parcel.deliveryTerminalAddress}
                             <br />
-                            <button onClick={onSelect} id={parcel.code}>Select</button>
+                            <button className={styles.bigButton} onClick={onSelect} id={parcel.code}>Select</button>
                         </li>)}
                     </ul>
                 }

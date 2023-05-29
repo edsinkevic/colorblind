@@ -11,12 +11,32 @@
 .titleContainer {
   flex: 1;
   cursor: pointer;
+
+  & .headerButton {
+    border: none;
+    background-color: transparent;
+    padding-left: 20px;
+    position: relative;
+    font-size: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+  }
 }
 
 .buttonContainer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  & button:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 1px;
+    height: 20px;
+    background-color: #333;
+  }
 }
 
 .headerButton {
@@ -29,32 +49,14 @@
   cursor: pointer;
   font-weight: bold;
   color: #333;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
-.headerButton:first-child {
-  margin-left: 0;
-}
 
-.headerButton:last-child {
-  margin-right: 0;
-}
-
-.buttonContainer button:not(:first-child)::before {
-  content: "";
-  position: absolute;
-  left: -10px;
-  width: 1px;
-  height: 20px;
-  background-color: #333;
-}
-
-.titleContainer .headerButton {
-  border: none;
-  background-color: transparent;
-  padding-left: 20px;
-  position: relative;
-  font-size: 40px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #333;
-}

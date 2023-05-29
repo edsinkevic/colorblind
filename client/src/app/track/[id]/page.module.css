@@ -1,6 +1,6 @@
 .info div {
     background-color: white;
-    padding: 1px 60px;
+    padding: 1px 0px;
     border-radius: 15px;
 }
 
@@ -8,6 +8,10 @@
     color: rgb(77, 1, 77);
     text-align: center;
     margin: 20px 0 20px;
+}
+
+.info p{
+    padding: 1px 60px;
 }
 
 .info .tel-container {
@@ -18,4 +22,12 @@
     margin-bottom: 10px;
     margin-top: 10px;
     width: 100%;
+}
+
+.info .progressBar{
+    padding:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 4px;
 }
