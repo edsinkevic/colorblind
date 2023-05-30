@@ -100,7 +100,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
   if (parcels.length === 0) {
     return (
       <div className={styles.info}>
-        <h1>No parcels in terminal</h1>
+        <h1>No parcels ready for shipment</h1>
       </div>
     );
   }
