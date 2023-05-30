@@ -9,30 +9,33 @@ import {
 import { getAll } from "colorblind/shared/requests/terminal";
 import { Button, Form, Row, Select } from "antd";
 import styles from "colorblind/shared/styles/littleForms.module.scss";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 export default function StepOne() {
   const router = useRouter();
-  const [problem, setProblem] = useState<Problem>();
-  const [error, setError] = useState<string>();
   const [terminals, setTerminals] = useState<TerminalDetails[]>([]);
   const [pickedTerminalId, setPickedTerminalId] = useState<string>();
+  const [notificationApi, notificationContext] = useNotification();
+
   useEffect(() => {
     const fetchTerminals = async () => {
       const response = await getAll();
 
       if (response.status !== StatusCodes.OK) {
         const body = (await response.json()) as Problem;
-        setProblem(body);
+        defaultError(notificationApi, body);
         return;
       }
 
       const terminals = (await response.json()) as TerminalDetails[];
       setTerminals(terminals);
-      setPickedTerminalId(terminals[0].id);
+
+      setPickedTerminalId(terminals[0]?.id);
     };
 
     fetchTerminals();
-  }, []);
+  }, [notificationApi]);
 
   const terminalOptions = terminals.map((terminal) => ({
     value: terminal.id,
@@ -47,6 +50,7 @@ export default function StepOne() {
         router.push(`/terminal/${pickedTerminalId}`);
       }}
     >
+      {notificationContext}
       <Row justify={"center"}>
         <span className={styles.title}>Select a terminal</span>
       </Row>
@@ -62,14 +66,12 @@ export default function StepOne() {
       <Row justify={"center"}>
         <Button
           htmlType="submit"
-          disabled={!pickedTerminalId || !!error || !!problem}
+          disabled={!pickedTerminalId}
           className={styles.bigButton}
         >
           Submit
         </Button>
       </Row>
-      {problem ? JSON.stringify(problem) : null}
-      {error}
     </Form>
   );
 }
