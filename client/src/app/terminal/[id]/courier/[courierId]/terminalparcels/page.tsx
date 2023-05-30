@@ -11,10 +11,11 @@ import {
   detailsGetOne,
   ship,
 } from "colorblind/shared/requests/parcels";
-import { notFound } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 import styles from "colorblind/shared/styles/littleForms.module.scss";
 import { Button, Card, Col, List, Modal, Row } from "antd";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 interface Props {
   params: {
@@ -25,7 +26,7 @@ interface Props {
 
 export default function TerminalParcels({ params: { id, courierId } }: Props) {
   const [parcels, setParcels] = useState<ParcelDetailsForTerminal[]>([]);
-  const [error, setError] = useState<string>();
+  const [notificationApi, notificationContext] = useNotification();
 
   const [selectedParcel, setSelectedParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
@@ -34,7 +35,8 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     const initParcels = async () => {
       const response = await detailsGetByTerminalId(id);
       if (response.status !== StatusCodes.OK) {
-        notFound();
+        defaultError(notificationApi, await response.json());
+        return;
       }
 
       const parcels = await response.json();
@@ -42,19 +44,20 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     };
 
     initParcels();
-  }, [id]);
+  }, [id, notificationApi]);
 
   const onShip: MouseEventHandler = async (e) => {
     e.preventDefault();
-    if (error || !selectedParcel) return;
+    if (!selectedParcel) return;
     const response = await ship(
       selectedParcel.code,
       courierId,
       selectedParcel.version
     );
+
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
@@ -69,7 +72,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     const parcelResponse = await detailsGetOne(e.currentTarget.id);
     if (parcelResponse.status !== StatusCodes.OK) {
       const problem = (await parcelResponse.json()) as Problem;
-      setError(problem.detail);
+      defaultError(notificationApi, problem);
       return;
     }
 
@@ -84,7 +87,8 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
 
     const response = await detailsGetByTerminalId(id);
     if (response.status !== StatusCodes.OK) {
-      notFound();
+      defaultError(notificationApi, await response.json());
+      return;
     }
 
     const parcels = await response.json();
@@ -141,6 +145,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
   return (
     <>
       <SelectedComponent />
+      {notificationContext}
       <Row>
         <Col className={styles.terminalCatalogue}>
           <Row justify={"center"}>
