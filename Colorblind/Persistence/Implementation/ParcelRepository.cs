@@ -25,7 +25,7 @@ public class ParcelRepository : IParcelRepository
         _documentSession.Query<Parcel>()
             .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct);
 
-    public async Task<List<ParcelInTerminalDTO>> ListShippableByTerminal(Guid terminalId,
+    public async Task<List<ShippableParcelInTerminal>> ListShippableByTerminal(Guid terminalId,
         CancellationToken ct = default)
     {
         var terminal = await _documentSession.LoadAsync<Terminal>(terminalId, ct);
@@ -42,8 +42,7 @@ public class ParcelRepository : IParcelRepository
 
         return parcels
             .Select(x =>
-                new ParcelInTerminalDTO(x.Id, x.Code, x.Version,
-                    destinations[x.ReceiverDeliveryInfo.TerminalId].Address))
+                new ShippableParcelInTerminal(x, destinations[x.ReceiverDeliveryInfo.TerminalId]))
             .ToList();
     }
 

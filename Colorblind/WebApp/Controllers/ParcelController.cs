@@ -66,7 +66,7 @@ public class ParcelController : ControllerBase
 
     [HttpGet("terminal/{terminalId:guid}")]
     public async Task<IActionResult> GetInTerminal(
-        [FromServices] GetParcelsInTerminalUseCase useCase,
+        [FromServices] GetShippableParcelsInTerminal useCase,
         Guid terminalId,
         CancellationToken ct)
     {

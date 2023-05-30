@@ -5,12 +5,21 @@
   border-radius: 10px;
 }
 
+
+$min-height: 400px;
+$min-width: 550px;
+
 .terminalCatalogue {
   padding: 10px;
-  min-height: 400px;
-  min-width: 550px;
+  min-height: $min-height;
+  min-width: $min-width;
   background-color: white;
   border-radius: 10px;
+}
+
+.list {
+  min-height: $min-height;
+  min-width: $min-width;
 }
 
 .selectionBox {
