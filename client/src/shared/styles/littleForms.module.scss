@@ -6,20 +6,12 @@
 }
 
 
-$min-height: 400px;
-$min-width: 550px;
-
 .terminalCatalogue {
   padding: 10px;
-  min-height: $min-height;
-  min-width: $min-width;
+  min-height: 500px;
+  width: 800px;
   background-color: white;
   border-radius: 10px;
-}
-
-.list {
-  min-height: $min-height;
-  min-width: $min-width;
 }
 
 .selectionBox {

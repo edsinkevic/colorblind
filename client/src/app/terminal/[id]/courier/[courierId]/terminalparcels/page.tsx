@@ -147,7 +147,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
       <Row>
         <Col className={styles.terminalCatalogue}>
           <Row justify={"center"}>
-            <span className={styles.title}>Parcels in terminal</span>
+            <span className={styles.title}>Parcels ready for shipment</span>
           </Row>
           <List
             className={styles.list}
@@ -161,16 +161,13 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
             }}
             dataSource={parcels}
             renderItem={(shippableParcel) => (
-              <List.Item>
+              <List.Item >
                 <Card
-                  title={
-                    <Row justify={"center"}>
-                      <span style={{fontSize: "10px"}}>{shippableParcel.parcel.id}</span>
-                    </Row>
-                  }
+                  title={shippableParcel.parcel.id}
                   onClick={onSelect}
                   className={styles.clickableCard}
                   bodyStyle={{ padding: "10px" }}
+                  headStyle={{textAlign: "center"}}
                   id={shippableParcel.parcel.id}
                   hoverable
                 >
@@ -178,13 +175,19 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
                     <span>Size: {shippableParcel.parcel.size}</span>
                   </Row>
                   <Row justify={"center"}>
-                    <span>From: {shippableParcel.parcel.senderDeliveryInfo.fullname}</span>
+                    <span>
+                      From: {shippableParcel.parcel.senderDeliveryInfo.fullname}
+                    </span>
                   </Row>
                   <Row justify={"center"}>
-                    <span>To: {shippableParcel.parcel.receiverDeliveryInfo.fullname}</span>
+                    <span>
+                      To: {shippableParcel.parcel.receiverDeliveryInfo.fullname}
+                    </span>
                   </Row>
                   <Row justify={"center"}>
-                    <span>Address: {shippableParcel.receivingTerminal.address}</span>
+                    <span>
+                      Address: {shippableParcel.receivingTerminal.address}
+                    </span>
                   </Row>
                 </Card>
               </List.Item>
