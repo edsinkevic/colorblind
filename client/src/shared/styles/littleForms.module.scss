@@ -5,6 +5,27 @@
   border-radius: 10px;
 }
 
+.terminalCatalogue {
+  padding: 10px;
+  min-height: 400px;
+  min-width: 550px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.selectionBox {
+  margin-left: 10px;
+  width: 400px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.selection {
+  font-size: 30px;
+  font-weight: 700;
+  color: #333;
+}
+
 .title {
   font-size: 50px;
   font-weight: 700;
@@ -19,6 +40,24 @@
 .input {
   width: 80%;
   margin: 10px;
+}
+
+.smallerButton {
+  width: 75px;
+  height: 30px;
+  background-color: rebeccapurple;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: none;
+
+  &:hover {
+    transition: 0.3s;
+  }
+}
+
+.clickableCard {
+  cursor: pointer;
 }
 
 .bigButton {

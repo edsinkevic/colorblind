@@ -18,11 +18,9 @@ interface Props {
 }
 
 export default function TerminalReceive({ params: { id } }: Props) {
-  const [error, setError] = useState<string>();
   const [code, setCode] = useState<string>("");
   const [parcel, setParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
-  const [successMessage, setSuccessMessage] = useState<string>();
   const router = useRouter();
   const [notificationApi, notificationContext] = useNotification();
 
@@ -78,7 +76,6 @@ export default function TerminalReceive({ params: { id } }: Props) {
   };
 
   const onSubmit: MouseEventHandler = async () => {
-    setError(undefined);
     await router.push(`/terminal/${id}`);
   };
 
@@ -112,7 +109,6 @@ export default function TerminalReceive({ params: { id } }: Props) {
           </Button>
         </Row>
       ) : null}{" "}
-      <br />
       {lockerNumber ? (
         <Row justify={"center"}>
           <Button className={styles.bigButton} onClick={onSubmit}>
@@ -120,8 +116,6 @@ export default function TerminalReceive({ params: { id } }: Props) {
           </Button>
         </Row>
       ) : null}
-      {successMessage}
-      {error}
     </Form>
   );
 }

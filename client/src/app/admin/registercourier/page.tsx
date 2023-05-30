@@ -3,36 +3,34 @@ import styles from "colorblind/shared/styles/littleForms.module.scss";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
+import { StatusCodes } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/couriers";
 import { Button, Form, Input, Row } from "antd";
+import useNotification from "antd/es/notification/useNotification";
+import { defaultError } from "colorblind/shared/notifications/defaults";
 
 export default function RegisterCourier() {
-  const [error, setError] = useState<Error>();
   const router = useRouter();
-  const [problem, setProblem] = useState<Problem>();
+  const [notificationApi, notificationContext] = useNotification();
 
   const onSubmit = async () => {
     const resp = await register({ name });
 
-    if (resp.status === StatusCodes.OK) {
-      // Decide what to do next
-      router.replace("/");
+    if (resp.status !== StatusCodes.OK) {
+      defaultError(notificationApi, await resp.json());
       return;
     }
 
-    if (resp.status === StatusCodes.BAD_REQUEST) {
-      setProblem(await resp.json());
-      return;
-    }
-
-    setError(new Error("Something went super wrong!"));
+    // Decide what to do next
+    router.replace("/");
+    return;
   };
 
   const [name, setName] = useState<string>("");
 
   return (
     <Form onFinish={onSubmit} className={styles.form}>
+      {notificationContext}
       <Row justify={"center"}>
         <span className={styles.title}>Register courier</span>
       </Row>
@@ -51,8 +49,6 @@ export default function RegisterCourier() {
           Submit
         </Button>
       </Row>
-      {problem ? JSON.stringify(problem) : null}
-      {error ? error.message : null}
     </Form>
   );
 }
