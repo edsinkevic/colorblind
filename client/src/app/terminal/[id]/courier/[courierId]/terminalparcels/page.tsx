@@ -105,46 +105,44 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     );
   }
 
-  const SelectedComponent = () => {
-    return (
-      <Modal
-        centered
-        open={!!selectedParcel}
-        onCancel={() => setSelectedParcel(undefined)}
-        footer={
-          <Row justify={"space-evenly"}>
-            <Button key={"ship"} className={styles.bigButton} onClick={onShip}>
-              Ship
-            </Button>
-            <Button
-              disabled={!lockerNumber}
-              key={"confirm"}
-              className={styles.bigButton}
-              onClick={onDone}
-            >
-              Confirm shipment
-            </Button>
-          </Row>
-        }
-      >
-        <Row justify={"center"}>
-          <span className={styles.selection}>Order selected</span>
+  const SelectedComponent = (
+    <Modal
+      centered
+      open={!!selectedParcel}
+      onCancel={() => setSelectedParcel(undefined)}
+      footer={
+        <Row justify={"space-evenly"}>
+          <Button key={"ship"} className={styles.bigButton} onClick={onShip}>
+            Ship
+          </Button>
+          <Button
+            disabled={!lockerNumber}
+            key={"confirm"}
+            className={styles.bigButton}
+            onClick={onDone}
+          >
+            Confirm shipment
+          </Button>
         </Row>
-        {lockerNumber && (
-          <Row justify={"center"}>
-            <span>Locker {lockerNumber} opened.</span>
-          </Row>
-        )}
+      }
+    >
+      <Row justify={"center"}>
+        <span className={styles.selection}>Order selected</span>
+      </Row>
+      {lockerNumber && (
         <Row justify={"center"}>
-          <span>{selectedParcel?.id}</span>
+          <span>Locker {lockerNumber} opened.</span>
         </Row>
-      </Modal>
-    );
-  };
+      )}
+      <Row justify={"center"}>
+        <span>{selectedParcel?.id}</span>
+      </Row>
+    </Modal>
+  );
 
   return (
     <>
-      <SelectedComponent />
+      {SelectedComponent}
       {notificationContext}
       <Row>
         <Col className={styles.terminalCatalogue}>
