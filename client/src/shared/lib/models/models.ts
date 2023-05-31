@@ -62,10 +62,11 @@ export interface DeliverResponse {
 
 export interface ParcelDetailsForTerminal extends ParcelBase {
   deliveryTerminalAddress: string;
+  size: string;
 }
-export interface ShippableParcelInTerminal {
-  parcel: ParcelDetails,
-  receivingTerminal: TerminalDetails
+
+export interface GetShippableParcelInTerminalResponse {
+  parcels: ParcelDetailsForTerminal[];
 }
 
 export enum ParcelStatus {

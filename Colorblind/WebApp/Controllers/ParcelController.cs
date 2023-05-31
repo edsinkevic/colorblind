@@ -72,11 +72,11 @@ public class ParcelController : ControllerBase
         CancellationToken ct)
     {
         var res = await useCase.Execute(terminalId, ct);
-        
+
         var response = new GetShippableParcelsInTerminalResponse(res.Select(x =>
             new ShippableParcelResponse(Id: x.Parcel.Id, Size: x.Parcel.Size,
-                DeliveryAddress: x.ReceivingTerminal.Address)).ToList());
-        
+                DeliveryTerminalAddress: x.ReceivingTerminal.Address)).ToList());
+
         return Ok(response);
     }
 

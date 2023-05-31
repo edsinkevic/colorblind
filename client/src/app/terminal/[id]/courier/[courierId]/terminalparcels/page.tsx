@@ -1,9 +1,10 @@
 "use client";
 
 import {
+  GetShippableParcelInTerminalResponse,
   ParcelDetails,
+  ParcelDetailsForTerminal,
   Problem,
-  ShippableParcelInTerminal,
   StatusCodes,
 } from "colorblind/shared/lib/models/models";
 import {
@@ -25,7 +26,7 @@ interface Props {
 }
 
 export default function TerminalParcels({ params: { id, courierId } }: Props) {
-  const [parcels, setParcels] = useState<ShippableParcelInTerminal[]>([]);
+  const [parcels, setParcels] = useState<ParcelDetailsForTerminal[]>([]);
   const [notificationApi, notificationContext] = useNotification();
 
   const [selectedParcel, setSelectedParcel] = useState<ParcelDetails>();
@@ -39,8 +40,8 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
         return;
       }
 
-      const parcels = await response.json();
-      setParcels(parcels);
+      const body = await response.json() as GetShippableParcelInTerminalResponse;
+      setParcels(body.parcels);
     };
 
     initParcels();
@@ -163,30 +164,20 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
             renderItem={(shippableParcel) => (
               <List.Item >
                 <Card
-                  title={shippableParcel.parcel.id}
+                  title={shippableParcel.id}
                   onClick={onSelect}
                   className={styles.clickableCard}
                   bodyStyle={{ padding: "10px" }}
                   headStyle={{textAlign: "center"}}
-                  id={shippableParcel.parcel.id}
+                  id={shippableParcel.id}
                   hoverable
                 >
                   <Row justify={"center"}>
-                    <span>Size: {shippableParcel.parcel.size}</span>
+                    <span>Size: {shippableParcel.size}</span>
                   </Row>
                   <Row justify={"center"}>
                     <span>
-                      From: {shippableParcel.parcel.senderDeliveryInfo.fullname}
-                    </span>
-                  </Row>
-                  <Row justify={"center"}>
-                    <span>
-                      To: {shippableParcel.parcel.receiverDeliveryInfo.fullname}
-                    </span>
-                  </Row>
-                  <Row justify={"center"}>
-                    <span>
-                      Address: {shippableParcel.receivingTerminal.address}
+                      Address: {shippableParcel.deliveryTerminalAddress}
                     </span>
                   </Row>
                 </Card>
