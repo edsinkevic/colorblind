@@ -12,13 +12,9 @@ import {
 } from "colorblind/shared/lib/models/models";
 import { register } from "colorblind/shared/requests/parcels";
 import { PeopleInfoForm } from "colorblind/app/registerparcel/steptwo/components/PeopleInfoForm";
-import { getFromStore } from "colorblind/shared/lib/state";
+import { getFromStore, store } from "colorblind/shared/lib/state";
 import { FormWithStatus } from "../components/FormWithStatus";
 import { getAll } from "colorblind/shared/requests/terminal";
-
-type Props = {
-  terminals: TerminalDetails[];
-};
 
 export default function StepTwo() {
   const [registration, setRegistration] = useState<ParcelRegistration>();
@@ -55,17 +51,8 @@ export default function StepTwo() {
   }, []);
 
   const onSubmit = async (value: ParcelRegistration): Promise<void> => {
-    const resp = await register(value);
-    const { status } = resp;
-
-    if (status !== StatusCodes.OK) {
-      const body = (await resp.json()) as Problem;
-      setProblem(body);
-      return;
-    }
-
-    const body = (await resp.json()) as ParcelRegistrationResponse;
-    router.replace(`/track/${body.id}`);
+    store("registration", value);
+    router.push("/registerparcel/stepthree");
   };
 
   if (!registration) return null;
