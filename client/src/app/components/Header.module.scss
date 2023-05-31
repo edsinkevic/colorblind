@@ -1,61 +1,87 @@
 .headerContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   height: 80px;
-  padding: 0 30px;
+  width: 100%;
   background-color: #f0f0f0;
-  flex-grow: 1;
-}
 
-.titleContainer {
-  flex: 1;
-  cursor: pointer;
-
-  & .headerButton {
+  & button {
+    display: inline-block;
+    line-height: 80px;
+    margin: 0 5px;
     border: none;
     background-color: transparent;
-    padding-left: 20px;
-    position: relative;
-    font-size: 40px;
     cursor: pointer;
     font-weight: bold;
     color: #333;
   }
+
+  & input {
+    float: right;
+    line-height: 80px;
+    cursor: pointer;
+    display: none;
+
+  }
+}
+
+.check {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .check {
+    display: block;
+
+    &:checked ~ .buttonContainer {
+
+      left: 0;
+    }
+  }
+
+  .buttonContainer {
+    position: fixed;
+    background: #FFFFFF;
+    width: 100%;
+    height: 100vh;
+    top: 80px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
+
+    & button {
+      display: block;
+      line-height: 40px;
+      width: 100%;
+    }
+  }
+
+  .headerContainer {
+    & input {
+      display: block;
+    }
+  }
+}
+
+
+.titleContainer {
+  line-height: 80px;
+  padding: 0 40px;
+  color: #333;
+
+  & button {
+    font-size: 40px;
+  }
+
+  @media (max-width: 952px) {
+    font-size: 30px;
+    padding-left: 10px;
+  }
 }
 
 .buttonContainer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  float: right;
 
-  & button:not(:first-child)::before {
-    content: "";
-    position: absolute;
-    left: -10px;
-    width: 1px;
-    height: 20px;
-    background-color: #333;
-  }
-}
-
-.headerButton {
-  border: none;
-  background-color: transparent;
-  margin-left: 20px;
-  padding-left: 20px;
-  position: relative;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #333;
-
-  &:first-child {
-    margin-left: 0;
-  }
-
-  &:last-child {
-    margin-right: 0;
+  & button {
+    font-size: 20px;
   }
 }
 

@@ -6,6 +6,7 @@ import { Roboto } from "next/font/google";
 export const metadata = {
   title: "FastMail",
   description: "Send your parcels fast and easy!",
+  viewport: "width=device-width, initial-scale=1.0",
 };
 
 const roboto = Roboto({
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <Header />
+        <header >
+          <Header />
+        </header>
         <main className={styles.main}>{children}</main>
       </body>
     </html>
