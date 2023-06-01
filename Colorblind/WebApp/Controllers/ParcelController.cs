@@ -130,6 +130,18 @@ public class ParcelController : ControllerBase
         return Ok(new { lockerNumber });
     }
 
+    [HttpGet("events/{id:guid}")]
+    public async Task<IActionResult> GetWithEvents(
+        [FromServices] GetParcelWithEventsUseCase useCase,
+        Guid id,
+        CancellationToken ct)
+    {
+        var res = await useCase.Execute(id, ct);
+        return res is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: $"Parcel with id {id} was not found!")
+            : Ok(res);
+    }
+
     [HttpPost("{code}/receive")]
     public async Task<IActionResult> Receive(
         [FromServices] ReceiveParcelFromTerminalUseCase useCase,

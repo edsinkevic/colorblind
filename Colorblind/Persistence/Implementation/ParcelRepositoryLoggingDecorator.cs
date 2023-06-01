@@ -63,4 +63,10 @@ public class ParcelRepositoryLoggingDecorator : IParcelRepository
         _logger.LogInformation("Getting parcel with code={}", code);
         return _parcelRepository.GetByCode(code, ct);
     }
+
+    public Task<ParcelWithEventsDTO?> GetWithEvents(Guid id, CancellationToken ct)
+    {
+        _logger.LogInformation("Getting parcel with id={} with events", id);
+        return _parcelRepository.GetWithEvents(id, ct);
+    }
 }

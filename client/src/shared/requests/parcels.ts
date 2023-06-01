@@ -16,6 +16,12 @@ export const detailsGetOne = (id: string): Promise<Response> =>
     method: "GET",
   });
 
+export const detailsWithEvent = (id: string): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/events/${id}`), {
+    ...defaultFetchConfig,
+    method: "GET",
+  });
+
 export const detailsGetByTerminalId = (terminalID: string): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/terminal/${terminalID}`), {
     ...defaultFetchConfig,
