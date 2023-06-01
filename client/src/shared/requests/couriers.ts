@@ -22,6 +22,16 @@ export const fetchCourier = (id: string): Promise<Response> =>
     ...defaultFetchConfig,
     method: "GET",
   });
+
+export const fetchCourierFromSession = (session: string): Promise<Response> =>
+  fetch(colorblindServerUrl("/couriers/fromsession"), {
+    ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      Authorization: session,
+    },
+    method: "GET",
+  });
 export const register = (data: RegisterCourier): Promise<Response> =>
   fetch(colorblindServerUrl(`/couriers/register`), {
     ...defaultFetchConfig,

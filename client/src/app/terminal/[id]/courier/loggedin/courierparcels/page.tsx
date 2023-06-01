@@ -12,30 +12,46 @@ import {
   detailsGetByCourierIdForTerminal,
   detailsGetOne,
 } from "colorblind/shared/requests/parcels";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { MouseEventHandler, useEffect, useState } from "react";
 import styles from "colorblind/shared/styles/littleForms.module.scss";
 
 import { Button, Card, Col, List, Modal, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
 import { defaultError } from "colorblind/shared/notifications/defaults";
+import { getAuth } from "colorblind/shared/lib/state";
 
 interface Props {
   params: {
     id: string;
-    courierId: string;
   };
 }
 
-export default function CourierParcels({ params: { id, courierId } }: Props) {
+export default function CourierParcels({ params: { id } }: Props) {
   const [parcels, setParcels] = useState<ParcelDetailsForTerminal[]>([]);
   const [notificationApi, notificationContext] = useNotification();
   const [selectedParcel, setSelectedParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
+  const [session, setSession] = useState<string>();
+  const router = useRouter();
 
   useEffect(() => {
     const initParcels = async () => {
-      const response = await detailsGetByCourierIdForTerminal(courierId, id);
+      const sessionFromStorage = getAuth();
+      if (!sessionFromStorage) {
+        router.replace(`/terminal/${id}/courier`);
+        return;
+      }
+
+      setSession(sessionFromStorage);
+
+      const response = await detailsGetByCourierIdForTerminal(session, id);
+
+      if (response.status === StatusCodes.FORBIDDEN) {
+        router.replace(`/terminal/${id}/courier`);
+        return;
+      }
+
       if (response.status !== StatusCodes.OK) {
         notFound();
       }
@@ -45,7 +61,7 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
     };
 
     initParcels();
-  }, [id, courierId]);
+  }, [id, router, session]);
 
   const onDeliver: MouseEventHandler = async (e) => {
     e.preventDefault();
@@ -83,7 +99,7 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
     e.preventDefault();
     if (!lockerNumber) return;
 
-    const response = await detailsGetByCourierIdForTerminal(courierId, id);
+    const response = await detailsGetByCourierIdForTerminal(session!, id);
     if (response.status !== StatusCodes.OK) {
       defaultError(notificationApi, await response.json());
       return;
@@ -158,9 +174,6 @@ export default function CourierParcels({ params: { id, courierId } }: Props) {
             }}
             pagination={{
               pageSize: 4,
-              onChange: (page) => {
-                console.log(page);
-              },
             }}
             dataSource={parcels}
             renderItem={(parcel) => (

@@ -3,11 +3,16 @@
 import styles from "colorblind/shared/styles/littleForms.module.scss";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
+import {
+  AuthenticateResponse,
+  Problem,
+  StatusCodes,
+} from "colorblind/shared/lib/models/models";
 import { authenticate } from "colorblind/shared/requests/couriers";
 import { Button, Form, Input, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
 import { defaultError } from "colorblind/shared/notifications/defaults";
+import { storeAuth } from "colorblind/shared/lib/state";
 
 interface Props {
   params: { id: string };
@@ -35,11 +40,11 @@ export default function PickCourier({ params: { id } }: Props) {
       return;
     }
 
-    const session = (await response.json()) as string;
+    const session = (await response.json()) as AuthenticateResponse;
 
-    
+    storeAuth(session.token);
 
-    router.push(`/terminal/${id}/courier/${session[0].id}`);
+    router.push(`/terminal/${id}/courier/loggedin`);
   };
 
   return (

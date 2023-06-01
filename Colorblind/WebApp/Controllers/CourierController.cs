@@ -1,4 +1,5 @@
 using Domain.Commands.CourierCommands;
+using Domain.Entities;
 using Domain.UseCases.CourierUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,20 @@ public class CourierController : ControllerBase
     public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, Guid id, CancellationToken ct)
     {
         var courier = await useCase.Execute(id, ct);
+
+        return courier is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
+            : Ok(courier);
+    }
+
+    [HttpGet("fromsession")]
+    public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, CancellationToken ct)
+    {
+        var courierFromSession = (Courier?)Request.HttpContext.Items["Courier"];
+        if (courierFromSession is null)
+            return Forbid();
+
+        var courier = await useCase.Execute(courierFromSession.Id, ct);
 
         return courier is null
             ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")

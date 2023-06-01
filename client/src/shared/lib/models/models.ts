@@ -133,9 +133,14 @@ export enum StatusCodes {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
   Conflict = 409,
+  FORBIDDEN = 401,
 }
 
 export interface AuthenticateRequest {
   name: string;
   password: string;
+}
+
+export interface AuthenticateResponse {
+  token: string;
 }
