@@ -38,6 +38,7 @@ public class TerminalController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Post(
         [FromServices] RegisterTerminalUseCase useCase,
         RegisterTerminalRequest request,

@@ -100,6 +100,7 @@ public class ParcelController : ControllerBase
     }
 
     [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> SubmitToTerminal(
         [FromServices] SubmitParcelToTerminalUseCase useCase,
         string code,
@@ -114,13 +115,12 @@ public class ParcelController : ControllerBase
 
     [HttpPost("{code}/ship")]
     public async Task<IActionResult> Ship(
-        HttpContext context,
         [FromServices] ShipParcelFromTerminalUseCase useCase,
         string code,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var courier = (Courier?)context.Items["Courier"];
+        var courier = (Courier?)Request.HttpContext.Items["Courier"];
         if (courier is null)
             return Forbid();
         

@@ -30,7 +30,7 @@ public class RegisterCourierUseCase
         RegisterCourier command,
         CancellationToken ct = default)
     {
-        var courierExists = await _courierRepository.GetByName(command.Name);
+        var courierExists = await _courierRepository.GetByName(command.Name, ct);
 
         if(courierExists is not null)
             throw new DomainError($"A courier with the name {command.Name} already exists!");
