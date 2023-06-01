@@ -31,11 +31,11 @@ public class CourierRepository : ICourierRepository
 
     public Task<IPagedList<Courier>> ListUnapproved(int? pageNum, int? pageSize, CancellationToken ct = default) =>
         _documentSession.Query<Courier>()
-            .Where(x => x.isApproved == false)
+            .Where(x => x.IsApproved == false)
             .ToPagedListAsync(pageNum ?? 1, pageSize ?? 10, token: ct);
 
-     public void Update(Courier courier) =>
-        _documentSession.Update(courier);
+     public void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default) =>
+        _documentSession.Events.Append(id, expectedVersionAfterAppend, @event);
 
     public void Create(CourierRegistered register) =>
         _documentSession.Events.StartStream<Courier>(register.Id, register);

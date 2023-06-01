@@ -33,7 +33,7 @@ public class ApproveCourierUseCase
 
         courier.Apply(@event);
 
-        _courierRepository.Update(courier);
+        _courierRepository.Update(courier.Id, command.Version + 1, @event, ct);
 
         await _saveChanges.SaveChanges(ct);
     }

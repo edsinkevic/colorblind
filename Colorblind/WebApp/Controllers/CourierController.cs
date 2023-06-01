@@ -22,26 +22,6 @@ public class CourierController : ControllerBase
         CancellationToken ct) =>
         Ok(await useCase.Execute(pageNum, pageSize, name, ct));
 
-    [HttpGet("unapproved")]
-    public async Task<IActionResult> Get(
-        [FromServices] ListUnapprovedCouriersUseCase useCase,
-        [FromQuery] string? name,
-        [FromQuery] int? pageSize,
-        [FromQuery] int? pageNum,
-        CancellationToken ct) =>
-        Ok(await useCase.Execute(pageNum, pageSize, name, ct));
-
-    [HttpPost("{id:guid}/approve")]
-    public async Task<IActionResult> Approve(
-        [FromServices] ApproveCourierUseCase useCase,
-        Guid id,
-        CancellationToken ct)
-    {
-        var command = new ApproveCourier(id);
-        await useCase.Execute(command, ct);
-        return Ok();
-    }
-
     [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, Guid id, CancellationToken ct)

@@ -1,15 +1,18 @@
 using Domain.Commands.TerminalCommands;
 using Domain.UseCases.TerminalUseCases;
 using Domain.Values;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
 
 namespace WebApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("terminals")]
 public class TerminalController : ControllerBase
 {
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Get(
         [FromServices] ListTerminalsUseCase useCase,
@@ -20,6 +23,7 @@ public class TerminalController : ControllerBase
         return Ok(await useCase.Execute(pageNum, pageSize, ct));
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(
         [FromServices] GetTerminalUseCase useCase,
