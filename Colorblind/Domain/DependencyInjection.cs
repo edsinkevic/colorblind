@@ -14,6 +14,7 @@ public static class DependencyInjection
             .AddScoped<RegisterTerminalUseCase>()
             .AddScoped<GetCourierUseCase>()
             .AddScoped<ListCouriersUseCase>()
+            .AddScoped<ListUnapprovedCouriersUseCase>()
             .AddScoped<RegisterCourierUseCase>()
             .AddScoped<AuthenticateCourierUseCase>()
             .AddScoped<GetParcelUseCase>()

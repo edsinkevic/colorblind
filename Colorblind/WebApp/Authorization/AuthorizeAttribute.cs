@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 namespace WebApp.Authorization;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]

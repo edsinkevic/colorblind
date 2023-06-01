@@ -11,8 +11,8 @@ export default function Home() {
           </Link>
         </div>
         <div>
-          <Link href={"/admin/registercourier"}>
-            <button className={styles.bigButton}>Register courier</button>
+          <Link href={"/admin/approvecourier"}>
+            <button className={styles.bigButton}>Approve couriers</button>
           </Link>
         </div>
       </div>

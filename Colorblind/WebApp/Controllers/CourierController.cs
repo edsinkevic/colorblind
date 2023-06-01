@@ -46,7 +46,8 @@ public class CourierController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult> Authenticate([FromServices] AuthenticateCourierUseCase useCase,
+    public async Task<ActionResult> Authenticate(
+        [FromServices] AuthenticateCourierUseCase useCase,
         AuthenticateCourierRequest request,
         CancellationToken ct)
     {

@@ -3,12 +3,8 @@
 import styles from "colorblind/shared/styles/littleForms.module.scss";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Courier,
-  Problem,
-  StatusCodes,
-} from "colorblind/shared/lib/models/models";
-import { query } from "colorblind/shared/requests/couriers";
+import { Problem, StatusCodes } from "colorblind/shared/lib/models/models";
+import { authenticate } from "colorblind/shared/requests/couriers";
 import { Button, Form, Input, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
 import { defaultError } from "colorblind/shared/notifications/defaults";
@@ -24,7 +20,14 @@ export default function PickCourier({ params: { id } }: Props) {
   const [notificationApi, notificationContext] = useNotification();
 
   const onSubmit = async () => {
-    const response = await query(courierName);
+    if (!courierName || !courierPassword) {
+      return;
+    }
+
+    const response = await authenticate({
+      name: courierName,
+      password: courierPassword,
+    });
 
     if (response.status !== StatusCodes.OK) {
       const body = (await response.json()) as Problem;
@@ -32,17 +35,11 @@ export default function PickCourier({ params: { id } }: Props) {
       return;
     }
 
-    const couriers = (await response.json()) as Courier[];
+    const session = (await response.json()) as string;
 
-    if (couriers.length === 0) {
-      notificationApi.error({
-        message: "Could not log in",
-        description: "Courier not found!",
-      });
-      return;
-    }
+    
 
-    router.push(`/terminal/${id}/courier/${couriers[0].id}`);
+    router.push(`/terminal/${id}/courier/${session[0].id}`);
   };
 
   return (
@@ -78,7 +75,7 @@ export default function PickCourier({ params: { id } }: Props) {
         <Button
           htmlType="submit"
           className={styles.bigButton}
-          disabled={!courierName}
+          disabled={!courierName || !courierPassword}
         >
           Submit
         </Button>

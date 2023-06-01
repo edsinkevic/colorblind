@@ -11,6 +11,7 @@ namespace WebApp.Controllers;
 public class AdminController : ControllerBase
 {
     [HttpGet("unapproved")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get(
         [FromServices] ListUnapprovedCouriersUseCase useCase,
         [FromQuery] string? name,
@@ -20,6 +21,7 @@ public class AdminController : ControllerBase
         Ok(await useCase.Execute(pageNum, pageSize, name, ct));
 
     [HttpPost("{id:guid}/approve")]
+    [AllowAnonymous]
     public async Task<IActionResult> Approve(
         [FromServices] ApproveCourierUseCase useCase,
         Guid id,

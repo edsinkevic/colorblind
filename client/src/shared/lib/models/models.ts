@@ -10,6 +10,8 @@ export interface Courier {
   id: string;
   name: string;
   parcelIds: string[];
+  isApproved: boolean;
+  version: number;
 }
 
 export interface DeliveryType {
@@ -86,6 +88,8 @@ export interface GetShippableParcelInTerminalResponse {
   parcels: ParcelDetailsForTerminal[];
 }
 
+export type GetUnapprovedCouriersResponse = Courier[];
+
 export enum ParcelStatus {
   REGISTERED = "Registered",
   UNREGISTERED = "Unregistered",
@@ -116,6 +120,7 @@ export interface RegisterLocker {
 
 export interface RegisterCourier {
   name: string;
+  password: string;
 }
 
 export interface RegisterCourierResponse {
@@ -128,4 +133,9 @@ export enum StatusCodes {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
   Conflict = 409,
+}
+
+export interface AuthenticateRequest {
+  name: string;
+  password: string;
 }
