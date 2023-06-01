@@ -45,7 +45,10 @@ export interface ParcelBase {
 }
 
 export interface ParcelDetails extends ParcelBase {
+  size: string;
   status: ParcelStatus;
+  senderDeliveryInfo: PersonInfo;
+  receiverDeliveryInfo: PersonInfo;
   lockerNumber: number | null;
 }
 
@@ -59,6 +62,11 @@ export interface DeliverResponse {
 
 export interface ParcelDetailsForTerminal extends ParcelBase {
   deliveryTerminalAddress: string;
+  size: string;
+}
+
+export interface GetShippableParcelInTerminalResponse {
+  parcels: ParcelDetailsForTerminal[];
 }
 
 export enum ParcelStatus {

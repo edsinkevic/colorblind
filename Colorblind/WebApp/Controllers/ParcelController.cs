@@ -3,6 +3,7 @@ using Domain.UseCases.ParcelUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
+using WebApp.Responses;
 
 namespace WebApp.Controllers;
 
@@ -66,12 +67,17 @@ public class ParcelController : ControllerBase
 
     [HttpGet("terminal/{terminalId:guid}")]
     public async Task<IActionResult> GetInTerminal(
-        [FromServices] GetParcelsInTerminalUseCase useCase,
+        [FromServices] GetShippableParcelsInTerminal useCase,
         Guid terminalId,
         CancellationToken ct)
     {
         var res = await useCase.Execute(terminalId, ct);
-        return Ok(res);
+
+        var response = new GetShippableParcelsInTerminalResponse(res.Select(x =>
+            new ShippableParcelResponse(Id: x.Parcel.Id, Size: x.Parcel.Size,
+                DeliveryTerminalAddress: x.ReceivingTerminal.Address)).ToList());
+
+        return Ok(response);
     }
 
     [HttpGet("courier/{courierId:guid}/{terminalId:guid}")]

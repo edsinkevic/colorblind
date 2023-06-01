@@ -30,7 +30,7 @@ public class ParcelRepositoryLoggingDecorator : IParcelRepository
         return _parcelRepository.List(pageNum, pageSize, ct);
     }
 
-    public Task<List<ParcelInTerminalDTO>> ListShippableByTerminal(Guid terminalId,
+    public Task<List<ShippableParcelInTerminal>> ListShippableByTerminal(Guid terminalId,
         CancellationToken ct = default)
     {
         _logger.LogInformation("Listing shippable parcels in terminal of id={}", terminalId);

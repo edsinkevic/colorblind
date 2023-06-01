@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  GetShippableParcelInTerminalResponse,
   ParcelDetails,
   ParcelDetailsForTerminal,
   Problem,
@@ -39,8 +40,8 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
         return;
       }
 
-      const parcels = await response.json();
-      setParcels(parcels);
+      const body = await response.json() as GetShippableParcelInTerminalResponse;
+      setParcels(body.parcels);
     };
 
     initParcels();
@@ -147,36 +148,37 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
       <Row>
         <Col className={styles.terminalCatalogue}>
           <Row justify={"center"}>
-            <span className={styles.title}>Parcels in terminal</span>
+            <span className={styles.title}>Parcels ready for shipment</span>
           </Row>
           <List
+            className={styles.list}
             grid={{
               gutter: 16,
               column: 2,
             }}
             pagination={{
+              position: "top",
               pageSize: 4,
-              onChange: (page) => {
-                console.log(page);
-              },
             }}
             dataSource={parcels}
-            renderItem={(parcel) => (
-              <List.Item>
+            renderItem={(shippableParcel) => (
+              <List.Item >
                 <Card
-                  title={
-                    <Row justify={"center"}>
-                      <span>Parcel</span>
-                    </Row>
-                  }
+                  title={shippableParcel.id}
                   onClick={onSelect}
                   className={styles.clickableCard}
                   bodyStyle={{ padding: "10px" }}
-                  id={parcel.id}
+                  headStyle={{textAlign: "center"}}
+                  id={shippableParcel.id}
                   hoverable
                 >
                   <Row justify={"center"}>
-                    <span>To: {parcel.deliveryTerminalAddress}</span>
+                    <span>Size: {shippableParcel.size}</span>
+                  </Row>
+                  <Row justify={"center"}>
+                    <span>
+                      Address: {shippableParcel.deliveryTerminalAddress}
+                    </span>
                   </Row>
                 </Card>
               </List.Item>

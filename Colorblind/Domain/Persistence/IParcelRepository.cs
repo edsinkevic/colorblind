@@ -9,7 +9,7 @@ public interface IParcelRepository
 {
     Task<Parcel?> Get(Guid id, CancellationToken ct = default);
     Task<IPagedList<Parcel>> List(int? pageNum, int? pageSize, CancellationToken ct = default);
-    Task<List<ParcelInTerminalDTO>> ListShippableByTerminal(Guid terminalId, CancellationToken ct = default);
+    Task<List<ShippableParcelInTerminal>> ListShippableByTerminal(Guid terminalId, CancellationToken ct = default);
     void Create(ParcelRegistered register);
     void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default);
     Task<Parcel?> GetByCode(string code, CancellationToken ct = default);
