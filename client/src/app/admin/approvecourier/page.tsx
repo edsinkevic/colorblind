@@ -62,7 +62,11 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
       placement: "top",
       duration: 3,
     });
-    setSelectedCourier(undefined)
+    setCouriers((couriers) =>
+      couriers.filter((x) => x.id !== selectedCourier.id)
+    );
+    setSelectedCourier(undefined);
+
     return;
   };
 
@@ -103,7 +107,7 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     </Modal>
   );
 
-  console.log(pageNumber)
+  console.log(pageNumber);
 
   return (
     <>
