@@ -143,6 +143,7 @@ public class ParcelController : ControllerBase
     }
 
     [HttpGet("events/{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetWithEvents(
         [FromServices] GetParcelWithEventsUseCase useCase,
         Guid id,
