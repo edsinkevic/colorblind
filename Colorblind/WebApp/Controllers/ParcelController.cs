@@ -1,16 +1,20 @@
 using Domain.Commands.ParcelCommands;
+using Domain.Entities;
 using Domain.UseCases.ParcelUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Authorization;
 using WebApp.Requests;
 using WebApp.Responses;
 
 namespace WebApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("parcels")]
 public class ParcelController : ControllerBase
 {
+    [AllowAnonymous]
     [HttpGet("code/{code}")]
     public async Task<IActionResult> Get(
         [FromServices] GetParcelByCodeUseCase useCase,
@@ -23,6 +27,7 @@ public class ParcelController : ControllerBase
             : Ok(res);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(
         [FromServices] GetParcelUseCase useCase,
@@ -43,6 +48,7 @@ public class ParcelController : ControllerBase
         CancellationToken ct) =>
         Ok(await useCase.Execute(pageNum, pageSize, ct: ct));
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register(
         [FromServices] RegisterParcelUseCase useCase,
@@ -53,6 +59,7 @@ public class ParcelController : ControllerBase
         return Ok(new { id });
     }
 
+    [AllowAnonymous]
     [HttpPost("{code}/unregister")]
     public async Task<IActionResult> Unregister(
         [FromServices] UnregisterParcelUseCase useCase,
@@ -65,6 +72,7 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
+    [AllowAnonymous]
     [HttpGet("terminal/{terminalId:guid}")]
     public async Task<IActionResult> GetInTerminal(
         [FromServices] GetShippableParcelsInTerminal useCase,
@@ -92,6 +100,7 @@ public class ParcelController : ControllerBase
     }
 
     [HttpPost("{code}/submit/terminal/{terminalId:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> SubmitToTerminal(
         [FromServices] SubmitParcelToTerminalUseCase useCase,
         string code,
@@ -104,15 +113,18 @@ public class ParcelController : ControllerBase
         return Ok(new { lockerNumber });
     }
 
-    [HttpPost("{code}/ship/{courierId:guid}")]
+    [HttpPost("{code}/ship")]
     public async Task<IActionResult> Ship(
         [FromServices] ShipParcelFromTerminalUseCase useCase,
         string code,
-        Guid courierId,
         [FromHeader(Name = "If-Match")] string eTag,
         CancellationToken ct)
     {
-        var command = new ShipParcel(code, courierId, eTag.ToExpectedVersion());
+        var courier = (Courier?)Request.HttpContext.Items["Courier"];
+        if (courier is null)
+            return Forbid();
+        
+        var command = new ShipParcel(code, courier.Id, eTag.ToExpectedVersion());
         var lockerNumber = await useCase.Execute(command, ct);
         return Ok(new { lockerNumber });
     }
@@ -142,6 +154,7 @@ public class ParcelController : ControllerBase
             : Ok(res);
     }
 
+    [AllowAnonymous]
     [HttpPost("{code}/receive")]
     public async Task<IActionResult> Receive(
         [FromServices] ReceiveParcelFromTerminalUseCase useCase,

@@ -22,12 +22,12 @@ class ServerClient:
         return requests.post(f"{self.url}/parcels/{_code}/submit/terminal/{_terminal_id}",
                              headers=default_headers(version))
 
-    def ship_parcel(self, _code: str, _courier_id: str, version: int):
-        return requests.post(f"{self.url}/parcels/{_code}/ship/{_courier_id}", headers=default_headers(version))
+    def ship_parcel(self, _code: str, _courier_id: str, version: int, auth: str):
+        return requests.post(f"{self.url}/parcels/{_code}/ship", headers=default_headers(version, auth))
 
-    def deliver_parcel(self, _code: str, _terminal_id: str, version: int):
+    def deliver_parcel(self, _code: str, _terminal_id: str, version: int, auth):
         return requests.post(f"{self.url}/parcels/{_code}/deliver/terminal/{_terminal_id}",
-                             headers=default_headers(version))
+                             headers=default_headers(version, auth))
 
     def receive_parcel(self, _code: str, version: int):
         return requests.post(f"{self.url}/parcels/{_code}/receive",
@@ -38,18 +38,25 @@ class ServerClient:
                              headers=default_headers())
 
     def register_courier(self, _obj: dict):
-        return requests.post(f"{self.url}/couriers", json=_obj,
+        return requests.post(f"{self.url}/couriers/register", json=_obj,
                              headers=default_headers())
 
-    def get_courier(self, _id: dict):
+    def get_courier(self, _id: str):
         return requests.get(f"{self.url}/couriers/{_id}", headers=default_headers())
 
-    def get_terminal(self, _id: dict):
+    def get_terminal(self, _id: str):
         return requests.get(f"{self.url}/terminals/{_id}", headers=default_headers())
 
+    def courier_authenticate(self, _obj: dict):
+        return requests.post(f"{self.url}/couriers/authenticate", json=_obj, headers=default_headers())
 
-def default_headers(version: Optional[int] = None):
+
+def default_headers(version: Optional[int] = None, auth: Optional[str] = None):
+    headers = {"Content-type": "application/json"}
     if version is not None:
-        return {"Content-type": "application/json", "If-Match": f'''"{version}"'''}
+        headers["If-Match"] = f'''"{version}"'''
 
-    return {"Content-type": "application/json"}
+    if auth is not None:
+        headers["Authorization"] = auth
+
+    return headers

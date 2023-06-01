@@ -1,3 +1,5 @@
+import random
+
 from server import ServerClient
 from config import config
 
@@ -13,7 +15,8 @@ def test_scenario():
     response.raise_for_status()
     to_terminal_id = response.json()['id']
 
-    response = server.register_courier(default_courier())
+    courier_registration = default_courier()
+    response = server.register_courier(courier_registration)
     response.raise_for_status()
     resp = response.json()
     courier_id = resp['id']
@@ -37,7 +40,13 @@ def test_scenario():
     terminal = response.json()
     assert len(get_parcels(terminal)) == 1 and get_parcels(terminal)[0] == parcel_id
 
-    response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1)
+    response = server.courier_authenticate(courier_registration)
+    response.raise_for_status()
+
+    token = response.json()['token']
+
+    response = server.ship_parcel(parcel_code, courier_id, parcel_version + 1, token)
+    print(response.json())
     response.raise_for_status()
 
     response = server.get_courier(courier_id)
@@ -50,7 +59,7 @@ def test_scenario():
     terminal = response.json()
     assert len(get_parcels(terminal)) == 0
 
-    response = server.deliver_parcel(parcel_code, to_terminal_id, parcel_version + 2)
+    response = server.deliver_parcel(parcel_code, to_terminal_id, parcel_version + 2, token)
     response.raise_for_status()
 
     response = server.get_courier(courier_id)
@@ -100,7 +109,7 @@ def default_registration(from_terminal, to_terminal):
 
 
 def default_courier():
-    return {"name": "Edvin Sinkevič"}
+    return {"name": f"Edvin Sinkevič {random.randint(1, 1000)}", "password": "HelloThere"}
 
 
 def default_terminal(address: str):

@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Domain.Errors;
 
-namespace WebApp;
+namespace WebApp.Middleware;
 
 public class DomainErrorMiddleware
 {

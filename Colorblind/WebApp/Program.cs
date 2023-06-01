@@ -3,6 +3,8 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using WebApp;
+using WebApp.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ builder.Services
 
 builder.Services.SetupMarten(schemaName, connectionString).AddDomain().AddPersistence();
 
+builder.Services.AddAuthentication();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -33,7 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
 }
 
-app.UseMiddleware<DomainErrorMiddleware>().UseMiddleware<ConcurrencyExceptionMiddleware>();
+app.UseMiddleware<DomainErrorMiddleware>().UseMiddleware<JwtMiddleware>()
+    .UseMiddleware<ConcurrencyExceptionMiddleware>();
 
 app.UseCors(options => options.AllowAnyOrigin().WithExposedHeaders("*").AllowAnyMethod().AllowAnyHeader())
     .UseHttpsRedirection()
