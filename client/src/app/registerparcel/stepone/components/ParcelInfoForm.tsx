@@ -1,7 +1,7 @@
 import styles from "../page.module.css";
 import { useState } from "react";
 import { DeliveryType } from "colorblind/shared/lib/models/models";
-import { Button, Select } from "antd";
+import { Button, Radio } from "antd";
 
 interface ParcelInfo {
   deliveryType: DeliveryType;
@@ -41,16 +41,17 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
           <p>Size</p>
         </div>
         <div className={styles.rightSide}>
-          <Select
-            defaultValue={sizes[0]}
-            options={sizeOptions}
-            onChange={(size) =>
+          <Radio.Group value={state.size}
+            onChange={(e) =>
               setState({
                 ...state,
-                size,
+                size: e.target.value,
               })
-            }
-          />
+            }>
+            {sizes.map((size) => (
+              <Radio.Button key={size} value={size}>{size}</Radio.Button>
+            ))}
+          </Radio.Group>
         </div>
       </div>
       <h2>Delivery type</h2>
@@ -60,34 +61,23 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
             <p>From</p>
           </div>
           <div className={styles.rightSide}>
-            <Select
-              defaultValue={deliveryTypes[0]}
-              options={deliveryTypeOptions}
-              onChange={(from) =>
-                setState({
-                  ...state,
-                  deliveryType: { ...state.deliveryType, from },
-                })
-              }
-            />
+            <Radio.Button onClick={() =>
+              setState({
+                ...state,
+                deliveryType: { ...state.deliveryType, from: state.deliveryType.from === "terminal" ? "address" : "terminal" },
+              })
+            } value={state.deliveryType.from}>{state.deliveryType.from}</Radio.Button>
           </div>
-        </div>
-        <div>
-          <div className={styles.leftSide}>
+          <div className={styles.leftSide} style={{ paddingLeft: "10px" }}>
             <p>To</p>
           </div>
-          <div className={styles.rightSide}>
-            <Select
-              defaultValue={deliveryTypes[0]}
-              options={deliveryTypeOptions}
-              onChange={(to) =>
-                setState({
-                  ...state,
-                  deliveryType: { ...state.deliveryType, to },
-                })
-              }
-            />
-          </div>
+          <Radio.Button onClick={() =>
+            setState({
+              ...state,
+              deliveryType: { ...state.deliveryType, to: state.deliveryType.to === "terminal" ? "address" : "terminal" },
+            })
+          } value={state.deliveryType.to}>{state.deliveryType.to}</Radio.Button>
+
         </div>
       </div>
 
@@ -98,6 +88,6 @@ export function ParcelInfoForm({ defaultValue, onSubmit }: Props) {
       >
         Next
       </Button>
-    </form>
+    </form >
   );
 }

@@ -1,5 +1,5 @@
 .statusIndicator {
-    background-color: #8844cc;
+    background-color: rebeccapurple
 }
 
 .statusIndicator .item {
@@ -9,6 +9,12 @@
     margin-left: 20px;
     display: grid;
     grid-template-columns: 30px auto;
+}
+
+.statusIndicator h2 {
+    color: white;
+    text-align: left;
+    margin: 15px 0px 20px 15px;
 }
 
 .itemIndex {

@@ -5,11 +5,11 @@ interface Props {
     className?: string
 }
 
-const states = ["Package", "Sender and receiver information", "Overview", "Payment"];
+const states = ["Package", "Sender and receiver information", "Payment"];
 export const StatusIndicator = ({ current, className }: Props) => {
     return (
         <div className={`${className} ${styles.statusIndicator}`}>
-            <label>Status</label>
+            <h2>Status</h2>
             <div className={styles.list}>
                 {states.map((state, index) =>
                     <div key={index} className={`${styles.item} ${index === current - 1 ? styles.active : ""}`}>
