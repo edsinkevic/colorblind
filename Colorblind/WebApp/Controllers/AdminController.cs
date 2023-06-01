@@ -1,7 +1,7 @@
 using Domain.Commands.CourierCommands;
 using Domain.UseCases.CourierUseCases;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Authorization;
+using WebApp.Authorization;
 
 namespace WebApp.Controllers;
 

@@ -3,7 +3,7 @@ using Domain.UseCases.CourierUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
-using WebApi.Authorization;
+using WebApp.Authorization;
 
 namespace WebApp.Controllers;
 

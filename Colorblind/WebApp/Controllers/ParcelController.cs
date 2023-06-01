@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.UseCases.ParcelUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Authorization;
+using WebApp.Authorization;
 using WebApp.Requests;
 using WebApp.Responses;
 
