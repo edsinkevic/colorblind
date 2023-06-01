@@ -45,7 +45,7 @@ export default function CourierParcels({ params: { id } }: Props) {
 
       setSession(sessionFromStorage);
 
-      const response = await detailsGetByCourierIdForTerminal(session, id);
+      const response = await detailsGetByCourierIdForTerminal(sessionFromStorage, id);
 
       if (response.status === StatusCodes.FORBIDDEN) {
         router.replace(`/terminal/${id}/courier`);
@@ -69,7 +69,8 @@ export default function CourierParcels({ params: { id } }: Props) {
     const response = await deliver(
       selectedParcel.code,
       id,
-      selectedParcel.version
+      selectedParcel.version,
+      session!
     );
     if (response.status !== StatusCodes.OK) {
       const problem = (await response.json()) as Problem;
@@ -181,7 +182,7 @@ export default function CourierParcels({ params: { id } }: Props) {
                 <Card
                   title={
                     <Row justify={"center"}>
-                      <span>Parcel</span>
+                      <span>{parcel.id}</span>
                     </Row>
                   }
                   onClick={onSelect}

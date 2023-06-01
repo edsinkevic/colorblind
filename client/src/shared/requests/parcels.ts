@@ -69,7 +69,8 @@ export const ship = (
 export const deliver = (
   code: string,
   terminalId: string,
-  version: number
+  version: number,
+  auth: string
 ): Promise<Response> =>
   fetch(
     colorblindServerUrl(`/parcels/${code}/deliver/terminal/${terminalId}`),
@@ -78,6 +79,7 @@ export const deliver = (
       headers: {
         ...defaultFetchConfig.headers,
         "If-Match": `"${version}"`,
+        "Authorization": auth
       },
       method: "POST",
     }
