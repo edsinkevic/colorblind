@@ -27,7 +27,7 @@ public class AuthenticateCourierUseCase
         AuthenticateCourier command,
         CancellationToken ct = default)
     {
-        var courier = await _courierRepository.GetByName(command.Name);
+        var courier = await _courierRepository.GetByName(command.Name, ct);
 
         if (courier is null)
             throw new DomainError($"User with name {command.Name} does not exist.");
