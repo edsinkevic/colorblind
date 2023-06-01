@@ -8,6 +8,7 @@ namespace Domain.Persistence;
 public interface IParcelRepository
 {
     Task<Parcel?> Get(Guid id, CancellationToken ct = default);
+    Task<ParcelWithEventsDTO?> GetWithEvents(Guid id, CancellationToken ct);
     Task<IPagedList<Parcel>> List(int? pageNum, int? pageSize, CancellationToken ct = default);
     Task<List<ShippableParcelInTerminal>> ListShippableByTerminal(Guid terminalId, CancellationToken ct = default);
     void Create(ParcelRegistered register);

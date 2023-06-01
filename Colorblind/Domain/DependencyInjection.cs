@@ -18,6 +18,7 @@ public static class DependencyInjection
             .AddScoped<GetParcelUseCase>()
             .AddScoped<GetShippableParcelsInTerminal>()
             .AddScoped<GetParcelsByCourierForTerminalUseCase>()
+            .AddScoped<GetParcelWithEventsUseCase>()
             .AddScoped<GetParcelByCodeUseCase>()
             .AddScoped<ListParcelsUseCase>()
             .AddScoped<RegisterParcelUseCase>()

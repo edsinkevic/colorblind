@@ -52,6 +52,23 @@ export interface ParcelDetails extends ParcelBase {
   lockerNumber: number | null;
 }
 
+export interface ParcelDetailsForTracking extends ParcelDetails {
+  senderDeliveryInfo: PersonInfo;
+}
+
+export interface ParcelDetailsWithEvent {
+  parcel: ParcelDetailsForTracking;
+  events: ParcelEvent[];
+  senderTerminalAddress: string;
+  receiverTerminalAddress: string;
+}
+
+export interface ParcelEvent {
+  eventTypeName: string;
+  timeStamp: string;
+  courierName?: string;
+}
+
 export interface SubmitResponse {
   lockerNumber: number;
 }

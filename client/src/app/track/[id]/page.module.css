@@ -2,6 +2,7 @@
     background-color: white;
     padding: 1px 0px;
     border-radius: 15px;
+    max-width: 750px;
 }
 
 .info h1 {
@@ -10,7 +11,7 @@
     margin: 20px 0 20px;
 }
 
-.info p{
+.info p {
     padding: 1px 60px;
 }
 
@@ -24,10 +25,55 @@
     width: 100%;
 }
 
-.info .progressBar{
-    padding:0;
+.info .progressBar {
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     padding-bottom: 4px;
+}
+
+.info h2 {
+    color: rgb(77, 1, 77);
+    padding: 1px 60px;
+}
+
+.info .details {
+    padding: 1px 60px;
+    padding-bottom: 10px;
+}
+
+.circle {
+    height: 10px;
+    margin: 10px;
+    border-radius: 100% !important;
+    border-style: solid;
+    border-width: 2px;
+    align-items: center;
+    position: relative;
+    border: 2px solid rgb(77, 1, 77);
+    width: 10px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.first *.circle {
+    background-color: rgb(77, 1, 77) !important;
+}
+
+.first *.circle:before {
+    display: none;
+}
+
+.circle:before {
+    position: absolute;
+    border: 1px solid rgb(77, 1, 77);
+    width: 0;
+    height: 30px;
+    display: block;
+    content: '';
+    left: 50%;
+    z-index: 1;
+    top: -34px;
+    margin-left: -1px;
 }

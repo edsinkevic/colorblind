@@ -67,6 +67,42 @@ public class ParcelRepository : IParcelRepository
     public void Update(Guid id, int expectedVersionAfterAppend, object @event, CancellationToken ct = default) =>
         _documentSession.Events.Append(id, expectedVersionAfterAppend, @event);
 
+    public async Task<ParcelWithEventsDTO?> GetWithEvents(Guid id, CancellationToken ct)
+    {
+        var destinations = new Dictionary<Guid, Terminal>();
+
+        var parcel = await _documentSession.Query<Parcel>().FirstOrDefaultAsync(parcel => parcel.Id == id, token: ct);
+
+        if (parcel is null)
+            throw new DomainError("Parcel does not exist!");
+
+        var senderTerminalAddress = (await _documentSession.LoadAsync<Terminal>(parcel.SenderDeliveryInfo.TerminalId, ct))?.Address;
+        var receiverTerminalAddress = (await _documentSession.LoadAsync<Terminal>(parcel.ReceiverDeliveryInfo.TerminalId, ct))?.Address;
+
+        if (senderTerminalAddress is null || receiverTerminalAddress is null)
+            throw new DomainError("Internal server error! Please try again later or contact support.");
+
+        var events = (await _documentSession.Events.FetchStreamAsync(parcel.Id, token: ct))
+            .Select(e =>
+            {
+                if (e.EventTypeName == "parcel_shipped")
+                {
+                    var parcelShipped = e.Data as ParcelShipped;
+                    var courierName = _documentSession.Load<Courier>(parcelShipped!.CourierId)!.Name;
+                    return new ParcelEventDTO(e.EventTypeName, e.Timestamp, courierName);
+                }
+                if (e.EventTypeName == "parcel_delivered")
+                {
+                    var parcelDelivered = e.Data as ParcelDelivered;
+                    var courierName = _documentSession.Load<Courier>(parcelDelivered!.CourierId)!.Name;
+                    return new ParcelEventDTO(e.EventTypeName, e.Timestamp, courierName);
+                }
+                return new ParcelEventDTO(e.EventTypeName, e.Timestamp);
+            }).OrderByDescending(e => e.TimeStamp).ToList();
+
+        return new ParcelWithEventsDTO(parcel, events, senderTerminalAddress, receiverTerminalAddress);
+    }
+
     public Task<Parcel?> GetByCode(string code, CancellationToken ct) =>
         _documentSession.Query<Parcel>().FirstOrDefaultAsync(i => i.Code == code, token: ct);
 }
