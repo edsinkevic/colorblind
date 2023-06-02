@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
-import { fetchCourier } from "colorblind/shared/requests/couriers";
+import { fetchCourierFromSession } from "colorblind/shared/requests/couriers";
 import {
   Courier,
   StatusCodes,
@@ -11,25 +11,31 @@ import {
 } from "colorblind/shared/lib/models/models";
 import { getOne } from "colorblind/shared/requests/terminal";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { deleteAuth, getAuth } from "colorblind/shared/lib/state";
+import { defaultError } from "colorblind/shared/notifications/defaults";
+import useNotification from "antd/es/notification/useNotification";
 
-const logout = (router: AppRouterInstance, terminalId: string, alertMessage: string) => {
+const logout = (
+  router: AppRouterInstance,
+  terminalId: string,
+  alertMessage: string
+) => {
   router.push(`/terminal/${terminalId}`);
+  deleteAuth();
   alert(alertMessage);
 };
 
 interface Props {
   params: {
     id: string;
-    courierId: string;
   };
 }
 
-export default function TerminalCourierEnvironment({
-  params: { id, courierId },
-}: Props) {
+export default function TerminalCourierEnvironment({ params: { id } }: Props) {
   const [courier, setCourier] = useState<Courier>();
   const [terminal, setTerminal] = useState<TerminalDetails>();
   const [logoutTimer, setLogoutTimer] = useState<number>(60);
+  const [notificationApi, notificationContext] = useNotification();
   const router = useRouter();
 
   useEffect(() => {
@@ -45,10 +51,18 @@ export default function TerminalCourierEnvironment({
 
   useEffect(() => {
     const initCourier = async () => {
-      const response = await fetchCourier(courierId);
+      const session = getAuth();
+      if (!session) {
+        router.replace(`/terminal/${id}/courier`);
+        return;
+      }
+
+      const response = await fetchCourierFromSession(session);
 
       if (response.status !== StatusCodes.OK) {
-        notFound();
+        defaultError(notificationApi, await response.json());
+        await setTimeout(() => router.replace(`/terminal/${id}/courier`), 2000);
+        return;
       }
 
       setCourier(await response.json());
@@ -63,9 +77,8 @@ export default function TerminalCourierEnvironment({
       const terminal = await response.json();
       setTerminal(terminal);
     };
-    initCourier();
-    initTerminal();
-  }, [courierId, id]);
+    initCourier().then(() => initTerminal());
+  }, [id, router]);
 
   if (!courier || !terminal) {
     return null;
@@ -74,30 +87,41 @@ export default function TerminalCourierEnvironment({
   return (
     <>
       <div className={styles.info}>
-        <button 
-          className={styles.bigButton} 
-          onClick={() => router.push(`/terminal/${id}/courier/${courierId}/terminalparcels`)}>
-            View terminal parcels
+        <button
+          className={styles.bigButton}
+          onClick={() =>
+            router.push(`/terminal/${id}/courier/loggedin/terminalparcels`)
+          }
+        >
+          View terminal parcels
         </button>
         <br />
-        <button 
+        <button
           className={styles.bigButton}
-          onClick={() => router.push(`/terminal/${id}/courier/${courierId}/courierparcels`)}>
-            Deliver parcel
+          onClick={() =>
+            router.push(`/terminal/${id}/courier/loggedin/courierparcels`)
+          }
+        >
+          Deliver parcel
         </button>
         <div>
-          <button 
+          <button
             className={styles.bigButtonLogout}
-            onClick={() => logout(router, id, "Log out successful")}>
-              Logout
+            onClick={() => logout(router, id, "Log out successful")}
+          >
+            Logout
           </button>
           <br />
-          <label>For safety reasons you will be logged out in {logoutTimer} seconds of inactivity</label>
+          <label>
+            For safety reasons you will be logged out in {logoutTimer} seconds
+            of inactivity
+          </label>
         </div>
-
       </div>
       <div className={styles.intro}>
-        <h1>Viewing as Courier: <h2>{courier.name}</h2></h1>
+        <h1>
+          Viewing as Courier: <h2>{courier.name}</h2>
+        </h1>
       </div>
     </>
   );

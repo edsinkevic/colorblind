@@ -24,7 +24,7 @@ public class ApproveCourierUseCase
         ApproveCourier command,
         CancellationToken ct = default)
     {
-        var courier = await _courierRepository.Get(command.Id);
+        var courier = await _courierRepository.Get(command.Id, ct);
 
         if (courier is null)
             throw new DomainError($"Courier with id {command.Id} does not exist.");

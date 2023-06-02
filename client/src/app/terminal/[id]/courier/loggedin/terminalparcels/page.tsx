@@ -17,43 +17,55 @@ import styles from "colorblind/shared/styles/littleForms.module.scss";
 import { Button, Card, Col, List, Modal, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
 import { defaultError } from "colorblind/shared/notifications/defaults";
+import { getAuth } from "colorblind/shared/lib/state";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
     id: string;
-    courierId: string;
   };
 }
 
-export default function TerminalParcels({ params: { id, courierId } }: Props) {
+export default function TerminalParcels({ params: { id } }: Props) {
   const [parcels, setParcels] = useState<ParcelDetailsForTerminal[]>([]);
   const [notificationApi, notificationContext] = useNotification();
 
   const [selectedParcel, setSelectedParcel] = useState<ParcelDetails>();
   const [lockerNumber, setLockerNumber] = useState<number>();
+  const router = useRouter();
+  const [session, setSession] = useState<string>();
 
   useEffect(() => {
     const initParcels = async () => {
-      const response = await detailsGetByTerminalId(id);
+      const sessionFromStorage = getAuth();
+      if (!sessionFromStorage) {
+        router.replace(`/terminal/${id}/courier`);
+        return;
+      }
+
+      setSession(sessionFromStorage);
+
+      const response = await detailsGetByTerminalId(id, sessionFromStorage);
       if (response.status !== StatusCodes.OK) {
         defaultError(notificationApi, await response.json());
         return;
       }
 
-      const body = await response.json() as GetShippableParcelInTerminalResponse;
+      const body =
+        (await response.json()) as GetShippableParcelInTerminalResponse;
       setParcels(body.parcels);
     };
 
     initParcels();
-  }, [id, notificationApi]);
+  }, [id, notificationApi, router, session]);
 
   const onShip: MouseEventHandler = async (e) => {
     e.preventDefault();
     if (!selectedParcel) return;
     const response = await ship(
       selectedParcel.code,
-      courierId,
-      selectedParcel.version
+      selectedParcel.version,
+      session!
     );
 
     if (response.status !== StatusCodes.OK) {
@@ -86,14 +98,14 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
     e.preventDefault();
     if (!lockerNumber) return;
 
-    const response = await detailsGetByTerminalId(id);
+    const response = await detailsGetByTerminalId(id, session!);
     if (response.status !== StatusCodes.OK) {
       defaultError(notificationApi, await response.json());
       return;
     }
 
-    const parcels = await response.json();
-    setParcels(parcels);
+    const parcels = await response.json() ;
+    setParcels(parcels.parcels);
     setLockerNumber(undefined);
     setSelectedParcel(undefined);
   };
@@ -162,13 +174,13 @@ export default function TerminalParcels({ params: { id, courierId } }: Props) {
             }}
             dataSource={parcels}
             renderItem={(shippableParcel) => (
-              <List.Item >
+              <List.Item>
                 <Card
                   title={shippableParcel.id}
                   onClick={onSelect}
                   className={styles.clickableCard}
                   bodyStyle={{ padding: "10px" }}
-                  headStyle={{textAlign: "center"}}
+                  headStyle={{ textAlign: "center" }}
                   id={shippableParcel.id}
                   hoverable
                 >

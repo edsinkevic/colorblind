@@ -27,10 +27,15 @@ public class AuthenticateCourierUseCase
         AuthenticateCourier command,
         CancellationToken ct = default)
     {
-        var courier = await _courierRepository.GetByName(command.Name);
+        var courier = await _courierRepository.GetByName(command.Name, ct);
 
         if (courier is null)
             throw new DomainError($"User with name {command.Name} does not exist.");
+
+        if (!courier.IsApproved)
+        {
+            throw new DomainUnauthorizedError($"User with name {command.Name} wasn't approved yet.");
+        }
 
         var isValid = _passwordHasher.VerifyPassword(command.Password, courier.HashedPassword, courier.Salt);
 
@@ -38,7 +43,7 @@ public class AuthenticateCourierUseCase
             throw new DomainError($"The password entered is incorrect.");
 
         var token = _jwtUtils.GenerateJwtToken(courier);
-        
+
         return token;
     }
 }

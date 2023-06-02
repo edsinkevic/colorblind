@@ -2,7 +2,10 @@ import {
   colorblindServerUrl,
   defaultFetchConfig,
 } from "colorblind/shared/requests/shared";
-import { RegisterCourier } from "colorblind/shared/lib/models/models";
+import {
+  AuthenticateRequest,
+  RegisterCourier,
+} from "colorblind/shared/lib/models/models";
 
 export const query = (name: string | undefined): Promise<Response> => {
   const params = new URLSearchParams();
@@ -19,8 +22,53 @@ export const fetchCourier = (id: string): Promise<Response> =>
     ...defaultFetchConfig,
     method: "GET",
   });
+
+export const fetchCourierFromSession = (session: string): Promise<Response> =>
+  fetch(colorblindServerUrl("/couriers/fromsession"), {
+    ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      Authorization: session,
+    },
+    method: "GET",
+  });
 export const register = (data: RegisterCourier): Promise<Response> =>
-  fetch(colorblindServerUrl(`/couriers`), {
+  fetch(colorblindServerUrl(`/couriers/register`), {
+    ...defaultFetchConfig,
+    body: JSON.stringify(data),
+    method: "POST",
+  });
+
+export const listUnapproved = (
+  pageNum: number = 1,
+  pageSize: number = 10
+): Promise<Response> =>
+  fetch(
+    colorblindServerUrl(
+      `/admin/unapproved?` +
+        new URLSearchParams({
+          pageNum: pageNum.toString(),
+          pageSize: pageSize.toString(),
+        }).toString()
+    ),
+    {
+      ...defaultFetchConfig,
+      method: "GET",
+    }
+  );
+
+export const approve = (id: string, version: number): Promise<Response> =>
+  fetch(colorblindServerUrl(`/admin/${id}/approve`), {
+    ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      "If-Match": `"${version.toString()}"`,
+    },
+    method: "POST",
+  });
+
+export const authenticate = (data: AuthenticateRequest): Promise<Response> =>
+  fetch(colorblindServerUrl(`/couriers/authenticate`), {
     ...defaultFetchConfig,
     body: JSON.stringify(data),
     method: "POST",

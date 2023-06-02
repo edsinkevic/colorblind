@@ -1,8 +1,7 @@
 using Domain.Commands.TerminalCommands;
 using Domain.UseCases.TerminalUseCases;
-using Domain.Values;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Authorization;
 using WebApp.Requests;
 
 namespace WebApp.Controllers;

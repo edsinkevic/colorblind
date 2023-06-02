@@ -1,38 +1,43 @@
 "use client";
-import styles from "colorblind/shared/styles/littleForms.module.scss";
-
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { StatusCodes } from "colorblind/shared/lib/models/models";
-import { register } from "colorblind/shared/requests/couriers";
-import { Button, Form, Input, Row } from "antd";
 import useNotification from "antd/es/notification/useNotification";
+import { register } from "colorblind/shared/requests/couriers";
+import { StatusCodes } from "colorblind/shared/lib/models/models";
 import { defaultError } from "colorblind/shared/notifications/defaults";
 
-export default function RegisterCourier() {
+import styles from "colorblind/shared/styles/littleForms.module.scss";
+import { useState } from "react";
+import { Button, Form, Input, Row } from "antd";
+
+const Page = () => {
   const router = useRouter();
   const [notificationApi, notificationContext] = useNotification();
+  const [name, setName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const onSubmit = async () => {
-    const resp = await register({ name });
+    const resp = await register({ name, password });
 
     if (resp.status !== StatusCodes.OK) {
       defaultError(notificationApi, await resp.json());
       return;
     }
 
-    // Decide what to do next
-    router.replace("/");
+    notificationApi.success({
+      message: "Registration successful. Wait for admin approval!",
+      placement: "top",
+      duration: 3,
+    });
+
+    setTimeout(() => router.replace("/"), 3000);
     return;
   };
-
-  const [name, setName] = useState<string>("");
 
   return (
     <Form onFinish={onSubmit} className={styles.form}>
       {notificationContext}
       <Row justify={"center"}>
-        <span className={styles.title}>Register courier</span>
+        <span className={styles.title}>Courier registration</span>
       </Row>
       <Row justify={"center"}>
         <Input
@@ -43,6 +48,15 @@ export default function RegisterCourier() {
             setName(e.target.value);
           }}
         />
+        <Input
+          className={styles.input}
+          type="password"
+          value={password}
+          placeholder="Password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
       </Row>
       <Row justify={"center"}>
         <Button htmlType="submit" className={styles.bigButton} disabled={!name}>
@@ -51,4 +65,6 @@ export default function RegisterCourier() {
       </Row>
     </Form>
   );
-}
+};
+
+export default Page;

@@ -1,9 +1,10 @@
 using Domain.Commands.CourierCommands;
+using Domain.Entities;
 using Domain.UseCases.CourierUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Requests;
-using WebApi.Authorization;
+using WebApp.Authorization;
 
 namespace WebApp.Controllers;
 
@@ -33,6 +34,20 @@ public class CourierController : ControllerBase
             : Ok(courier);
     }
 
+    [HttpGet("fromsession")]
+    public async Task<IActionResult> Get([FromServices] GetCourierUseCase useCase, CancellationToken ct)
+    {
+        var courierFromSession = (Courier?)Request.HttpContext.Items["Courier"];
+        if (courierFromSession is null)
+            return Forbid();
+
+        var courier = await useCase.Execute(courierFromSession.Id, ct);
+
+        return courier is null
+            ? Problem(statusCode: StatusCodes.Status404NotFound, title: "Not found")
+            : Ok(courier);
+    }
+
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult> Post([FromServices] RegisterCourierUseCase useCase,
@@ -46,7 +61,8 @@ public class CourierController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult> Authenticate([FromServices] AuthenticateCourierUseCase useCase,
+    public async Task<ActionResult> Authenticate(
+        [FromServices] AuthenticateCourierUseCase useCase,
         AuthenticateCourierRequest request,
         CancellationToken ct)
     {

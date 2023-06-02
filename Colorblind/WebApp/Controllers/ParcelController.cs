@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.UseCases.ParcelUseCases;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Authorization;
+using WebApp.Authorization;
 using WebApp.Requests;
 using WebApp.Responses;
 
@@ -72,13 +72,16 @@ public class ParcelController : ControllerBase
         return Ok();
     }
 
-    [AllowAnonymous]
     [HttpGet("terminal/{terminalId:guid}")]
     public async Task<IActionResult> GetInTerminal(
         [FromServices] GetShippableParcelsInTerminal useCase,
         Guid terminalId,
         CancellationToken ct)
     {
+        var courier = (Courier?)Request.HttpContext.Items["Courier"];
+        if (courier is null)
+            return Forbid();
+        
         var res = await useCase.Execute(terminalId, ct);
 
         var response = new GetShippableParcelsInTerminalResponse(res.Select(x =>
@@ -88,14 +91,17 @@ public class ParcelController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("courier/{courierId:guid}/{terminalId:guid}")]
+    [HttpGet("courier/{terminalId:guid}")]
     public async Task<IActionResult> GetByCourierForTerminal(
         [FromServices] GetParcelsByCourierForTerminalUseCase useCase,
-        Guid courierId,
         Guid terminalId,
         CancellationToken ct)
     {
-        var res = await useCase.Execute(courierId, terminalId, ct);
+        var courier = (Courier?)Request.HttpContext.Items["Courier"];
+        if (courier is null)
+            return Forbid();
+        
+        var res = await useCase.Execute(courier.Id, terminalId, ct);
         return Ok(res);
     }
 
@@ -143,6 +149,7 @@ public class ParcelController : ControllerBase
     }
 
     [HttpGet("events/{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetWithEvents(
         [FromServices] GetParcelWithEventsUseCase useCase,
         Guid id,

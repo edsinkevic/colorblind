@@ -22,15 +22,26 @@ export const detailsWithEvent = (id: string): Promise<Response> =>
     method: "GET",
   });
 
-export const detailsGetByTerminalId = (terminalID: string): Promise<Response> =>
+export const detailsGetByTerminalId = (terminalID: string, auth: string): Promise<Response> =>
   fetch(colorblindServerUrl(`/parcels/terminal/${terminalID}`), {
     ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      "Authorization": auth,
+    },
     method: "GET",
   });
 
-export const detailsGetByCourierIdForTerminal = (courierID: string, terminalID: string): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/courier/${courierID}/${terminalID}`), {
+export const detailsGetByCourierIdForTerminal = (
+  auth: string,
+  terminalID: string
+): Promise<Response> =>
+  fetch(colorblindServerUrl(`/parcels/courier/${terminalID}`), {
     ...defaultFetchConfig,
+    headers: {
+      ...defaultFetchConfig.headers,
+      "Authorization": auth,
+    },
     method: "GET",
   });
 
@@ -42,14 +53,15 @@ export const getOneByCode = (code: string): Promise<Response> =>
 
 export const ship = (
   code: string,
-  courierId: string,
-  version: number
+  version: number,
+  auth: string
 ): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/ship/${courierId}`), {
+  fetch(colorblindServerUrl(`/parcels/${code}/ship`), {
     ...defaultFetchConfig,
     headers: {
       ...defaultFetchConfig.headers,
       "If-Match": `"${version}"`,
+      "Authorization": auth
     },
     method: "POST",
   });
@@ -57,16 +69,21 @@ export const ship = (
 export const deliver = (
   code: string,
   terminalId: string,
-  version: number
+  version: number,
+  auth: string
 ): Promise<Response> =>
-  fetch(colorblindServerUrl(`/parcels/${code}/deliver/terminal/${terminalId}`), {
-    ...defaultFetchConfig,
-    headers: {
-      ...defaultFetchConfig.headers,
-      "If-Match": `"${version}"`,
-    },
-    method: "POST",
-  });
+  fetch(
+    colorblindServerUrl(`/parcels/${code}/deliver/terminal/${terminalId}`),
+    {
+      ...defaultFetchConfig,
+      headers: {
+        ...defaultFetchConfig.headers,
+        "If-Match": `"${version}"`,
+        "Authorization": auth
+      },
+      method: "POST",
+    }
+  );
 
 export const submit = (
   code: string,
