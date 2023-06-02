@@ -17,7 +17,7 @@ interface Props {
   };
 }
 
-export default async function ParcelDetailsPage({ params: { id } }: Props) {
+export default function ParcelDetailsPage({ params: { id } }: Props) {
   const [body, setBody] = useState<ParcelDetailsWithEvent>();
   useEffect(() => {
     const fetchParcel = async () => {

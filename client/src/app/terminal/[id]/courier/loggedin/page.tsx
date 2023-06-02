@@ -12,6 +12,8 @@ import {
 import { getOne } from "colorblind/shared/requests/terminal";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { deleteAuth, getAuth } from "colorblind/shared/lib/state";
+import { defaultError } from "colorblind/shared/notifications/defaults";
+import useNotification from "antd/es/notification/useNotification";
 
 const logout = (
   router: AppRouterInstance,
@@ -33,6 +35,7 @@ export default function TerminalCourierEnvironment({ params: { id } }: Props) {
   const [courier, setCourier] = useState<Courier>();
   const [terminal, setTerminal] = useState<TerminalDetails>();
   const [logoutTimer, setLogoutTimer] = useState<number>(60);
+  const [notificationApi, notificationContext] = useNotification();
   const router = useRouter();
 
   useEffect(() => {
@@ -57,7 +60,9 @@ export default function TerminalCourierEnvironment({ params: { id } }: Props) {
       const response = await fetchCourierFromSession(session);
 
       if (response.status !== StatusCodes.OK) {
-        notFound();
+        defaultError(notificationApi, await response.json());
+        await setTimeout(() => router.replace(`/terminal/${id}/courier`), 2000);
+        return;
       }
 
       setCourier(await response.json());
@@ -85,9 +90,7 @@ export default function TerminalCourierEnvironment({ params: { id } }: Props) {
         <button
           className={styles.bigButton}
           onClick={() =>
-            router.push(
-              `/terminal/${id}/courier/loggedin/terminalparcels`
-            )
+            router.push(`/terminal/${id}/courier/loggedin/terminalparcels`)
           }
         >
           View terminal parcels

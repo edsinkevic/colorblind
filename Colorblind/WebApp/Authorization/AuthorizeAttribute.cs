@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -17,6 +18,9 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         // authorization
         var courier = (Courier?)context.HttpContext.Items["Courier"];
         if (courier == null)
-            context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            throw new DomainUnauthorizedError("Session missing.");
+        
+        if (!courier.IsApproved)
+            throw new DomainUnauthorizedError("You were not approved yet by an administrator.");
     }
 }

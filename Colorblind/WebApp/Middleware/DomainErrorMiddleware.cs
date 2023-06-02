@@ -30,5 +30,16 @@ public class DomainErrorMiddleware
                 detail = ex.Message,
             }));
         }
+        catch (DomainUnauthorizedError ex)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            await context.Response.WriteAsync(JsonSerializer.Serialize(new
+            {
+                title = "Unauthorized",
+                status = context.Response.StatusCode,
+                detail = ex.Message,
+            }));
+        }
     }
 }
